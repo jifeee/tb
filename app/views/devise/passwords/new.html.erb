@@ -1,0 +1,31 @@
+<div class="entry-login container">
+
+  <div class="row">
+    <div class="span6 t-centered">
+      <%= image_tag "app.png", :alt => "", :width => 273, :height => 537 %>
+    </div>
+
+    <div class="span4">
+      <h1><%= image_tag "applogo.png", :width => 75, :height => 74 %></h1>
+        <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post, :class => "form-vertical" }) do |f| %>
+        <%= devise_error_messages! %>
+
+        <div class="control-group">
+          <%= f.label "Email to send reset password instructions", :class => "control-label" %>
+          <div class="controls"><%= f.email_field :email, :class => "span4" %></div>
+        </div>
+
+        <div class="form-actions">
+          <div class="row">
+            <div class="span2">
+              <button type="submit" class="btn btn-primary btn-xlarge btn-submit"><span>Send</span></button>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+
+  </div>
+</div>
+

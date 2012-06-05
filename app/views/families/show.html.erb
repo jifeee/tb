@@ -1,0 +1,26 @@
+<table class="dashboard-table table table-bordered">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Aux emails</th>
+      <th>Phone</th>
+    </tr>
+  </thead>
+  <tbody><%= render :partial => 'member', :collection => @family.parents %></tbody>
+</table>
+
+<div class="dashboard-actions">
+  <a href="#pwd" data-toggle="modal" class="btn">Change Password</a>
+  <% if can? :create, User %>
+    <a href="#new_parent" data-toggle="modal" class="btn">Add new parent</a>
+  <% end %><% if can? :update, @family %>
+    <%= link_to "Edit members", edit_family_path(@family), :class => "btn" %>
+  <% end %>
+</div>
+
+<% content_for :modals do %>
+  <%= render :file => "/devise/passwords/edit" %>
+  <%= render :file => "/parents/new" %>
+<% end %>
+

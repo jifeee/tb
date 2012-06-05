@@ -1,0 +1,33 @@
+<%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :class => "form-vertical") do |f| %>
+  <%= devise_error_messages! %>
+  
+  <div class="control-group">
+    <%= f.label :email, :class => "control-label" %>
+    <div class="controls"><%= f.email_field :email, :class => "span4" %></div>
+  </div>
+              
+  <div class="control-group">
+    <span class="control-labelextra"><%= link_to "Forgot your password?", new_password_path(resource_name) %></span>
+    <%= f.label :password, :class => "control-label" %>
+    <div class="controls"><%= f.password_field :password, :class => "span4" %></div>
+  </div>
+            
+  <div class="control-group">
+    <div class="controls">
+      <label class="checkbox"><%= f.check_box :remember_me %>Keep me logged in</label>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <div class="row">
+      <div class="span2">
+        <button type="submit" class="btn btn-primary btn-xlarge btn-submit"><span>Login</span></button>
+      </div>
+      <div class="span2 form-actions_r">
+        Don’t have an account? <%= link_to "Register", new_user_registration_path %>
+      </div>
+    </div>
+  </div>
+
+<% end %>            
+
