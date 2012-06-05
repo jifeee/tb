@@ -1,0 +1,34 @@
+<table class="dashboard-table table table-bordered">
+  <thead>
+    <tr>
+      <th><% if can? :destroy, Alert %><input type="checkbox" id="all" /><% end %></th>
+      <th>Name</th>
+      <th>Event type</th>
+      <th>Conditions</th>
+      <th>Phones</th>
+      <th>Contacts</th>
+    </tr>
+  </thead>
+  <tbody><%= render :partial => 'alert', :collection => @alerts %></tbody>
+</table>
+
+<div class="dashboard-actions">
+  <% if can? :create, Alert %>
+    <%= link_to "Add new Alert", new_alert_path, :class => "btn" %>
+  <% end %><% if can? :destroy, Alert %>
+    <%= link_to "Remove Alert", delete_alerts_path, :class => "btn", :id => 'delete_alert' %>
+  <% end %>
+</div>
+
+<% content_for :javascripts do %>
+  <script>    
+    $("a#delete_alert").click(function() {
+      var ids = $.map($("input.all:checked"), function(val) { return val.id; })
+      if (ids.length == 0) {
+        alert("No Alerts checked");
+        return false;
+      }
+      $(this).attr("href", $(this).attr("href") + "?ids=" + ids);
+    });
+  </script>
+<% end %>

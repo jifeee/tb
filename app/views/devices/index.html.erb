@@ -1,0 +1,36 @@
+<table class="dashboard-table table table-bordered">
+  <thead>
+    <tr>
+      <th><% if can? :destroy, Device %><input type="checkbox" id="all" /><% end %></th>
+      <th></th>
+      <th>Name</th>
+      <th>MAC address</th>
+      <th>Last log/position</th>
+    </tr>
+  </thead>
+  <tbody><%= render :partial => 'device', :collection => @devices %></tbody>
+</table>
+
+<div class="dashboard-actions">
+  <a href="#new_device" data-toggle="modal" class="btn">Add new Textbuster</a>
+  <% if can? :destroy, @devices %>
+    <%= link_to "Remove Textbuster", delete_textbusters_path, :class => "btn", :id => 'delete_device' %>
+  <% end %>
+</div>
+
+<% content_for :modals do %>
+  <%= render :partial => "/devices/form" %>
+<% end %>
+
+<% content_for :javascripts do %>
+  <script>
+    $("a#delete_device").click(function() {
+      var ids = $.map($("input.all:checked"), function(val) { return val.id; })
+      if (ids.length == 0) {
+        alert("No Textbusters checked");
+        return false;
+      }
+      $(this).attr("href", $(this).attr("href") + "?ids=" + ids);
+    });
+  </script>
+<% end %>
