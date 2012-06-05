@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/textbuster/!svn/ver/2/legacy/Textbuster
+END
+.title
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/textbuster/!svn/ver/2/legacy/Textbuster/.title
+END
+proguard.cfg
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/textbuster/!svn/ver/2/legacy/Textbuster/proguard.cfg
+END
+project.properties
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/textbuster/!svn/ver/2/legacy/Textbuster/project.properties
+END
+local.properties
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/textbuster/!svn/ver/2/legacy/Textbuster/local.properties
+END
+server
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/textbuster/!svn/ver/2/legacy/Textbuster/server
+END
+AndroidManifest.xml
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/textbuster/!svn/ver/2/legacy/Textbuster/AndroidManifest.xml
+END
+server.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/textbuster/!svn/ver/2/legacy/Textbuster/server.c
+END
+:last-child{
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/textbuster/!svn/ver/2/legacy/Textbuster/:last-child%7B
+END
+phonegap.js
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/textbuster/!svn/ver/2/legacy/Textbuster/phonegap.js
+END
+ant.properties
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/textbuster/!svn/ver/2/legacy/Textbuster/ant.properties
+END
+build.xml
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/textbuster/!svn/ver/2/legacy/Textbuster/build.xml
+END
