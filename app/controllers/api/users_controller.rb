@@ -36,7 +36,7 @@ class Api::UsersController < ApplicationController
 protected
 
   def render_with_log options = {}
-    @logger.info "LOGIN_#{DateTime.now.strftime('%Y%m%d %H:%M:%S')}: response #{options}"
+    @logger.info "LOGIN_#{DateTime.now.strftime('%Y%m%d %H:%M:%S')}: response #{options.inspect}"
     render options
   end
 
@@ -46,7 +46,7 @@ protected
   end
 
   def logger
-    @logger.info "LOGIN_#{DateTime.now.strftime('%Y%m%d %H:%M:%S')}: params #{params}"    
+    @logger.info "LOGIN_#{DateTime.now.strftime('%Y%m%d %H:%M:%S')}: params #{params.inspect}"    
   end
 
 end
