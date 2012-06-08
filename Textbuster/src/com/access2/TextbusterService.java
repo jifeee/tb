@@ -52,12 +52,12 @@ public class TextbusterService extends Service{
 	
 	private long lastACL = 0;
 	
-	private boolean active = false; 
+	private boolean active = true; 
 	
 	PowerManager pm;
 	
-	public static final String STOP_LOCK = "com.access2.textbuster.stoplock";
-	public static final String START_LOCK = "com.access2.textbuster.startlock";
+	public static final String SET_ACTIVE = "com.access2.textbuster.SET_ACTIVE";
+	public static final String SET_INACTIVE = "com.access2.textbuster.SET_INACTIVE";
 	
 	
 	private Reporter reporter = null;
@@ -76,9 +76,7 @@ public class TextbusterService extends Service{
 		
 		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(STOP_LOCK);
-		filter.addAction(START_LOCK);
+
 		
 //		reporter.checkForLocation();
 //		reporter.getLocation();
@@ -89,12 +87,11 @@ public class TextbusterService extends Service{
 	private TimerTask mainloop = new TimerTask(){ 
 		public void run(){
 			
-			// No need to do all this if the screen is off anyways
-			
+
 //			boolean isScreenOn = pm.isScreenOn();
 			boolean isScreenOn = true; 
-
 			
+			// No need to do all this if the screen is off anyways
 			if (isScreenOn==true && active == true) {
 				
 				// check if the phone should be locked because Bluetooth is turned off
@@ -186,6 +183,7 @@ public class TextbusterService extends Service{
 						String mac = "00:12:A1:C8:00:06";
 						Log.d(TAG, "Trying to connect to " + mac);
 						
+						bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 						bluetoothDevice = bluetoothAdapter.getRemoteDevice(mac);
 						final BluetoothSocket bluetoothSocket = rfcommSocket = bluetoothDevice.
 						
@@ -297,22 +295,28 @@ public class TextbusterService extends Service{
 			 
 			public void onReceive(Context context, Intent intent) {
 				Log.i(TAG, "received in service");
-			
-				String action = intent.getAction();
+				Log.i(TAG, intent.getAction());
 				
-				if (TextbusterActivity.STOP_LOCK.equals(action)) {
-					active = false; 
-					Log.i(TAG, "received STOP_LOCK");
+				if (intent.getAction().equals(SET_ACTIVE)) {
+					Log.i(TAG, "service set active");
+					active = true; 
 				}
 				
+				if (intent.getAction().equals(SET_INACTIVE)) {
+					Log.i(TAG, "service set INactive");
+					active = false; 
+				}
 					
 			}
 			
 		};
 		
-		bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		
 		IntentFilter filter = new IntentFilter();
+		filter.addAction(SET_ACTIVE);
+		filter.addAction(SET_INACTIVE);
+		context.registerReceiver(receiver, filter);
+		
+		filter = new IntentFilter();
 		filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
 		filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
 		filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
@@ -329,6 +333,7 @@ public class TextbusterService extends Service{
 	    unregisterReceiver(btReceiver);
 	    unregisterReceiver(aclReceiver);
 	    unregisterReceiver(receiver);
+	    Log.i(TAG, "Service destroyed");
 	}
 
 

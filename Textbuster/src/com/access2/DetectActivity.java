@@ -38,6 +38,9 @@ public class DetectActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detect);
         
+        // dont lock the phone right away
+        stopLock();
+        
         toggle = (ToggleButton)findViewById(R.id.bluetoothButton);
         pairButton = (Button)findViewById(R.id.pairButton);
         pb = (ProgressBar) findViewById(R.id.progressBar1);
@@ -90,19 +93,6 @@ public class DetectActivity extends Activity {
 		filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
 		filter.addAction(BluetoothDevice.ACTION_FOUND);
 		registerReceiver(receiver, filter);
-		
-//		
-        Intent service = null;
-        
-        Context ctx = this.getBaseContext();
-        
-        service = new Intent(ctx, TextbusterService.class);
-        
-        ctx.startService(service);
-        
-        
-
-         
         
     }
     
@@ -129,23 +119,23 @@ public class DetectActivity extends Activity {
 	}
 	
 	protected void onDestroy() { 
-		Log.i(TAG, "destroy");
+		Log.i(TAG, "DET destroy");
 		unregisterReceiver(receiver);
 		super.onDestroy();
 	}
 	public void onPause()
 	  {
-		Log.i(TAG, "pause");
-		unregisterReceiver(receiver);
+		Log.i(TAG, "DET pause");
+//		unregisterReceiver(receiver);
 	    super.onPause();
 	  }
 
 	 public void onResume()
 	  {
-		 Log.i(TAG, "resume");
-	    registerReceiver(receiver, filter);
+		 Log.i(TAG, "DET resume");
+	    super.registerReceiver(receiver, filter);
 	    super.onResume();
-	  }
+	  } 
 
 	private final BroadcastReceiver receiver = new BroadcastReceiver() {
 		 
@@ -221,6 +211,38 @@ public class DetectActivity extends Activity {
 		}
 		
 	};
+	
+    @Override public void onBackPressed() { 
+    	stopLock();
+    	startLock();
+    	
+    }
+    
+    public void startLock () { 
+		Intent i = new Intent();
+		i.setAction(TextbusterService.SET_ACTIVE);
+		getApplicationContext().sendBroadcast(i);
+    }
+    
+    public void stopLock () {
+		Intent i = new Intent();
+		i.setAction(TextbusterService.SET_INACTIVE);
+		getApplicationContext().sendBroadcast(i);
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+      Log.i(TAG, "OSIS detact");
+      super.onSaveInstanceState(savedInstanceState);
+
+    }
+    
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+    	super.onRestoreInstanceState(savedInstanceState);
+    	Log.i(TAG, "ORIS detact");
+      
+    }
 
 
 }

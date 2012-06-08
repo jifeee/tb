@@ -1,10 +1,10 @@
 package com.access2;
 
-import com.access2.R;
-
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,7 +21,7 @@ public class LoginActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		ctx=this;
-		
+		startLock();
 		
         final EditText pass = (EditText) findViewById(R.id.editText1);
         pass.setOnKeyListener(new OnKeyListener() {
@@ -61,5 +61,33 @@ public class LoginActivity extends Activity{
 		
 		
 	}	
+	
+    public void startLock () {
+		Intent i = new Intent();
+		i.setAction(TextbusterService.SET_ACTIVE);
+		getApplicationContext().sendBroadcast(i);
+    }
+    
+    public void stopLock () {
+		Intent i = new Intent();
+		i.setAction(TextbusterService.SET_INACTIVE);
+		getApplicationContext().sendBroadcast(i);
+    }
+    protected void onDestroy() 
+    {
+    	Log.i(TAG, "Login destroyed");
+		super.onDestroy();
+	}
+	public void onPause()
+	{
+		Log.i(TAG, "Login pause");
+		super.onPause();
+	  }
+
+	 public void onResume()
+	  {
+		 Log.i(TAG, "Login resume"); 
+	    super.onResume();
+	  }
 
 }

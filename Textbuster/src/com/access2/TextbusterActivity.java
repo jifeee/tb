@@ -33,8 +33,8 @@ public class TextbusterActivity extends Activity {
 	Button pairButton;
 	TextView tv1;
 	TextView tv2;
-	public static final String STOP_LOCK = "com.access2.textbuster.STOP_LOCK";
-	public static final String START_LOCK = "com.access2.textbuster.START_LOCK";
+	public static final String SET_ACTIVE = "com.access2.textbuster.SET_ACTIVE";
+	public static final String SET_INACTIVE = "com.access2.textbuster.SET_INACTIVE";
 	
 	/** Called when the activity is first created. */
     @Override
@@ -43,44 +43,29 @@ public class TextbusterActivity extends Activity {
         setContentView(R.layout.main);
         
         
-//        Intent service = null;
-//        
-//        Context ctx = this.getBaseContext();
-//        
-//        service = new Intent(ctx, TextbusterService.class);
-//        
-//        ctx.startService(service);
-        
+    	Intent service = new Intent(getApplicationContext(), TextbusterService.class);
+    	getApplicationContext().startService(service);
 
         // Intent to start the detecting of new textbuster devices; need to disable TextbusterService while this runs
-        
-        Intent detectIntent = new Intent(TextbusterActivity.this, DetectActivity.class);      
+    	Intent detectIntent = new Intent(TextbusterActivity.this, DetectActivity.class);      
     	TextbusterActivity.this.startActivityForResult(detectIntent, DETECT);  
 
- 
+    	
+    }
+    
+    public void startLock () {
+		Intent i = new Intent();
+		i.setAction(TextbusterService.SET_ACTIVE);
+		getApplicationContext().sendBroadcast(i);
     }
     
     public void stopLock () {
 		Intent i = new Intent();
-		i.setAction(TextbusterService.STOP_LOCK);
+		i.setAction(TextbusterService.SET_INACTIVE);
 		getApplicationContext().sendBroadcast(i);
     }
     
-    protected void onDestroy() 
-    {
-		super.onDestroy();
-	}
-	public void onPause()
-	{
-		super.onPause();
-	  }
-
-	 public void onResume()
-	  {
-	    super.onResume();
-	  }
-	 
-	    protected void onActivityResult(int requestCode, int resultCode,
+    protected void onActivityResult(int requestCode, int resultCode,
 	            Intent resultIntent) {
 
 	    	if (requestCode == DETECT) {
@@ -112,6 +97,42 @@ public class TextbusterActivity extends Activity {
 	        
 	       
         } 
+	    
+	    @Override public void onBackPressed() { 
+	    	
+	    	
+	    }
+	    
+//	    protected void onDestroy() 
+//		{
+//			Log.i(TAG, "TBA destroyed");	
+//			super.onDestroy();
+//		}
+//
+//		public void onPause()
+//		{
+//			Log.i(TAG, "TBA pause");
+//			super.onPause();
+//		  }
+//
+//		public void onResume()
+//		  {
+//			 Log.i(TAG, "TBA resume");	
+//		    super.onResume();
+//		  }
+//
+//		@Override
+//	    public void onSaveInstanceState(Bundle savedInstanceState) {
+//	      Log.i(TAG, "OSIS tbact");
+//	    }
+//	    
+//	    @Override
+//	    public void onRestoreInstanceState(Bundle savedInstanceState) {
+//	    	Log.i(TAG, "ORIS tbact");
+//	      
+//	    }
+
+
 	    
 
 }

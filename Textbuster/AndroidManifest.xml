@@ -21,10 +21,11 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
         
-                <receiver android:name="BootReceiver">  
+                <receiver android:name=".TBReceiver">  
    			 <intent-filter>  
        			 <action android:name="android.intent.action.BOOT_COMPLETED" />  
        			 <action android:name="com.access2.textbuster.STOP_LOCK"/>
+       			 <action android:name="com.access2.textbuster.START_LOCK"/>
        			 
    			</intent-filter>  
 		</receiver>
