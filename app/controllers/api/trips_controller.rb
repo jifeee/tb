@@ -1,5 +1,8 @@
+# coding: utf-8
 # API trips controller. Sending a trip / trips list as json
 class Api::TripsController < ApplicationController
+  before_filter :logger
+
   # before_filter :authorize_user
   # authorize_resource
 
@@ -10,40 +13,41 @@ class Api::TripsController < ApplicationController
     trip = user.trips.scoped
     trip = trip.where(:created_at => (params[:date_start].to_date)..(params[:date_end].to_date)) unless params[:date_start].nil? && params[:date_end].nil? rescue trip
     trip = trip.order(params[:miles] == 'miles' ? 'distance' : 'created_at')
-    render :json => trip.map(&:to_hash)
+    render_with_log :json => trip.map(&:to_hash)
   rescue => e
-    render :json => {:status => 403, :message => e.message}
+    render_with_log :json => {:status => 403, :message => e.message}
   end
   
   # trip details
   def show
     user = User.find_by_authentication_token(params[:token])
-    trip = user.trips.find_by_id(params[:id])
-    render :json => {
+    trip = user.trips.find(params[:id])
+    render_with_log :json => {
       :trip_id => trip.id,
       :distance => trip.distance,
       :average_speed => trip.average_speed,
-      :start => trip.start_point,
-        # {:latitude => trip.start_point.latitude,
-        # :longitude => trip.start_point.longitude,
-        # :address => trip.start_point.address,
-        # :city => '',
-        # :zip => '',
-        # :country => '',
-        # :date => trip.start_point.created_at.try(:to_date),
-        # :time => trip.start_point.created_at.try(:to_time)},
-      :end => trip.end_point,
-      # {:latitude => trip.end_point.latitude,
-      #   :longitude => trip.end_point.longitude,
-      #   :address => trip.end_point.address,
-      #   :city => '',
-      #   :zip => '',
-      #   :country => '',
-      #   :date => trip.end_point.created_at.try(:to_date),
-      #   :time => trip.end_point.created_at.try(:to_time},
-      :points => [{},{}]
+      :start => trip.start_point.api_point_detail,
+      :end => trip.end_point.api_point_detail,
+      :points => trip.locations.map {|location| location.api_point_detail}
     }
   rescue => e
-    render :json => {:status => 403, :message => e.message}
+    case e
+    when ::ActiveRecord::RecordNotFound
+      render_with_log :json => {:status => 403, :message => 'Couldn\'t find Trip with ID=2'}
+    else
+      render_with_log :json => {:status => 403, :message => e.message}
+    end
   end
+
+protected
+
+  def render_with_log options = {}
+    @logger.info "LOGIN_#{DateTime.now.strftime('%Y%m%d %H:%M:%S')}: response #{options}"
+    render options
+  end
+
+  def logger
+    @logger.info "LOGIN_#{DateTime.now.strftime('%Y%m%d %H:%M:%S')}: params #{params}"    
+  end
+
 end

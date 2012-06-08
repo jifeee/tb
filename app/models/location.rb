@@ -29,5 +29,19 @@ class Location < ActiveRecord::Base
   def set_address!
     update_attribute :address, self.geolocate
   end
+
+  def api_point_detail
+    {
+      :latitude => self.latitude,
+      :longitude => self.longitude,
+      :address => self.address,
+      :city => 'not defined',
+      :zip => 'not defined',
+      :country => 'not defined',
+      :date => self.created_at.try(:to_date),
+      :time => self.created_at.try(:to_time)
+    }
+  end
+
 end
 

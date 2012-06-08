@@ -2,6 +2,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :restore_page_param, :retrieve_family
+  before_filter :api_logger
   
   # redirection for user attempting to get restricted resources
   rescue_from CanCan::AccessDenied do |exception|
@@ -48,5 +49,9 @@ class ApplicationController < ActionController::Base
     if user_signed_in? && current_user.family_id
       @family = Family.find_by_id current_user.family_id
     end
+  end
+
+  def api_logger
+    @logger = Logger.new(File.join(Rails.root, "log", "api_#{Rails.env}.log"), 'daily')
   end
 end

@@ -45,4 +45,5 @@ class Trip < ActiveRecord::Base
   def status
     allowed? ? "on" : "alert"
   end 
+  
 end
