@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/textbuster/!svn/ver/1/legacy/BlueScan/phonegap
+END
+log
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/textbuster/!svn/ver/1/legacy/BlueScan/phonegap/log
+END
+create
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/textbuster/!svn/ver/1/legacy/BlueScan/phonegap/create
+END
+debug
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/textbuster/!svn/ver/1/legacy/BlueScan/phonegap/debug
+END
+emulate
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/textbuster/!svn/ver/1/legacy/BlueScan/phonegap/emulate
+END

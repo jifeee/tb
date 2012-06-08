@@ -1,0 +1,50 @@
+<%= form_for @device, :url => textbuster_path(@device) do |f| %>
+<table class="dashboard-table table table-bordered">
+  <thead>
+    <tr>
+      <th colspan="2">Textbuster<%= ' \'' << @device.name << '\'' if @device.name %> settings</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Name</th>
+      <td><%= f.text_field :name %></td>
+    </tr>
+    <tr>
+      <th>MAC address</th>
+      <td><%= f.text_field :mac %></td>
+    </tr>
+    <tr>
+      <th>Phones list</th>
+      <td>
+        <% @family.phones.each do |phone| %>
+          <div>
+            <%= check_box_tag "device[phone_ids][]", phone.id, f.object.phones.include?(phone) %>
+            <%= phone.name || (phone.user.name + "'s phone") %>
+          </div>
+        <% end %>
+      </td>
+    </tr> 
+  </tbody>
+</table>
+<div class="modal-footer">
+  <%= f.submit :class => 'btn' %>
+</div>
+<% end %>
+
+
+
+
+
+
+
+
+
+
+<div class="panel">
+  <div class="panel_contents">
+    <div class='attributes_table'>
+      <%= render :partial => 'form' %>
+    </div> 
+  </div>
+</div>

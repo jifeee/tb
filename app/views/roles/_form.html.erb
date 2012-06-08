@@ -1,0 +1,19 @@
+<%= semantic_form_for [:admin, @role] do |f| %>
+  <%= f.inputs "#{@role.name} permissions" do %>
+    <% Permission.possible_permissions.group_by{|p| permission_alias(p.subject_class)}.each do |group| %>
+      <h3 style="margin: auto auto 5px 15px;"><%= group.first.pluralize %></h3>
+        <% group.last.sort_by{|p| p.action.to_s}.each_with_index do |perm, i| %>
+          <% if (i%5) == 0 %><tr><% end %>
+            <td width="100">
+              <%= check_box_tag "role[permission_ids][]", perm.id, @role.admin? || @role.permission_ids.include?(perm.id), :id => "role_"+dom_id(perm), :style => "display: inline;", :disabled => @role.admin? %>
+              <%= f.label dom_id(perm), perm.action.to_s, :style => "display: inline; margin-left:5px;" %>
+            </td>
+          <%= ('<td width="100"></td>' * (3 - i%5)).html_safe if perm == group.last.max_by{|p| p.action.to_s} %>
+          <% if (i%5) == 4 %></tr><% end %>
+        <% end %>
+      </table>
+      <hr style="margin-top:0;">
+    <% end %>
+  <% end %>
+  <%= f.buttons :commit unless @role.admin? %>
+<% end %>

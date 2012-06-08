@@ -1,0 +1,77 @@
+10
+
+dir
+2
+http://pm.mobilezapp.com/svn/textbuster/legacy/Textbuster/assets/www/app
+http://pm.mobilezapp.com/svn/textbuster
+
+
+
+2012-05-14T15:48:54.209139Z
+2
+saklic
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+20531bca-8fee-4ba0-85f1-eb369d934843
+
+model
+dir
+
+controller
+dir
+
+widget
+dir
+
+view
+dir
+
+app.js
+file
+
+
+
+
+2012-05-15T08:27:52.644907Z
+3bcea0224c7015cad038033717f73d1f
+2012-05-14T15:48:54.209139Z
+2
+saklic
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2122
+
+store
+dir
+

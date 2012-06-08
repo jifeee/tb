@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>TextBuster</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <%= stylesheet_link_tag "bootstrap", "style" %>
+
+    <!-- fav and touch icons -->
+    <!-- 
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+    
+    <%= csrf_meta_tag %>
+  </head>
+  <body>
+    <%= render :partial => "users/#{user_signed_in? ? "authorized" : "guest"}_menu" %>
+
+    <div class="middle">
+      <div class="entry-promo_small middle-entry">
+      </div><!-- /entry-promo_small -->
+      
+      <div class="entry-main container">
+
+        <div class="dashboard tabbable tabs-left">
+          <%= render :partial => 'users/parents_menu' %>
+          <div class="tab-content"><div class="tab-content_i">
+            
+            <%= yield %>
+          </div>
+        </div>
+        
+      </div><!-- /container -->
+    
+    </div><!-- /middle -->
+    </div>
+    <%= render :partial => "application/footer" %>
+    <%= yield :modals %>
+    
+    <%= javascript_include_tag 'jquery-1.7.1.min', 'jquery_ujs', 'bootstrap.min', 'application' %>
+    <%= yield :javascripts %>
+  </body>
+</html>

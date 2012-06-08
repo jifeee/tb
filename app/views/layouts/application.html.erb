@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>TextBuster</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <%= stylesheet_link_tag "bootstrap", "style" %>
+
+    <!-- fav and touch icons -->
+    <!-- 
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+    
+    <%= csrf_meta_tag %>
+  </head>
+  <body>
+    <%= render :partial => "users/#{user_signed_in? ? "authorized" : "guest"}_menu" %>
+
+    <div class="middle">
+      <%= yield %>
+    </div>
+
+    <%= render :partial => "application/footer" %>
+
+    <%= javascript_include_tag 'jquery.min', 'jquery_ujs', 'application' %>
+    <%= yield :javascripts %>
+  </body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script>
+	
+	Cmp = function(cmp, parent){
+		this.parent = (parent) ? parent : document.body;
+		this.cmp = cmp;
+		
+		this.constructor();
+	};
+	
+	Cmp.prototype.constructor = function(){
+		var params = ['Width', 'Height', 'Id', 'Docked', 'Centered'];
+		
+		var c = '';
+		
+		for(var i = 0; i < params.length; i++){
+				c += '<div style="font: .8em Menlo; width: 30px; ">' + params[i] + '</div>';
+		}
+		
+		var div = document.createElement(div);
+		div.style.background = 'lightgrey';
+		div.style.margin = '3px';
+		div.style.padding = '3px';
+		div.style.display = 'block';
+		div.innerHTML = c;
+		this.parent.appendChild(div);
+		
+		console.log(this.cmp);
+		
+		this.configDiv;
+	};
+	
+	function init(){
+	
+		var preview = document.getElementById('preview').contentWindow;
+		var config =  document.getElementById('config');
+		
+		var senchalib = preview.document.createElement('script');
+		senchalib.src = 'lib/sencha-touch-all.js';
+		senchalib.onload = previewReady;
+		preview.document.head.appendChild(senchalib);
+		
+		var senchacss = preview.document.createElement('link');
+		senchacss.rel = 'stylesheet';
+		senchacss.href = 'resources/css/sencha-touch.css';
+		senchacss.type = 'text/css';
+		preview.document.head.appendChild(senchacss);
+	
+		var but = document.createElement('button');
+		but.innerHTML = 'sdsd';
+		but.onclick = function() {
+			new Cmp(View.items.items[0].items.items[0]);
+		};
+		document.body.appendChild(but);
+	
+	}
+	
+	function previewReady(){
+		window.Ext = preview.Ext;
+		
+		Ext.application({name: 'app' });
+			
+		Ext.define('view', {
+			extend : 'Ext.Panel',
+			xtype : 'history',
+			config : {
+				fullscreen:	true,
+				layout:	{ type : 'vbox', align : 'center', animation: { type: 'slide' } },
+				items: [
+					{ xtype : 'toolbar', docked : 'top', items : [
+						{ xtype : 'button', id : 'historyBack', ui : 'back', text : 'Back' },
+						{ xtype : 'container', html : '<img src="resources/images/toolbar-banner.jpg"></img>'},
+					]},
+				]
+			}
+		});
+		
+		window.View = Ext.create(preview.view);
+			
+		
+	
+	}
+
+</script>
+
+</head>
+<body onload="init();">
+	<div id="config" style="width: 200px; height : 100%; float: left; background: lightgrey">
+	</div>
+	<div style="height : 100%; float: right">
+		<iframe id="preview" height = "100%" width = "400px">
+		</iframe>
+	</div>
+</body>
+</html>

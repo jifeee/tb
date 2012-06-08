@@ -1,0 +1,11 @@
+<tr class="member">
+  <td><%= form.check_box '_destroy', :title => "Remove" %></td>
+  <td><%= form.text_field :name, :placeholder => 'Name', :style => "width:100px;" %></td>
+  <td>
+    <%= form.text_field :email, :placeholder => 'Email cannot be blank!', :style => "width:150px;" %>
+    <span class="error"><%= form.object.errors[:email].join(', ') %></span>
+  </td>
+  <td><%= form.text_field :aux_emails, :placeholder => 'Auxiliary emails', :style => "width:150px;" %></td>
+  <td><%= form.text_field :phone, :placeholder => 'Phone number', :style => "width:130px;" %></td>
+  <td><%= form.select :role_id, options_from_collection_for_select(Role.where("name <> 'Admin'"), :id, :name, form.object.role_id), {}, :style => "width:80px;" %></td>
+</tr>
