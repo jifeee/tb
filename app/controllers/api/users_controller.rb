@@ -20,12 +20,17 @@ class Api::UsersController < ApplicationController
 
   # http://localhost:3001/api/sign_up?email=isbaysoft@gmail.com&password=qwe123
   def sign_up
-# “device” : ”<device_id>”,
+    # params[:device] - imei ????
+    phone = Phone.find_by_imei params[:device]
+    unless phone.nil?
+      render_with_log :json => {:status => 403, :message => 'Imei has already been taken'} and return
+    end
     user = User.new :email => params[:email], 
       :password => params[:password],
       :name => params[:email],
       :login => params[:email]
-    if user.save
+    if user && user.valid_password?(params[:password]) && user.save
+      user.phones << Phone.create(:imei => params[:device])
       user.reset_authentication_token!
       render_with_log :json => {:token => user.authentication_token, :user_id => user.id}
     else

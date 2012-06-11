@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120301092546) do
+ActiveRecord::Schema.define(:version => 20120611094850) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -90,11 +90,14 @@ ActiveRecord::Schema.define(:version => 20120301092546) do
   end
 
   create_table "locations", :force => true do |t|
-    t.decimal  "latitude",   :precision => 8, :scale => 6
+    t.decimal  "latitude",   :precision => 9, :scale => 6
     t.decimal  "longitude",  :precision => 8, :scale => 6
     t.string   "address"
     t.integer  "trip_id"
     t.datetime "created_at"
+    t.string   "country"
+    t.string   "city"
+    t.string   "zip"
   end
 
   add_index "locations", ["created_at"], :name => "index_locations_on_created_at"
