@@ -48,6 +48,9 @@
     <%= render :partial => "application/footer" %>
     <%= yield :modals %>
     
-    <%= yield :javascripts %>
+    <script type="text/javascript">
+      <%= yield :javascripts %>
+    </script>
+    
   </body>
 </html>

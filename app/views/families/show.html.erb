@@ -29,7 +29,6 @@
 
 <%= javascript_tag '$(document).ready(function(){showNewParent();})' if flash[:action] == :new %>
 
-
 <% content_for :modals do %>
   <%= render :file => "/devise/passwords/edit" %>
   <%= render :file => "/parents/new" %>
