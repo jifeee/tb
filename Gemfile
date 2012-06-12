@@ -27,7 +27,6 @@ gem 'delayed_job_active_record'
 # Use unicorn as the web server
 gem 'unicorn'
 gem 'capistrano', :group => :development, :require => false
-gem 'capistrano-deploy', :group => :development, :require => false
 
 # Deploy with Capistrano
 # gem 'capistrano'

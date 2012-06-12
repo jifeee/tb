@@ -50,8 +50,6 @@ GEM
       net-sftp (>= 2.0.0)
       net-ssh (>= 2.0.14)
       net-ssh-gateway (>= 1.1.0)
-    capistrano-deploy (0.3.2)
-      capistrano (~> 2.9)
     delayed_job (3.0.1)
       activesupport (~> 3.0)
     delayed_job_active_record (0.3.2)
@@ -156,7 +154,6 @@ DEPENDENCIES
   bitmask_attributes
   cancan
   capistrano
-  capistrano-deploy
   delayed_job_active_record
   devise
   enumerated_attribute
