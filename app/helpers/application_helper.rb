@@ -20,4 +20,18 @@ module ApplicationHelper
     {"User" => "Parent",
      "Family" => "Parent"}[resource] || resource
   end
+
+  def errors_for(object, message=nil)
+    html = ""
+    unless object.errors.blank?
+      html << "<div class='alert alert-error'>\n"
+      html << "<ul>\n"
+      object.errors.full_messages.each do |error|
+        html << "<li>#{error}</li>\n"
+      end
+      html << "</ul>\n"
+      html << "</div>\n"
+    end
+    html.html_safe
+  end
 end

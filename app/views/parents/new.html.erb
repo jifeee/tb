@@ -8,6 +8,8 @@
   <% if @parent.errors.any? %>
     <%= @parent.errors.full_messages.join '; ' %>
   <% end %>
+
+  <%= errors_for(flash[:errors]) if flash[:errors] %>
   
   <div class="control-group">
     <label class="convtrol-label" for="f1">Primary email:</label>
@@ -22,12 +24,12 @@
 
     <label class="convtrol-label" for="f1">Password:</label>
     <div class="controls">
-      <%= f.text_field :password, :class => 'span4', :placeholder => 'If left blank, no ability to login' %>
+      <%= f.password_field :password, :class => 'span4', :placeholder => 'If left blank, no ability to login' %>
     </div>
     
     <label class="convtrol-label" for="f1">Password confirmation:</label>
     <div class="controls">
-      <%= f.text_field :password_confirmation, :class => 'span4' %>
+      <%= f.password_field :password_confirmation, :class => 'span4' %>
     </div>
 
    <label class="convtrol-label" for="f1">Phones:</label>

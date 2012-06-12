@@ -11,6 +11,6 @@ class Device < ActiveRecord::Base
   end
   
   def display_name
-    name || mac
+    name || mac rescue ''
   end
 end

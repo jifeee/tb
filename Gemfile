@@ -27,6 +27,8 @@ gem 'delayed_job_active_record'
 # Use unicorn as the web server
 gem 'unicorn'
 
+gem "dynamic_form", "~> 1.1.4"
+
 # Deploy with Capistrano
 # gem 'capistrano'
 

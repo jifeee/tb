@@ -5,10 +5,11 @@ class EventsController < ApplicationController
   
   # events list. All events for user phones, can be filtered by phone and textbuster
   def index
-    @events = Event.where(:phone_id => current_user.family.phones)
+    @events = Event.where(:phone_id => current_user.family.phones) rescue nil
     if filter = params[:event]
       @events = @events.where(:phone_id => filter[:phone_id]) if filter[:phone_id].present?
       @events = @events.where(:device_id => filter[:device_id]) if filter[:device_id].present?
     end
+
   end
 end

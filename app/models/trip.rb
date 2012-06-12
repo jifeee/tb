@@ -43,7 +43,7 @@ class Trip < ActiveRecord::Base
   end
   
   def status
-    allowed? ? "on" : "alert"
+    allowed? ? "on" : "alert" rescue 'on'
   end 
   
 end
