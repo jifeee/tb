@@ -1,5 +1,6 @@
 # Alerts controller: pages for alerts settings
 class AlertsController < ApplicationController
+  load_and_authorize_resource
   layout "parents"
   before_filter :find_owner, :only => :index
 

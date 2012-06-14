@@ -1,5 +1,6 @@
 # Trips controller. Showing the kids trips details to parents
 class TripsController < ApplicationController
+  load_and_authorize_resource
   layout "parents"
   authorize_resource
   

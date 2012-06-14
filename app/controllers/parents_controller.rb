@@ -1,6 +1,7 @@
 class ParentsController < ApplicationController
+  load_and_authorize_resource
   layout "parents"
-
+  
   respond_to :html, :js
 
   def new

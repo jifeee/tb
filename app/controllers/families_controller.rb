@@ -1,7 +1,7 @@
 # Family account controller. These are pages for parents/children management, so user should be authenticated.
 class FamiliesController < ApplicationController
   layout "parents"
-  authorize_resource
+  load_and_authorize_resource
   
   # update family data (including adding new members and changing their data)
   def update

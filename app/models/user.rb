@@ -24,8 +24,11 @@ class User < ActiveRecord::Base
   end
   after_create :send_welcome_email
   before_validation :generate_pwd, :on => :create, :if => "password.blank? && password_confirmation.blank?"
+
+  after_validation :email_validation_only_one_message
   
   validates :email, :format => /^[a-z0-9,!#\$%&'\*\+\/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+\/=\?\^_`\{\|}~-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})$/
+  validates :login, :name, :password, :presence => true
   
   # methods determining if the user belongs to a particular role
   # example:
@@ -70,5 +73,10 @@ class User < ActiveRecord::Base
     pwd = Devise.friendly_token.first(10)
     self.password, self.password_confirmation = pwd, pwd
   end
+
+  def email_validation_only_one_message
+    self.errors[:email].clear && self.errors[:email] = ['is invalid'] if self.errors.has_key?(:email)
+  end
+
 end
 

@@ -30,6 +30,14 @@ task :tst do
     task :stop, :roles => :app, :except => {:no_release => true} do
       run "kill -9 `cat #{unicorn_pid}`"
     end
+
+    desc "unicorn restart"
+    task :restart, :roles => :app, :except => {:no_release => true} do
+      run "kill -9 `cat #{unicorn_pid}`"
+      sleep 3
+      run "cd #{current_path} && bundle exec unicorn_rails -o 127.0.0.1 -c #{unicorn_cfg} -E production -D -p 3000"
+    end
+
     desc "unicorn reload"
     task :reload, :roles => :app, :except => {:no_release => true} do
       run "#{current_path}/bundle exec unicorn_exec reload"
@@ -60,7 +68,7 @@ task :tst do
                               "deploy:migrate",
                               :cleanup
 
-  # after 'deploy:restart', 'unicorn:reload'
+  after 'deploy:restart', 'unicorn:restart'
   
   namespace :bundler do
     task :bundle_install, :roles => :app do

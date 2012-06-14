@@ -49,7 +49,7 @@ ActiveAdmin.register User do
       table_for collection do |t|
         t.column(:email)
         t.column(:name) { |child| link_to(child.name, admin_user_path(child)) }
-      end
+      end if collection
     end
   end
 

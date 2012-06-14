@@ -8,6 +8,10 @@ class Ability
     
     if user.admin?
       can :manage, :all
+      %w(Alert Device Event Family ParentsController Phone Restriction Trip).map do |obj|
+        cannot :manage, obj.constantize
+      end
+
     elsif user.role
       user.role.permissions.each do |permission|
         can permission.action.to_sym, permission.subject_class.constantize

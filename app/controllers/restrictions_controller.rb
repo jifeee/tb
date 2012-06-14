@@ -1,5 +1,6 @@
 # Restrictions controller: pages for children geolocation restrictions management, user should be authenticated.
 class RestrictionsController < ApplicationController
+  load_and_authorize_resource
   layout "parents"
   before_filter :find_owner
   
