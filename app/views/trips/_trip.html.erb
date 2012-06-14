@@ -8,8 +8,8 @@
     </div>
   </td>
   <td>
-    <div class="ttl"><%= trip.phone.user.name %></div>
-    <div class="device"><%= trip.phone.name %></div>
+    <div class="ttl"><%= trip.phone.user.name rescue nil %></div>
+    <div class="device"><%= trip.phone.name rescue nil %></div>
   </td>
   <td>
     <%= trip.start_point.created_at.strftime '%R' %> - <%= trip.end_point.created_at.strftime '%R' %>
