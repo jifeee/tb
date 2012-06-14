@@ -15,6 +15,7 @@
     <tr class="alert_conditions">
       <th>Conditions</th>
       <td>
+        <%= content_tag :div, f.object.errors[:restrictions], :class => 'alert alert-error' if f.object.errors[:restrictions].present? %>
         <div class="time">
           <span>From</span> <%= f.text_field :restricted_time_start, :placeholder => 'Restricted time start', :alt => 'time' %>
           <span>till</span> <%= f.text_field :restricted_time_end, :placeholder => 'Restricted time end', :alt => 'time' %>
@@ -23,7 +24,6 @@
         <div class="map">
           <%= render :partial => 'restrictions/map', :locals => {:f => f} %>
         </div>
-        <span class="error"><%= f.object.errors[:restrictions] if f.object.errors[:restrictions].present? %></span>
       </td>
     </tr>
     <tr>

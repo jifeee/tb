@@ -4,7 +4,8 @@ class Device < ActiveRecord::Base
   has_many :reports, :order => 'created_at desc'
   has_many :events
   
-  validates :mac, :presence => true, :uniqueness => true
+  validates :mac, :presence => true, :uniqueness => true, :length => {:maximum => 50}
+  validates :name, :presence => true, :length => {:maximum => 255}
   
   def last_position
     events.where("latitude is not null and longitude is not null").order("created_at desc").first

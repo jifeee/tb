@@ -6,7 +6,7 @@
       <fieldset>
         <legend class="label"><label>Abilities</label></legend>
         <ol>
-          <% Phone.values_for_abilities.each do |a| %>
+          <% Phone::ABILITIES.each do |a| %>
             <li><%= check_box_tag "phone[abilities][]", a, f.object.abilities?(a) %> <%= a %></li>
           <% end %>
         </ol>

@@ -4,9 +4,11 @@ class Phone < ActiveRecord::Base
   has_many :events
   belongs_to :user
 
+  ABILITIES = [:GPS, :Bluetooth]
+
   validates :imei, :presence => true
   
-  bitmask :abilities, :as => [:GPS, :Bluetooth]
+  bitmask :abilities, :as => ABILITIES
   
   def last_position
     events.where("latitude is not null and longitude is not null").order("created_at desc").first

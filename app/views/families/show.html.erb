@@ -13,7 +13,7 @@
 <div class="dashboard-actions">
   <a href="#pwd" data-toggle="modal" class="btn">Change Password</a>
   <% if can? :create, User %>
-    <a href="#new_parent" data-toggle="modal" class="btn">Add new parent</a>
+    <%= link_to 'Add new parent', new_parent_path, :class => "btn", :remote => true %>
   <% end %><% if can? :update, @family %>
     <%= link_to "Edit members", edit_family_path(@family), :class => "btn" %>
   <% end %>
@@ -31,5 +31,4 @@
 
 <% content_for :modals do %>
   <%= render :file => "/devise/passwords/edit" %>
-  <%= render :file => "/parents/new" %>
 <% end %>

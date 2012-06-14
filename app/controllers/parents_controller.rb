@@ -1,22 +1,25 @@
 class ParentsController < ApplicationController
   layout "parents"
 
-  respond_to :html
+  respond_to :html, :js
 
   def new
-    @parent = @family.parents.build
+    @parent = @family.parents.new
+    respond_with(@parent) do |format|
+      format.js {render :new}
+    end
   end
   
   def create
     @parent = @family.parents.build(params[:user])
     respond_with(@parent) do |format|
-      format.html do
+      format.js do
         if @parent.save
-          redirect_to @family
+          render :update do |page| 
+            page << "window.location.href = '#{family_path(current_user.family_id || 1)}';"
+          end
         else
-          flash[:action] = :new
-          flash[:errors] = @parent
-          redirect_to family_path(current_user.family_id || 1)
+          render :new
         end
       end
     end

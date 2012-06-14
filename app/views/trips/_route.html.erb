@@ -7,7 +7,7 @@
       <%= hidden_field_tag :longitude, r.longitude, :id => "placeLng_#{r.id}" %>
       <%= hidden_field_tag :radius, r.radius, :id => "placeRad_#{r.id}" %>
     </div>
-  <% end %>
+  <% end if @trip.restrictions %>
   </div>
 </div>
 

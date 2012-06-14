@@ -1,15 +1,11 @@
-<%= form_for @device||=Device.new, :url => (@device.new_record? ? textbusters_path : textbuster_path(@device)), :html => {:id => 'new_device', :class => "modal modal_small hide form-vertical"} do |f| %>
+<%= form_for @device, :url => (@device.new_record? ? textbusters_path : textbuster_path(@device)), :html => {:id => 'new_device', :class => "modal modal_small hide form-vertical"}, :remote => true do |f| %>
 
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
     <h3 id='header'>Add new Textbuster</h3>
   </div>
   
-  <div class="modal-body">
-  <% if @device.errors.any? %>
-    <%= @device.errors.full_messages.join '; ' %>
-  <% end %>
-  
+  <div class="modal-body">  
   <div class="control-group">
     <label class="convtrol-label" for="f1">Description:</label>
     <div class="controls">

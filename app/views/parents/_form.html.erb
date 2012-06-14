@@ -1,16 +1,10 @@
-<%= form_for(@parent||=@family.parents.build, :url => parents_path, :html => {:id => 'new_parent', :class => "modal modal_small hide form-vertical"}) do |f| %>
+<%= form_for(@parent, :url => parents_path, :html => {:id => 'new_parent', :class => "modal modal_small hide form-vertical"}, :remote => true) do |f| %>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
     <h3 id='header'>Add new parent</h3>
   </div>
   
-  <div class="modal-body">
-  <% if @parent.errors.any? %>
-    <%= @parent.errors.full_messages.join '; ' %>
-  <% end %>
-
-  <%= errors_for(flash[:errors]) if flash[:errors] %>
-  
+  <div class="modal-body">  
   <div class="control-group">
     <label class="convtrol-label" for="f1">Primary email:</label>
     <div class="controls">

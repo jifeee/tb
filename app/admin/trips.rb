@@ -19,6 +19,8 @@ ActiveAdmin.register Trip do
       f.input :device
       f.input :distance
       f.input :average_speed
+      f.input :start_point
+      f.input :end_point
     end
     f.buttons
   end

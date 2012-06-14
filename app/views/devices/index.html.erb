@@ -12,15 +12,11 @@
 </table>
 
 <div class="dashboard-actions">
-  <a href="#new_device" data-toggle="modal" class="btn">Add new Textbuster</a>
+  <%= link_to 'Add new Textbuster', new_textbuster_path, :class => 'btn', :remote => true %>
   <% if can? :destroy, @devices %>
     <%= link_to "Remove Textbuster", delete_textbusters_path, :class => "btn", :id => 'delete_device' %>
   <% end %>
 </div>
-
-<% content_for :modals do %>
-  <%= render :partial => "/devices/form" %>
-<% end %>
 
 <% content_for :javascripts do %>
   <script>

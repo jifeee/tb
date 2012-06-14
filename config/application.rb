@@ -36,6 +36,9 @@ module Textbuster
     # JavaScript files you want as :defaults (application.js is always included).
     # config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
     
+    # fieldWithErrors style
+    config.action_view.field_error_proc = Proc.new{ |html_tag, instance| %{<span class="field_with_errors" title="#{instance.error_message.first}">#{html_tag}</span>}.html_safe }
+    
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
 
