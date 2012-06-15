@@ -1,3 +1,4 @@
+<%= javascript_include_tag 'jquery-1.7.1.min', 'jquery_ujs' %>
 <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :class => "form-vertical") do |f| %>
   <%= devise_error_messages! %>
   
@@ -7,7 +8,7 @@
   </div>
               
   <div class="control-group">
-    <span class="control-labelextra"><%= link_to "Forgot your password?", new_password_path(resource_name) %></span>
+    <span class="control-labelextra"><%= link_to "Forgot your password?", '#', :id => 'reset' %></span>
     <%= f.label :password, :class => "control-label" %>
     <div class="controls"><%= f.password_field :password, :class => "span4" %></div>
   </div>
@@ -31,3 +32,21 @@
 
 <% end %>            
 
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#reset').click(function(){
+      $.ajax({
+        type: 'POST',
+        url: '<%= reset_passwords_url %>',
+        data: {'email':$('#user_email').val()},
+        dataType: 'json',
+        complete: function(msg) {
+          $('#user_new').html("<p>We've sent an email to <strong>"+$('#user_email').val()+"</strong> containing a temporary url that will allow you to reset your password for the next 24 hours. Please check your spam folder if the email doesn't appear within a few minutes.</p>");          
+        }
+      });
+
+      return false;
+    })
+  });
+
+</script>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120611131420) do
+ActiveRecord::Schema.define(:version => 20120615140013) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(:version => 20120611131420) do
   add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
   create_table "devices", :force => true do |t|
-    t.string  "mac"
+    t.string  "mac",       :limit => 50, :null => false
     t.string  "name"
     t.integer "family_id"
   end
@@ -85,13 +85,14 @@ ActiveRecord::Schema.define(:version => 20120611131420) do
     t.integer  "user_id"
     t.integer  "phone_id"
     t.datetime "created_at"
+    t.integer  "report_id"
   end
 
   create_table "families", :force => true do |t|
   end
 
   create_table "locations", :force => true do |t|
-    t.decimal  "latitude",   :precision => 9, :scale => 6
+    t.decimal  "latitude",   :precision => 8, :scale => 6
     t.decimal  "longitude",  :precision => 8, :scale => 6
     t.string   "address"
     t.integer  "trip_id"
@@ -114,9 +115,11 @@ ActiveRecord::Schema.define(:version => 20120611131420) do
     t.string  "title"
     t.string  "anchor"
     t.text    "data"
+    t.boolean "menu_logged_upt"
     t.boolean "menu_logged_in"
     t.boolean "menu_logged_out"
     t.boolean "menu_footer"
+    t.boolean "menu_main",       :default => false
   end
 
   create_table "permissions", :force => true do |t|
@@ -144,16 +147,17 @@ ActiveRecord::Schema.define(:version => 20120611131420) do
     t.integer  "conditions"
     t.text     "data"
     t.datetime "created_at"
+    t.integer  "device_id"
   end
 
   create_table "restrictions", :force => true do |t|
-    t.decimal  "latitude",   :precision => 9, :scale => 6
-    t.decimal  "longitude",  :precision => 9, :scale => 6
-    t.decimal  "radius",     :precision => 5, :scale => 1
+    t.decimal  "latitude",                  :precision => 9, :scale => 6
+    t.decimal  "longitude",                 :precision => 9, :scale => 6
+    t.decimal  "radius",                    :precision => 5, :scale => 1
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "alert_id"
-    t.string   "address"
+    t.string   "address",    :limit => 256
   end
 
   create_table "roles", :force => true do |t|
@@ -178,9 +182,9 @@ ActiveRecord::Schema.define(:version => 20120611131420) do
   create_table "trips", :force => true do |t|
     t.integer  "distance"
     t.decimal  "average_speed",  :precision => 5, :scale => 2
-    t.decimal  "timezone",       :precision => 3, :scale => 1
     t.integer  "user_id"
     t.integer  "device_id"
+    t.decimal  "timezone",       :precision => 2, :scale => 1
     t.integer  "start_point_id"
     t.integer  "end_point_id"
     t.datetime "created_at"

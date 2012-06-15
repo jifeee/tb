@@ -18,6 +18,7 @@ ActiveAdmin.register Page do
     column "Logged in", :menu_logged_in
     column "Logged out", :menu_logged_out
     column "Footer", :menu_footer
+    column "Footer", :menu_main
     column "Data" do |page|
       truncate(page.data.gsub(/\<[^>]*\>/, ' '), :length => 100)
     end

@@ -1,7 +1,14 @@
 class PasswordsController < ApplicationController
-	before_filter :authenticate_user!
-
 	respond_to :html, :js
+
+	def reset
+		user = User.find_by_email(params[:email])
+		Mailer.reset_password_instructions(user).deliver
+		respond_with(user) do |format|
+			format.js {render :nothing => true}
+			format.any {render :nothing => true}
+		end
+	end
 
   def edit
     @user = current_user

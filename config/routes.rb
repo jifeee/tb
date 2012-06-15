@@ -3,8 +3,11 @@ Textbuster::Application.routes.draw do
   
 
   # devise_for :users, :only => [:registrations, :passwords]
-  devise_for :users, :only => [:registrations, :passwords], :controllers => {:passwords => "passwords"}
-  resources :passwords
+  devise_for :users, :only => [:registrations, :passwords, :unlocks], :controllers => {:passwords => "passwords"}
+  
+  resources :passwords do
+    post 'reset' => 'passwords', :on => :collection
+  end
 
   devise_for :users, ActiveAdmin::Devise.config
 
