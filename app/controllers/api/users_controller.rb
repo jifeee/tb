@@ -4,7 +4,7 @@ class Api::UsersController < ApplicationController
   before_filter :logger
 
   # login action
-  # http://localhost:3001/api/login?email=isbaysoft@gmail.com&password=qwe123
+  # http://localhost:3000/api/login?email=isbaysoft@gmail.com&password=qwe123
   #  ID = 2
   def login
     user = User.find_by_email(params[:email])

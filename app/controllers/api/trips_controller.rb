@@ -10,9 +10,9 @@ class Api::TripsController < ApplicationController
   # http://localhost:3001/api/trips?token=e4e5391a1f89a3499b00f54cba87df3b&date_start=2012-01-01&date_end=2012-01-13&order=miles
   def index
     user = User.find_by_authentication_token(params[:token])
-    trip = user.trips.scoped
+    trip = user.trips_without_order.scoped
     trip = trip.where(:created_at => (params[:date_start].to_date)..(params[:date_end].to_date)) unless params[:date_start].nil? && params[:date_end].nil? rescue trip
-    trip = trip.order(params[:miles] == 'miles' ? 'distance' : 'created_at')
+    trip = trip.order(params[:order] == 'miles' ? 'distance ASC' : 'created_at ASC')
     render_with_log :json => trip.map(&:to_hash)
   rescue => e
     render_with_log :json => {:status => 403, :message => e.message}

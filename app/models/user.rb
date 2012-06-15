@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   belongs_to :family
   belongs_to :role
   has_many :trips, :order => "created_at DESC"
+  has_many :trips_without_order, :class_name => 'Trip'
   has_many :phones
   has_many :authored_alerts, :class_name => "Alert", :foreign_key => "author_id"
   has_and_belongs_to_many :alerts
@@ -27,8 +28,8 @@ class User < ActiveRecord::Base
 
   after_validation :email_validation_only_one_message
   
-  validates :email, :format => /^[a-z0-9,!#\$%&'\*\+\/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+\/=\?\^_`\{\|}~-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})$/
-  validates :login, :name, :password, :presence => true
+  validates :email, :format =>  /^[a-z0-9,!#\$%&'\*\+\/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+\/=\?\^_`\{\|}~-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})$/
+  # validates :login, :name, :password, :presence => true
   
   # methods determining if the user belongs to a particular role
   # example:
@@ -49,7 +50,7 @@ class User < ActiveRecord::Base
   # modify their accounts without providing a password
   def update_with_password params={}
     params.delete :current_password
-    self.update_without_password params
+    update_attributes(params)
   end
 
   # determines if the user is a parent for the particular kid

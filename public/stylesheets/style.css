@@ -465,12 +465,10 @@ body {
 .tablesorter th.headerSortDown { 
     background-image: url(../images/icons/desc.gif) !important;
 }
-
-
-
-
-
-
+.table {table-layout:fixed;}
+.table td{overflow:hidden !important;}
+th.mark {width:28px;}
+th.mark2 {width:36px;}
 
 .google-map, .map-input {
   width: 600px;

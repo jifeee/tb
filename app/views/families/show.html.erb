@@ -11,7 +11,7 @@
 </table>
 
 <div class="dashboard-actions">
-  <a href="#pwd" data-toggle="modal" class="btn">Change Password</a>
+  <%= link_to 'Change Password', edit_password_path, :class => 'btn', :remote => true %>
   <% if can? :create, User %>
     <%= link_to 'Add new parent', new_parent_path, :class => "btn", :remote => true %>
   <% end %><% if can? :update, @family %>
@@ -28,7 +28,3 @@
 </script>
 
 <%= javascript_tag '$(document).ready(function(){showNewParent();})' if flash[:action] == :new %>
-
-<% content_for :modals do %>
-  <%= render :file => "/devise/passwords/edit" %>
-<% end %>

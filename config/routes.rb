@@ -1,7 +1,11 @@
 Textbuster::Application.routes.draw do
   ActiveAdmin.routes(self)
   
-  devise_for :users, :only => [:registrations, :passwords]
+
+  # devise_for :users, :only => [:registrations, :passwords]
+  devise_for :users, :only => [:registrations, :passwords], :controllers => {:passwords => "passwords"}
+  resources :passwords
+
   devise_for :users, ActiveAdmin::Devise.config
 
   resources :alerts do
