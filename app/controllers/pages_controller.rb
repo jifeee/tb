@@ -1,7 +1,5 @@
 # Static pages controller
-class PagesController < ApplicationController
-  load_and_authorize_resource
-  
+class PagesController < ApplicationController 
   
   # show static page
   def show
