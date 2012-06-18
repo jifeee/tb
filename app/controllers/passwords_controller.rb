@@ -3,7 +3,7 @@ class PasswordsController < ApplicationController
 
 	def reset
 		user = User.find_by_email(params[:email])
-		Mailer.reset_password_instructions(user).deliver
+		user.send_reset_password_instructions
 		respond_with(user) do |format|
 			format.js {render :nothing => true}
 			format.any {render :nothing => true}
@@ -11,14 +11,19 @@ class PasswordsController < ApplicationController
 	end
 
   def edit
-    @user = current_user
+    @user = current_user || User.find(params[:id])
     respond_with(@user) do |format|
     	format.js {}
+    	format.html {}
     end
   end
 
   def update
-    @user = current_user
+    if params[:user][:reset_password_token] && !params[:user][:reset_password_token].blank?
+    	@user = User.find_by_id_and_reset_password_token(params[:id], params[:user][:reset_password_token])
+    else
+    	@user = current_user
+	end
     respond_with(@user) do |format|
     	format.js do 
 		    if @user.update_with_password(params[:user])
@@ -29,6 +34,14 @@ class PasswordsController < ApplicationController
 		    else
 		      render :edit
 		    end
+		end
+		format.html do
+			if @user.reset_password!(params[:user][:password],params[:user][:password_confirmation])
+				sign_in(@user, :bypass => true) 
+				redirect_to new_user_session_path
+			else
+				render :edit
+			end
 		end
 	end
   end
