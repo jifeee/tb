@@ -3,7 +3,7 @@ module ApplicationHelper
   def brand(applogo)
     content_tag "div", :class => "brand" do 
       root = current_user.try(:admin?) ? admin_dashboard_path : root_path
-      concat link_to image_tag("logo.png", :alt => "TextBuster", :width => 136, :height => 16), root, :class => 'logo'
+      concat link_to image_tag("logo.png", :alt => "TextBuster", :width => 181, :height => 21), root, :class => 'logo'
       concat link_to image_tag("applogo.s.png", :width => 28, :height => 28), root_path, :class => 'applogo' if applogo
     end
   end

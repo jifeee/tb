@@ -100,7 +100,7 @@
                 <dd>Access2Communications Inc.</dd>
                 <dd>225 Technology Way</dd>
                 <dd>Steubenville, Ohio 43952</dd>
-                <dd class="alt">info@textbuster.com</dd>
+                <dd class="alt"><%= mail_to 'info@textbuster.com', nil, :class => 'mailto' %></dd>
                 <dd>Phone 800-561-1110</dd>
               </dl>
                 
@@ -110,16 +110,16 @@
                 
               <dl class="contacts">
                 <dt>Customer Service</dt>
-                <dd>customerservice@textbuster.com</dd>
+                <dd><%= mail_to 'customerservice@textbuster.com', nil, :class => 'mailto' %></dd>
                 <dd>Phone 800-561-1110</dd>
               </dl>
               <dl class="contacts">
                 <dt>Press Inquires</dt>
-                <dd>news@textbuster.com</dd>
+                <dd><%= mail_to 'news@textbuster.com', nil, :class => 'mailto' %></dd>
               </dl>
               <dl class="contacts">
                 <dt>Sales Support</dt>
-                <dd>sales@textbuster.com</dd>
+                <dd><%= mail_to 'sales@textbuster.com', nil, :class => 'mailto' %></dd>
                 <dd>Phone 800-561-1110</dd>
                 <dd>Fax 800-341-2931</dd>
               </dl>

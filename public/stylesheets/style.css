@@ -502,3 +502,6 @@ ul.static_navigation li {
 form span.error { color: #610e0e; }
 .field_with_errors { display: inline; }
 .field_with_errors input { border: 3px solid #ff6f6f; }
+
+.mailto {color: #FFFFFF;}
+.mailto:hover {color: #FFFF00;}
