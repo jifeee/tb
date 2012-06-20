@@ -20,7 +20,6 @@ class Api::UsersController < ApplicationController
 
   # http://localhost:3001/api/sign_up?email=isbaysoft@gmail.com&password=qwe123
   def sign_up
-    # params[:device] - imei ????
     phone = Phone.find_by_imei params[:device]
     unless phone.nil?
       render_with_log :json => {:status => 403, :message => 'Imei has already been taken'} and return
@@ -36,6 +35,19 @@ class Api::UsersController < ApplicationController
     else
       render_with_log :json => {:status => 403, :message => user.errors.full_messages.join(', ')}
     end
+  end
+
+  def change_password
+    user = User.find_by_authentication_token(params[:token])
+    raise 'User not found or incorrect token' unless user
+    raise 'Password is incorrect' unless user.valid_password?(params[:current_password])
+    if user.reset_password!(params[:new_password],params[:confirm_new_password])
+      render_with_log :json => {:token => user.authentication_token}
+    else
+      render_with_log :json => {:status => 403, :message => user.errors.full_messages.join(', ')}
+    end    
+  rescue => e
+    render_with_log :json => {:status => 403, :message => e.message}
   end
 
 protected

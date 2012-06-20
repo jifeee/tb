@@ -32,9 +32,7 @@ Textbuster::Application.routes.draw do
   namespace :api do
     post 'login' => 'users#login' #post
     post 'sign_up' => 'users#sign_up' #post
-
-    get 'login' => 'users#login' #post
-    get 'sign_up' => 'users#sign_up' #post
+    post 'change_password' => 'users#change_password' #post
     
     resources :trips
   end
