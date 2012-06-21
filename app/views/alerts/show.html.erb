@@ -1,0 +1,63 @@
+<div class="panel">
+  <%= button_to "Edit", edit_alert_path(@alert), :method => :get, :style => "float:right" if can? :update, @alert %>
+  <h3>Alert settings</h3>
+  <div class="panel_contents">
+    <div class='attributes_table'>
+  <table border='0' style='width:75%;'>
+    <tbody>
+      <tr>
+        <th>Name</th>
+        <td><%= @alert.name %></td>
+      </tr><tr>
+        <th>Type</th>
+        <td><%= @alert.event_type %></td>
+      </tr><tr class='alert_conditions'>
+        <th>Conditions</th>
+        <td>
+          <div class="time">
+            <span> From </span> <%= @alert.restricted_time_start %>
+            <span> till </span> <%= @alert.restricted_time_end %>
+          </div>
+          <div class="map">
+          <%= form_for @alert do |f| %>
+            <%= render :partial => 'restrictions/map', :locals => {:f => f} %>
+          <% end %>
+          </div>
+        </td>
+      </tr><tr>
+        <th>Phone list</th>
+        <td>
+          <% @family.phones.each do |phone| %>
+            <div>
+              <%= check_box_tag "alert[phone_ids][]", phone.id, @alert.phones.include?(phone), :disabled => true %>
+              <%= phone.name || phone.user.name %>
+            </div>
+          <% end %>
+        </td>
+      </tr><tr>
+        <th>Contacts</th>
+        <td>
+          <% @family.parents.each do |parent| %>
+            <div>
+              <%= check_box_tag "alert[user_ids][]", parent.id, @alert.users.include?(parent), :disabled => true %>
+              <%= parent.name || parent.email %>
+            </div>
+          <% end %>
+        </td>
+      </tr>
+     </tbody>
+  </table>
+      </div> 
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    <% if @alert.event_type == :'Leaving area' %>
+      $("tr.alert_conditions .time").addClass("invisible");
+    <% else %>
+      $("tr.alert_conditions .map").addClass("invisible");
+    <% end %>
+  });
+</script>
+

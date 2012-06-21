@@ -1,0 +1,28 @@
+<% unless action_name.eql? 'main' %>
+  <div class="fancyline"></div>
+<% end %>
+
+<div class="footer">
+  <div class="container">
+      
+    <div class="row">
+      <div class="span8">
+            
+        <div class="soc">
+          <a href="https://www.facebook.com"><%= image_tag "icons/fb.png", :alt => "Facebook", :width => 27, :height => 27 %></a>
+          <a href="https://business.twitter.com/index_en.html"><%= image_tag "icons/tw.png", :alt => "Twitter", :width => 27, :height => 27 %></a>
+        </div>
+            
+        <ul class="simple-nav">
+          <% Page.by_menu(user_signed_in? ? :menu_logged_in : :menu_logged_out).by_menu(:menu_footer).each do |page| %>
+            <li><%= link_to page.title, page_path(page) %></li>
+          <% end %>
+        	<li><%= user_signed_in? ? link_to('Logout', destroy_user_session_path, :method => :delete) : link_to("Login", new_user_session_path) %></li>
+        </ul>
+            
+      </div>
+      <p class="copyright span4">© 2012 TextBuster®, Inc. All rights reserved. </p>
+    </div>
+        
+  </div><!-- /container -->
+</div><!-- /footer -->

@@ -1,0 +1,30 @@
+<%= form_for(current_user, :as => 'user', :url => password_path('user'), :html => { :method => :put, :id => 'pwd', :class => "modal modal_small hide form-vertical" }) do |f| %>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3 id='header'>Change password</h3>
+  </div>
+  <div class="modal-body">
+  <div class="control-group">
+    <%= f.hidden_field :reset_password_token %>
+
+    <label class="convtrol-label" for="f1">Current_password:</label>
+    <div class="controls">
+      <%= f.password_field :current_password, :class => 'span4' %>
+    </div>
+  
+    <label class="convtrol-label" for="f1">New password:</label>
+    <div class="controls">
+      <%= f.password_field :password, :class => 'span4' %>
+    </div>
+    
+    <label class="convtrol-label" for="f1">Password confirmation:</label>
+    <div class="controls">
+      <%= f.password_field :password_confirmation, :class => 'span4' %>
+    </div>
+  </div>
+  </div>
+  <div class="modal-footer">
+    <%= f.submit "Change my password" %>
+  </div>
+<% end %>
+

@@ -1,0 +1,40 @@
+<%= render :partial => 'events/filters' %>
+<%= render :partial => 'events/submenu' %>
+
+<table class="dashboard-table table table-bordered tablesorter">
+  <thead>
+    <tr>
+      <th class="mark2"></th>
+      <th>Date</th>
+      <th>Textbuster</th>
+      <th>Phone</th>
+      <th>Trip Time</th>
+      <th>Total miles/ Ave.Speed</th>
+      <th>Trip Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render :partial => "trip", :collection => @trips %>
+  </tbody>
+</table>
+            
+<div class="dashboard-actions">
+  <a href="#" class="lnk">Show More Results</a>
+</div>
+
+<% content_for :javascripts do %>
+    <%= javascript_include_tag "jquery.tablesorter.min" %>
+    <script>
+      $(document).ready(function() {
+        $("table.tablesorter").tablesorter({
+          headers: { 
+            0:{sorter: false}, 
+            4:{sorter: false}, 
+            5:{sorter: false}, 
+            6:{sorter: false} 
+          }
+        }); 
+      });
+    </script>
+<% end %>
+

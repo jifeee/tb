@@ -1,0 +1,52 @@
+<%#= javascript_include_tag 'jquery-1.7.1.min', 'jquery_ujs' %>
+<%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :class => "form-vertical") do |f| %>
+  <%= devise_error_messages! %>
+  
+  <div class="control-group">
+    <%= f.label :email, :class => "control-label" %>
+    <div class="controls"><%= f.email_field :email, :class => "span4" %></div>
+  </div>
+              
+  <div class="control-group">
+    <span class="control-labelextra"><%= link_to "Forgot your password?", '#', :id => 'reset' %></span>
+    <%= f.label :password, :class => "control-label" %>
+    <div class="controls"><%= f.password_field :password, :class => "span4" %></div>
+  </div>
+            
+  <div class="control-group">
+    <div class="controls">
+      <label class="checkbox"><%= f.check_box :remember_me %>Keep me logged in</label>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <div class="row">
+      <div class="span2">
+        <button type="submit" class="btn btn-primary btn-xlarge btn-submit"><span>Login</span></button>
+      </div>
+      <div class="span2 form-actions_r">
+        Don’t have an account? <%= link_to "Register", new_user_registration_path %>
+      </div>
+    </div>
+  </div>
+
+<% end %>            
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#reset').click(function(){
+      $.ajax({
+        type: 'POST',
+        url: '<%= reset_passwords_url %>',
+        data: {'email':$('#user_email').val()},
+        dataType: 'json',
+        complete: function(msg) {
+          $('#user_new').html("<p>We've sent an email to <strong>"+$('#user_email').val()+"</strong> containing a temporary url that will allow you to reset your password for the next 24 hours. Please check your spam folder if the email doesn't appear within a few minutes.</p>");          
+        }
+      });
+
+      return false;
+    })
+  });
+
+</script>
