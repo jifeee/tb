@@ -20,15 +20,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
 import classes.AllowedPackages;
+import classes.Converter;
 import classes.Reporter;
 
 public class TextbusterService extends Service{
@@ -137,10 +136,7 @@ public class TextbusterService extends Service{
 		public void run(){
 
 			runCount++;
-			
-			TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-			Log.i(TAG, "" + telephonyManager.getDeviceId());
-			
+		
 			Log.i(TAG, "runC" + runCount  +" eventC" + eventCount);
 
 			if (runCount==20) {
@@ -159,7 +155,7 @@ public class TextbusterService extends Service{
 		
 			Log.i(TAG, "try to write & send");
 
-			if (eventCount==10) {
+			if (eventCount==5) {
 				
 				try {
 					reporter.sendData();

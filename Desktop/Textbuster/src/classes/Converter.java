@@ -93,5 +93,16 @@ public class Converter {
 		return value; 
 	}
 	
+	public String imei (String imei) {
+		String fimei = imei;
+				
+		while (fimei.length()<65) {
+			fimei = fimei.concat("0");
+		}
+		
+		
+		return fimei;
+	}
+	
 	
 }

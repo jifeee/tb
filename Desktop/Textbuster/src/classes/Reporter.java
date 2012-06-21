@@ -28,6 +28,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class Reporter implements LocationListener {
@@ -57,7 +58,7 @@ public class Reporter implements LocationListener {
 	private double lon;
 	private double alt;
 	int eventCount = 0;
-
+	String imei;
 	
 	
 	Service service;
@@ -69,6 +70,12 @@ public class Reporter implements LocationListener {
 		bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		locationManager = (LocationManager) service.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 //		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, locationListener);
+		
+		TelephonyManager telephonyManager = (TelephonyManager)service.getSystemService(Context.TELEPHONY_SERVICE);
+		
+		Log.i(TAG, "65 char imei" + new Converter().imei(telephonyManager.getDeviceId()));
+		imei = new Converter().imei(telephonyManager.getDeviceId());
+		
 	}
 	
 	
@@ -181,9 +188,11 @@ public class Reporter implements LocationListener {
 			 LittleEndianDataOutputStream dos = new LittleEndianDataOutputStream(new FileOutputStream(f));
 		      dos.writeBytes("tb");
 		      
-		      for (int i=0; i<67; i++) {
+		      for (int i=0; i<2; i++) {
 		    	  dos.writeByte(0);
 		      }
+		      
+		      dos.writeBytes(imei);
 		      
 		      
 		      
