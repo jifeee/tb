@@ -9,7 +9,5 @@ $(document).ready(function() {
   $("input.all").click(function() {
     $("input#all").attr("checked", $("input.all:checked").length == $("input.all").length)
   });
-
-  document.body.innerHTML = document.body.innerHTML.replace(/TextBuster/g,'TextBuster&reg;');
 });
 
