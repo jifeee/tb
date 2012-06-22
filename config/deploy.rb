@@ -25,7 +25,7 @@ task :tst do
   namespace :unicorn do
     desc "start unicorn"
     task :start, :roles => :app, :except => {:no_release => true} do
-      run "cd #{current_path} && bundle exec unicorn_rails -o 127.0.0.1 -c #{unicorn_cfg} -E production -D -p 3000"
+      run "cd #{current_path} && bundle exec unicorn_rails -o 127.0.0.1 -c #{unicorn_cfg} -E #{rails_env} -D -p 3000"
     end
     desc "stop unicorn"
     task :stop, :roles => :app, :except => {:no_release => true} do
@@ -36,7 +36,7 @@ task :tst do
     task :restart, :roles => :app, :except => {:no_release => true} do
       run "kill -9 `cat #{unicorn_pid}`"
       sleep 6
-      run "cd #{current_path} && bundle exec unicorn_rails -o 127.0.0.1 -c #{unicorn_cfg} -E production -D -p 3000"
+      run "cd #{current_path} && bundle exec unicorn_rails -o 127.0.0.1 -c #{unicorn_cfg} -E #{rails_env} -D -p 3000"
     end
 
     desc "unicorn reload"
