@@ -8,7 +8,7 @@ development:
 
 test:
   adapter: mysql
-  database: textbuster-test
+  database: test
   username: textbuster
   password: asv1T8s8t
   pool: 5

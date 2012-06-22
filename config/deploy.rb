@@ -11,6 +11,7 @@ task :tst do
   set :password, "c9J0mcCQ1"
   set :keep_releases, 2
 
+  set :rails_env, "test"
   set :scm, "git"
   set :repository, "https://juliavetl:VbifRheu10@github.com/mobilezapp/Access2.git"
   set :branch, "master"
