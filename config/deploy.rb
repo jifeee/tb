@@ -34,7 +34,7 @@ task :tst do
     desc "unicorn restart"
     task :restart, :roles => :app, :except => {:no_release => true} do
       run "kill -9 `cat #{unicorn_pid}`"
-      sleep 3
+      sleep 6
       run "cd #{current_path} && bundle exec unicorn_rails -o 127.0.0.1 -c #{unicorn_cfg} -E production -D -p 3000"
     end
 
