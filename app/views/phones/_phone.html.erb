@@ -13,7 +13,7 @@
       <% end %>
       <% @family.devices.each do |d| %>
         <p><label class="checkbox">
-          <%= check_box_tag "phone[device_ids][]", d.id, f.object.devices.include?(d), :disabled => !can?(:update, phone) %>
+          <%#= check_box_tag "phone[device_ids][]", d.id, f.object.devices.include?(d), :disabled => !can?(:update, phone) %>
           <%= d.display_name %>
         </label></p>
       <% end %>
