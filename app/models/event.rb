@@ -1,4 +1,6 @@
 class Event < ActiveRecord::Base
+  self.primary_key = "idevents"
+
   include GeoHelper
 
   enum_attr :type, [:updated_GPS_position, :textbuster_discovered, :textbuster_lost], :plural=>:type_values
@@ -7,7 +9,7 @@ class Event < ActiveRecord::Base
   enum_attr :locked, %w(^not_locked locked), :plural=>:locked_values
 
   belongs_to :phone
-  belongs_to :device
+  belongs_to :device, :foreign_key => 'device'
 
   [:type, :gps_state, :bt_state, :locked].each do |att|
     alias :"e#{att}=" :"#{att}="

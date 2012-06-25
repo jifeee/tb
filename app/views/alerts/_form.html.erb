@@ -1,11 +1,7 @@
 <%= form_for @alert do |f| %>
   <table class="dashboard-table table table-bordered">
-    <tbody>
-      <thead>
-        <tr><th colspan="2"><%= @alert.new_record? ? 'Add new alert' : @alert.name || @alert.event_type %></th></tr>
-      </thead>
     <tr>
-      <th>Name</th>
+      <th class="span2">Name</th>
       <td><%= f.text_field :name %></td>
     </tr>
     <tr>

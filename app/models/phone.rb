@@ -1,5 +1,5 @@
 class Phone < ActiveRecord::Base
-  has_and_belongs_to_many :devices
+  has_and_belongs_to_many :devices, :foreign_key => 'device'
   has_and_belongs_to_many :alerts
   has_many :events
   belongs_to :user

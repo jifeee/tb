@@ -1,7 +1,7 @@
 # Represents a trip as collection of lat/lng points
 class Trip < ActiveRecord::Base
   belongs_to :user
-  belongs_to :device
+  belongs_to :device, :foreign_key => 'device'
   belongs_to :phone
   
   has_many :locations, :order => :created_at

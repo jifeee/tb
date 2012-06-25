@@ -15,6 +15,12 @@ module AppResources
     @permissions.uniq
   end
   
+  def action_aliases(action)
+    {
+      :destroy => [:batch_delete]
+    }[action.to_sym] || Array(action)
+  end
+
   private
   def routes_hash
     @routes ||= Rails.application.routes.routes.map(&:defaults).inject({}) do |rez, route|

@@ -5,7 +5,7 @@ ActiveAdmin.register Device, :as => "Textbuster" do
   # table for index action
   index do
     column :name
-    column :mac
+    column :imei
     column "Phones" do |d| 
       d.phones.map(&:name).join("<br/>").html_safe
     end
@@ -27,7 +27,7 @@ ActiveAdmin.register Device, :as => "Textbuster" do
   form do |f|
     f.inputs "Textbuster Details" do
       f.input :name
-      f.input :mac
+      f.input :imei
       f.input :phones, :as => :check_boxes, :collection => f.object.family.try(:phones)
     end
     f.buttons do
