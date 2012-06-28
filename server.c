@@ -5,6 +5,7 @@
 #include <time.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sys/types.h> 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -119,6 +120,8 @@ int kbhit()
 
 int main(int argc, char *argv[]){
 
+	printf("+++++++++++++++++++++\n+ CONFIG\n+++++++++++++++++++++\n\n");
+	
 	printf("MYSQL\n=====\n Server   : %s\n Database : %s\n User     : %s\n\n", mysql_server, mysql_database, mysql_user);
 	
 	printf("STRUCTS\n=======\n");
@@ -157,7 +160,7 @@ int main(int argc, char *argv[]){
 	 if(s + 1 != set_count) printf(",");
 	 printf("\n");
 	}
-	printf("};\n");
+	printf("};\n\n");
 	
 	// Open local service socket.
 	
@@ -187,6 +190,10 @@ int main(int argc, char *argv[]){
 		  error("ERROR on binding");
 	listen(sockfd, 5);
 	clilen = sizeof(cli_addr);
+	
+	signal(SIGCHLD, SIG_IGN);
+	
+	printf("+++++++++++++++++++++\n+ RUNTIME\n+++++++++++++++++++++\n\n");
 	
 	while(1){
 		 newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
@@ -447,7 +454,7 @@ int main(int argc, char *argv[]){
 			free(index_buf);
 			free(data_buf);
 			
-			return 0;
+			exit(0);
 		 }else{
 			close(newsockfd);
 		 }
@@ -458,6 +465,6 @@ int main(int argc, char *argv[]){
 
 	close(sockfd);
 	 
-	return 0; 
+	exit(0); 
 }
 
