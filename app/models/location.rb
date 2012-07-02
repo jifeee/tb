@@ -1,7 +1,5 @@
 # represents one point with geo coordinates
 class Location < ActiveRecord::Base
-  self.primary_key = "idlocations"
-
   include GeoHelper
 
   attr_accessor :geo

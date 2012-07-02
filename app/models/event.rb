@@ -1,6 +1,4 @@
 class Event < ActiveRecord::Base
-  self.primary_key = "idevents"
-
   include GeoHelper
 
   enum_attr :type, [:updated_GPS_position, :textbuster_discovered, :textbuster_lost], :plural=>:type_values

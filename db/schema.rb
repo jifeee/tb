@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120702091807) do
+ActiveRecord::Schema.define(:version => 20120702130906) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -110,7 +110,7 @@ ActiveRecord::Schema.define(:version => 20120702091807) do
   create_table "families", :force => true do |t|
   end
 
-  create_table "locations", :primary_key => "idlocations", :force => true do |t|
+  create_table "locations", :force => true do |t|
     t.decimal  "lat",        :precision => 8, :scale => 6
     t.decimal  "lng",        :precision => 8, :scale => 6
     t.string   "address"
