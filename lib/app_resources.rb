@@ -1,6 +1,6 @@
 module AppResources
 
-  def possible_permissions
+  def possible_permissions 
     @permissions = []
     Dir.new("#{Rails.root}/app/controllers").entries.each do |controller|
       if controller =~ /_controller/

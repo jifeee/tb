@@ -12,7 +12,9 @@
 </table>
 
 <div class="dashboard-actions">
-  <%= link_to 'Add new Textbuster', new_textbuster_path, :class => 'btn', :remote => true %>
+  <% if can? :create, Device %>
+    <%= link_to 'Add new Textbuster', new_textbuster_path, :class => 'btn', :remote => true %>
+  <% end %>
   <% if can? :destroy, @devices %>
     <%= link_to "Remove Textbuster", delete_textbusters_path, :class => "btn", :id => 'delete_device' %>
   <% end %>

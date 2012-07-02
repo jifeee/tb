@@ -9,7 +9,7 @@ class Event < ActiveRecord::Base
   enum_attr :locked, %w(^not_locked locked), :plural=>:locked_values
 
   belongs_to :phone
-  belongs_to :device, :foreign_key => 'device'
+  belongs_to :device, :foreign_key => 'devices_id'
 
   [:type, :gps_state, :bt_state, :locked].each do |att|
     alias :"e#{att}=" :"#{att}="
