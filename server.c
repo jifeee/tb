@@ -99,9 +99,9 @@ MYSQL_RES *mysql_res;
 MYSQL_ROW mysql_row;
 
 char *mysql_server = "localhost";
-char *mysql_user = "root";
-char *mysql_password = NULL; /* set me first */
-char *mysql_database = "Textbuster";
+char *mysql_user = "textbuster";
+char *mysql_password = 'asv1T8s8t'; /* set me first */
+char *mysql_database = "textbuster";
 
 void error(const char *msg)
 {
