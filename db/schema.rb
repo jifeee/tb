@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120703092820) do
+ActiveRecord::Schema.define(:version => 20120703113851) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -85,27 +85,21 @@ ActiveRecord::Schema.define(:version => 20120703092820) do
   end
 
   create_table "events", :force => true do |t|
-    t.string   "event_type"
-    t.integer  "device_id"
-    t.integer  "user_id"
-    t.integer  "phone_id"
-    t.datetime "created_at"
-    t.integer  "report_id"
-    t.datetime "time",                                      :null => false
-    t.string   "screen",       :limit => 12,                :null => false
-    t.string   "bluetooth",    :limit => 12,                :null => false
-    t.string   "gps",          :limit => 12,                :null => false
+    t.integer  "phones_log_id",                               :null => false
+    t.datetime "time",                                        :null => false
+    t.integer  "type",           :limit => 8,  :default => 0, :null => false
+    t.string   "screen",         :limit => 3
+    t.string   "bluetooth",      :limit => 3
+    t.string   "gps",            :limit => 4
+    t.string   "locked",         :limit => 3
+    t.string   "alert",          :limit => 3
+    t.string   "textbuster_mac", :limit => 17
     t.integer  "locations_id"
-    t.integer  "type",         :limit => 2,  :default => 0, :null => false
-    t.string   "locked"
-    t.string   "alert"
-    t.integer  "click_id"
     t.datetime "created"
   end
 
-  add_index "events", ["click_id"], :name => "index_events_on_click_id"
-  add_index "events", ["device_id"], :name => "index_events_on_devices_id"
   add_index "events", ["locations_id"], :name => "index_events_on_locations_id"
+  add_index "events", ["phones_log_id"], :name => "index_events_on_phones_log_id"
 
   create_table "families", :force => true do |t|
   end
@@ -163,6 +157,13 @@ ActiveRecord::Schema.define(:version => 20120703092820) do
     t.integer  "abilities"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "phones_log", :force => true do |t|
+    t.integer  "imei",    :null => false
+    t.integer  "string",  :null => false
+    t.datetime "created", :null => false
+    t.datetime "seen",    :null => false
   end
 
   create_table "reports", :force => true do |t|
