@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:textSize="18dp"
         android:textStyle="bold"
-        android:textColor="#FFFFFF"  />
+        android:textColor="#29c9cc"  />
 
     <TextView
         android:id="@+id/textView2"

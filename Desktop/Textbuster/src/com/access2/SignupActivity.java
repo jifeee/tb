@@ -26,6 +26,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -34,6 +36,7 @@ import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
 import classes.Constants;
+import classes.Converter;
 import classes.UserStatus;
 
 public class SignupActivity extends Activity {
@@ -44,6 +47,7 @@ public class SignupActivity extends Activity {
 	String mail;
 	String passw;
 	String passwRep;
+	String imei; 
 	
 	SignupTask mySignupTask;
 	private ProgressDialog pd;
@@ -56,11 +60,8 @@ public class SignupActivity extends Activity {
 		setContentView(R.layout.signup);
 		ctx=this;
 		
-		
-        Intent service = new Intent(ctx, TextbusterService.class);
-        ctx.startService(service);
-		
-		
+		TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+		imei = tm.getDeviceId();
 		
 		
         final EditText email = (EditText) findViewById(R.id.editText1);
@@ -114,7 +115,7 @@ public class SignupActivity extends Activity {
 	               	passwRep = passRep.getText().toString();
 	            	
 	            	
-	            	pd = ProgressDialog.show(ctx, "Logging in ...", "Please wait.           ", true,
+	            	pd = ProgressDialog.show(ctx, "Signing up ...", "Please wait.           ", true,
 	                        false); 
 	            	mySignupTask = new SignupTask();
 	            	mySignupTask.execute(myUserStatus);
@@ -172,7 +173,7 @@ public class SignupActivity extends Activity {
 
 		        	JSONObject json = new JSONObject();
 		            HttpPost post = new HttpPost("http://textbuster.mobilezapp.de/api/sign_up");
-		            json.put("device", "12345");
+		            json.put("device", imei);
 		            json.put("email", mail);
 		            json.put("password", passw);
 		            json.put("password_confirmation", passwRep);

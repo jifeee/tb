@@ -4,44 +4,75 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
     
-            <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="60dp"
         android:background="#585858" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/logo" />
 
         <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
             android:text="More"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#29c9cc"
+            android:textStyle="bold" />
 
+    </RelativeLayout>
+    
+        <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="7dp"
+        android:background="@drawable/fancylinebg"
+        android:orientation="vertical" >
     </LinearLayout>
 
     <Button
         android:id="@+id/button1"
-        android:layout_width="190dp"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        android:text="Button"
-        android:layout_marginTop="40dp" />
+        android:layout_marginTop="40dp"
+        android:background="@drawable/buttonstates"
+        android:text="Button" />
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="190dp"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        android:text="Button"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:background="@drawable/buttonstates"
+        android:text="Button" />
 
     <Button
         android:id="@+id/button3"
-        android:layout_width="190dp"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/buttonstates"
+        android:text="Button" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Button"
-        android:layout_marginTop="10dp" />
+        android:text="Medium Text"
+        android:layout_marginTop="20dp" 
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>

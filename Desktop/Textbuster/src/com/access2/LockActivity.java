@@ -35,6 +35,7 @@ public class LockActivity extends Activity {
 	
 	Button callButton;
 	Button naviButton;
+	Button appButton;
 	ImageView tbLogo;
 	
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,18 @@ public class LockActivity extends Activity {
 		                
 		        		}
 		            });
+		        
+//		    	appButton = (Button)findViewById(R.id.button3);
+//		        appButton.setOnClickListener(new OnClickListener() {
+//		        	
+//		            public void onClick(View v) {
+//		            	Log.i(TAG, "CLICK");
+//		            	Intent i = new Intent();
+//		        		i.setAction(TextbusterService.APP_START);
+//		                getApplicationContext().sendBroadcast(i);
+//		                
+//		        		}
+//		            });
     
 			}
 		

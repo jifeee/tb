@@ -4,37 +4,58 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-            <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="60dp"
         android:background="#585858" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/logo" />
 
         <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
             android:text="Trip Details"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginLeft="15dp" />
+            android:textColor="#29c9cc"
+            android:textStyle="bold"
+            
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-
+    </RelativeLayout>
+    
+        <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="7dp"
+        android:background="@drawable/fancylinebg"
+        android:orientation="vertical" >
     </LinearLayout>
     
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.15"
+
                     android:orientation="vertical" >
 
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/rl0"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.07"
         android:background="@drawable/borderthin"
-        android:gravity="center_vertical" >
+        android:gravity="center_vertical"
+                        android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" >
 
         <TextView
             android:id="@+id/textView1"
@@ -44,6 +65,8 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="25dp"
             android:text="Date: "
+                            android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -54,13 +77,16 @@
             android:layout_alignParentTop="true"
             android:layout_marginRight="25dp"
             android:text="Medium Text"
+            android:textColor="#29c9cc"
+                            android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.07"
+
         android:orientation="vertical" >
     </LinearLayout>
 
@@ -68,7 +94,8 @@
         android:id="@+id/rl1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.37"
+
+                android:layout_marginBottom="10dp"
         android:background="@drawable/borderthin"
         android:gravity="center_vertical" >
 
@@ -86,6 +113,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Trip Start Time"
+                android:layout_marginTop="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
@@ -93,6 +121,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Medium Text"
+                android:textColor="#29c9cc"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
@@ -109,6 +140,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Trip Time"
+                android:layout_marginTop="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
@@ -116,6 +148,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Medium Text"
+                android:textColor="#29c9cc"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
@@ -124,24 +159,27 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.07"
+
         android:orientation="vertical" >
     </LinearLayout>
     
         <RelativeLayout
+            android:id="@+id/rl2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.13"
+	    
+                android:layout_marginBottom="10dp"
             android:background="@drawable/borderthin" >
 
         <LinearLayout
-            android:id="@+id/linearLayout1"
+            android:id="@+id/ll1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="25dp"
-            android:layout_marginTop="43dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical" >
 
             <TextView
@@ -149,6 +187,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Average Speed"
+                                android:layout_marginTop="10dp"
+
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
@@ -156,16 +196,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Medium Text"
+                android:textColor="#29c9cc"
+                                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/linearLayout1"
+            android:layout_marginBottom="10dp"
             android:layout_marginRight="25dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical" >
 
             <TextView
@@ -173,6 +219,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Total Miles"
+				android:layout_marginTop="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
@@ -180,6 +227,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Medium Text"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="#29c9cc"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
@@ -188,16 +238,18 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.07"
+
             android:orientation="vertical" >
         </LinearLayout>
     
             <RelativeLayout
+                android:id="@+id/rl3"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.19"
                 android:background="@drawable/borderthin"
-                android:gravity="center_vertical" >
+                android:gravity="center_vertical"
+             
+                android:layout_marginBottom="10dp" >
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -209,6 +261,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:text="From: "
+                                android:layout_marginTop="10dp"
+
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
@@ -220,7 +274,10 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="Medium Text"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textColor="#29c9cc"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
 
         </LinearLayout>
 
@@ -229,13 +286,13 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.07" >
+                >
             </LinearLayout>
     
                 <RelativeLayout
+                    android:id="@+id/rl4"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.19"
                     android:background="@drawable/borderthin"
                     android:gravity="center_vertical" >
 
@@ -249,18 +306,22 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:text="To:"
+                                android:layout_marginTop="10dp"
+    
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/to"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                
+                                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
 				android:layout_marginRight="25dp"
                 android:layout_marginLeft="25dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="Medium Text"
+                android:textColor="#29c9cc"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </LinearLayout>

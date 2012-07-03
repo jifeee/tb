@@ -96,7 +96,7 @@ public class Converter {
 	public String imei (String imei) {
 		String fimei = imei;
 				
-		while (fimei.length()<65) {
+		while (fimei.length()<64) {
 			fimei = fimei.concat("0");
 		}
 		

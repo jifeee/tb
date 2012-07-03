@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import classes.Constants;
 import classes.UserStatus;
 
@@ -33,6 +36,24 @@ public class MoreActivity extends Activity {
 			ctx=this;
 			
 			myUserStatus = Constants.myUserStatus;
+			
+			SharedPreferences sp;
+	    	sp = getSharedPreferences("textbuster", 0);
+	    	
+	    	int i;
+	    	for (i=0; i>-1; i++) {
+	    		if (sp.getString(String.valueOf(i), "").equals("")) {
+	    			break;
+	    		}
+	    		else {
+	    			Log.i(TAG, "tb from settings: " + sp.getString(String.valueOf(i), ""));
+	    		}
+	    	}
+	    	
+	    	Log.i(TAG, "i: " + i);
+	    	
+	    	final TextView tv = (TextView) findViewById(R.id.textView2);
+	    	tv.setText("This phone is currently paired with " + i + " TextBuster device(s). ");
 			
 	        final Button call = (Button) findViewById(R.id.button1);
 	        call.setText("Call us");
