@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   has_many :trips, :order => "created_at DESC"
   has_many :trips_without_order, :class_name => 'Trip'
   has_many :phones
+
   has_many :authored_alerts, :class_name => "Alert", :foreign_key => "author_id"
   has_and_belongs_to_many :alerts
 
