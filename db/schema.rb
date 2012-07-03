@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120702143831) do
+ActiveRecord::Schema.define(:version => 20120703092820) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -86,7 +86,7 @@ ActiveRecord::Schema.define(:version => 20120702143831) do
 
   create_table "events", :force => true do |t|
     t.string   "event_type"
-    t.integer  "devices_id"
+    t.integer  "device_id"
     t.integer  "user_id"
     t.integer  "phone_id"
     t.datetime "created_at"
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(:version => 20120702143831) do
   end
 
   add_index "events", ["click_id"], :name => "index_events_on_click_id"
-  add_index "events", ["devices_id"], :name => "index_events_on_devices_id"
+  add_index "events", ["device_id"], :name => "index_events_on_devices_id"
   add_index "events", ["locations_id"], :name => "index_events_on_locations_id"
 
   create_table "families", :force => true do |t|
