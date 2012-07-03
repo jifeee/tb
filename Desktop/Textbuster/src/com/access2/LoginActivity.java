@@ -17,18 +17,19 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.widget.Button;
@@ -40,6 +41,8 @@ public class LoginActivity extends Activity {
 	
 	String TAG="TEX";
 	Context ctx;
+	
+	
 	
 	LoginTask myLoginTask;
 	private ProgressDialog pd;
@@ -56,12 +59,8 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.login);
 		ctx=this;
 		
-		
         Intent service = new Intent(ctx, TextbusterService.class);
         ctx.startService(service);
-		
-
-		
 		
 		
         final EditText email = (EditText) findViewById(R.id.editText2);
@@ -99,25 +98,42 @@ public class LoginActivity extends Activity {
             		mail = email.getText().toString();
             		passw = pass.getText().toString();
 	            	
-	            	
+            		
+            		if (mail.equals("") || passw.equals("")) {
+        				final AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
+        		      	alertDialog.setTitle("Ooops ...");
+        		      	alertDialog.setMessage("Please enter Email and Password.");
+        		      	
+        		      	alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+        		    	      public void onClick(DialogInterface dialog, int which) {
+        		    	    	  alertDialog.dismiss();
+        		    	    	  
+        		    	    } }); 
+        		    	 
+        		    	alertDialog.show();
+            			
+            			
+            		}
+            		
+            		else {
+            		myUserStatus.setLastError("Unknown error");	
 	            	pd = ProgressDialog.show(ctx, "Logging in ...", "Please wait.           ", true,
 	                        false); 
 	            	myLoginTask = new LoginTask();
 	            	myLoginTask.execute(myUserStatus);
-            	
+	            	}
             }
         });
         
-        final Button offline = (Button) findViewById(R.id.button2);
-        offline.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
 
-            }
-        });
         
         final Button forgot = (Button) findViewById(R.id.button3);
         forgot.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
+            	
+            	Intent viewIntent = new Intent("android.intent.action.VIEW", 
+            			Uri.parse("http://textbuster.mobilezapp.de/admin/login"));
+            	startActivity(viewIntent);  
 
             }
         });
@@ -260,12 +276,16 @@ public class LoginActivity extends Activity {
 	        }
 		        
 		    catch (ConnectTimeoutException e) {
+		    	Log.i(TAG, e.toString());
 		    	pd.dismiss();
+		    	myUserStatus[0].setLastError("Connection timed out");
 		    }
 		        
 	        catch(Exception e){
 	            e.printStackTrace(); 
+	            Log.i(TAG, e.toString());
 	            pd.dismiss();
+
 	 
 	        }
 		    	

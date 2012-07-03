@@ -1,25 +1,12 @@
 package classes;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import org.joda.time.DateTime;
-
-import com.google.common.io.LittleEndianDataOutputStream;
-
 import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -28,8 +15,13 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
+
+
 
 public class Reporter implements LocationListener {
 
@@ -49,231 +41,115 @@ public class Reporter implements LocationListener {
 	private ActivityManager activityManager = null;
 	private LocationManager locationManager = null;
 	
+	PowerManager pm;
+	TelephonyManager tm;
+	
 
-	private Long time; 
-	private int bt;
-	private int gps;
-	private int scr;
-	private double lat;
-	private double lon;
-	private double alt;
+	private int locked;
+	private int alert;
+	Location lastLocation = new Location("x");;
+	Location newLocation = new Location("x");
 	int eventCount = 0;
 	String imei;
+	final Handler handler;
+	boolean gpsstarted=false;
+	boolean locIsNew=false;
+	
+	File f;
+	public Logger log;
+	
+	Writer w;
+	
+	String textbusterMac;
 	
 	
 	Service service;
 	
-	public Reporter(Service service){
+
+	
+	public Reporter(Service service, Writer wr){
 		
 		this.service = service;
 		activityManager = (ActivityManager) service.getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
 		bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		locationManager = (LocationManager) service.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-//		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, locationListener);
 		
-		TelephonyManager telephonyManager = (TelephonyManager)service.getSystemService(Context.TELEPHONY_SERVICE);
 		
-		Log.i(TAG, "65 char imei" + new Converter().imei(telephonyManager.getDeviceId()));
-		imei = new Converter().imei(telephonyManager.getDeviceId());
+		tm = (TelephonyManager)service.getSystemService(Context.TELEPHONY_SERVICE);
+		pm = (PowerManager) service.getSystemService(Context.POWER_SERVICE);
 		
+		imei = tm.getDeviceId();
+		
+		
+		handler = new Handler();
+		
+		w = new Writer();
+		log = new Logger(imei);
+		
+		startGPS();
+
+
 	}
 	
 	
-	public void collectData () throws IOException  {
+	public void collectData (int lockType) throws IOException  {
 		
-		Log.i(TAG, "collectData");
+//		handler.post(gpsRun);
+		locked = lockType;
+
+
 		
-		
-		time=new Date().getTime();
-		scr=getScreenState();
-		bt=getBluetoothState();
-		gps=getLocationState();
-		
-		if (getLocation()!=null) {
-		lat=getLocation().getLatitude();
-		lon=getLocation().getLongitude();
-		alt=getLocation().getAltitude();
-		}
-		
-		else {
-			lat=0;
-			lon=0;
-			alt=0;
-		}
+		int sc = getScreenState();
+		int bt = getBluetoothState();
+		int lc = getLocationState();
+		int lt = lockType;
+		int al = getAlert();
 		
 
-		Log.i(TAG, "added " + new Date().getTime() + " " + getScreenState() + " " + getBluetoothState() + " " + 
-				getLocationState() + " " + lat + " " + lon + " " + 
-				alt);
+		log.set("state", (byte)sc, (byte)bt, (byte)lc, 
+				(byte)lt, (byte)al);
 		
+//		  `screen` enum('OFF','ON','IL1','IL2') DEFAULT NULL,
+//		  `bluetooth` enum('NA','OFF','ON','SCN') DEFAULT NULL,
+//		  `gps` enum('NA','OFF','ON','NPOS') DEFAULT NULL,
+//		  `locked` enum('NO','BT','TB','IL1') DEFAULT NULL,
+//		  `alert` enum('NO','TBN','TBU','GUN','GUU') DEFAULT NULL,
 		
+//		w.appendLog("collect Data, LocState: " + getLocationState() + " lat: " + newLocation.getLatitude() + 
+//				" lon: "+ newLocation.getLongitude() + "\n");
+		
+		if (lc==3) {
+			
+			Log.i(TAG, "Location LOGSET");
+//			w.appendLog("Location LOGSET\n");
+			log.set("gps", newLocation.getTime(), newLocation.getLatitude(), newLocation.getLongitude(), 
+					newLocation.getAltitude(), (double)newLocation.getSpeed(), (double)newLocation.getAccuracy(), 
+					(double)newLocation.getBearing());
+			locIsNew = false; 
+		}
+		
+	
+
 		eventCount++;
-		Log.i(TAG, "evc " + eventCount);
+		
 		
 	}
 	
 	public void writeData () throws IOException {
 		
 		Log.i(TAG, "writeData");
-		
-		
-		
-		File f = new File("sdcard/TBevents.file");
 
-		   if (!f.exists())
-		   {
-		      try
-		      {
-		
-		         f.createNewFile();
-		      } 
-		      catch (IOException e)
-		      {
-		    	  Log.i(TAG, e.toString());
-		         e.printStackTrace();
-		      }
-		   }  
-		   
-		   else {
-			   
-		   }
+		log.write();
 	   
-		
-		LittleEndianDataOutputStream dos = new LittleEndianDataOutputStream(new FileOutputStream(f, true));
-	    //event
 
-	      
-		      dos.writeLong(time);
-		      dos.writeByte(scr);											
-		      dos.writeByte(bt);											
-		      dos.writeByte(gps);											
-		      dos.writeDouble(lat);
-		      dos.writeDouble(lon);
-		      dos.writeDouble(alt); 
-		      
-	      
-	      dos.close();
 	
 	}
 	
 	public void sendData () throws UnknownHostException, IOException {
 		
-		boolean success = true; 
-		
-		//create new file
-		File f = new File("sdcard/TBwhole.file");
-		
-		f.delete();
-		   if (!f.exists())
-		   {
-		      try
-		      {
-		
-		         f.createNewFile();
-		      } 
-		      catch (IOException e)
-		      {
-		    	  Log.i(TAG, e.toString());
-		         e.printStackTrace();
-		         success=false; 
-		      }
-		   }  
-		   
-		   else {
-			   
-		   }
-		   
-			//write header
-		   
-			 LittleEndianDataOutputStream dos = new LittleEndianDataOutputStream(new FileOutputStream(f));
-		      dos.writeBytes("tb");
-		      
-		      for (int i=0; i<2; i++) {
-		    	  dos.writeByte(0);
-		      }
-		      
-		      dos.writeBytes(imei);
-		      
-		      
-		      
-		      dos.writeLong(35*eventCount);
-		      
-		      
-		      
-		      try
-              {
-                      //create FileInputStream object for source file
-                      FileInputStream fin = new FileInputStream("sdcard/TBevents.file");
-                     
-                      //create FileOutputStream object for destination file
-                      FileOutputStream fout = new FileOutputStream("sdcard/TBwhole.file", true);
-                     
-                      byte[] b = new byte[40960];
-                      int noOfBytes = 0;
-
-                     
-                      //read bytes from source file and write to destination file
-                      while( (noOfBytes = fin.read(b)) != -1 )
-                      {
-                              fout.write(b, 0, noOfBytes);
-                      }
-
-                     
-                      //close the streams
-                      fin.close();
-                      fout.close();   
-
-                     
-              }
-              catch(FileNotFoundException fnf)
-              {
-                      Log.i(TAG, "" + fnf);
-                      success=false; 
-              }
-              catch(IOException ioe)
-              {
-                     Log.i(TAG, "" + ioe);
-                     success=false; 
-              }
-	   
-		
 		Log.i(TAG, "sendData");
-		
-		//write out
-	      DataOutputStream os=null;
-		try {
-			int TCP_SERVER_PORT=8888;
-			Socket s = new Socket("192.168.0.40", TCP_SERVER_PORT);
+		log.send();
 
-			os = new DataOutputStream(
-			      new BufferedOutputStream(s.getOutputStream()));
-     
-			  
-			final BufferedInputStream inStream = new BufferedInputStream(new FileInputStream("/sdcard/TBwhole.file"));
-
-			final byte[] buffer = new byte[40960];
-			    for (int read = inStream.read(buffer); read >= 0; read = inStream.read(buffer))
-			        os.write(buffer, 0, read);
-		} catch (Exception e) {
-			success=false; 
-		}
-
-        
-        if (os!=null) {
-        os.flush();
-        }
-    
-        Log.i(TAG, "succ; " + success);
-        if (success) {
-        
-		File f1 = new File("sdcard/TBevents.file");
-		File f2 = new File("sdcard/TBwhole.file");
-		f1.delete();
-		f2.delete();
-        
-        eventCount = 0;
-	
-        }
 	}
 	
 	
@@ -287,48 +163,118 @@ public class Reporter implements LocationListener {
 	
 	public int getBluetoothState(){
 		
+		int bt = 0;
 		if(bluetoothAdapter == null){
-			return BLUETOOTH_NOTAVAILABLE;
+			
 		} else
 			
 		if(bluetoothAdapter.isDiscovering()){
-			return BLUETOOTH_SCANNING;
+			bt=3;
 		} else	
 		
 		if(bluetoothAdapter.getState() == BluetoothAdapter.STATE_ON){
-			return BLUETOOTH_ON;
-		} else
+			bt=2;
+		} else 
+			
+		if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) {
+			bt=1;	
+		}
 		
-		return BLUETOOTH_OFF;
+		return bt;
 
 	}
 	
 	public int getLocationState(){
 		
-		return 2;
-		
-//		if(locationManager == null){
-//			return LOCATION_NOTAVAILABLE;
-//		} 
-//		
-//		else if 
-//			
-//		{
-//			locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER)
-//		}
-//		
-//		return LOCATION_OFF;
+		int state = 0;
 
+		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false){
+			state=1;
+		}
+		
+		else {
+			state=2;
+			float dist = lastLocation.distanceTo(newLocation);
+			
+			Log.i(TAG, "getLocationState, newLocLat: " + newLocation.getLatitude() + " isNew: " + locIsNew 
+				+ " dist: " + dist + "isBetter: " + isBetterLocation(newLocation, lastLocation));
+			
+			if (newLocation.getLatitude()!=0  && dist > 1 && locIsNew  && isBetterLocation(newLocation, lastLocation)) { //&& locked!=0,&& locIsNew
+		
+				
+				state = 3;
+			}
+
+		}	
+		Log.i(TAG, "LOCATIONSTATE: (na, off, on, new)" + state);
+		return state;
+//		return 3; 
 	}
 	
 	public int getScreenState () {
-		return 1;
+		int on=0;
+		
+		if (pm==null) { 
+			on=2;
+		}
+		
+		else if (pm.isScreenOn()) {
+			on = 1;
+			}
+		
+		return on;
 	}
 	
 
 	
 	
 	
+	public Location getLocation() {
+			
+			Location l = null;
+			Location l2 = null;
+			
+			locationManager = (LocationManager) service.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+			if (locationManager != null) {
+	
+				
+				Criteria criteria = new Criteria();
+		
+				
+				
+//				l = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+				l = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+			}
+			
+			else {
+				Log.i(TAG, "LocationManager null");
+			}
+			return l;
+		}
+
+
+	public int getAlert () {
+			alert=0;
+			
+			boolean serviceRunning = false; 
+		    ActivityManager manager = (ActivityManager) service.getSystemService(service.getApplicationContext().ACTIVITY_SERVICE);
+		    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+		        if ("eu.toasternet.SemperService".equals(service.service.getClassName())) {
+		           Log.i(TAG, "Found running service " + service.service.getClassName());
+		           serviceRunning = true; 
+		        }
+		        
+		
+		    }
+		    
+		    if (!serviceRunning) {
+		    	Log.i(TAG, "Guardian Service not running");
+		    	alert=3;
+		    }
+		    return alert;
+		}
+
+
 	public String toString(){
 		return "BT : " + new Integer(getBluetoothState()).toString() +
 			   " | Front : " + getTopActivity();
@@ -336,7 +282,11 @@ public class Reporter implements LocationListener {
 	
 	@Override
 	public void onLocationChanged(Location arg0) {
-		// TODO Auto-generated method stub
+		Log.i(TAG, "New Location: " + arg0.toString());
+		lastLocation = newLocation;
+		newLocation = arg0;
+		locIsNew=true;
+		
 
 	}
 
@@ -358,39 +308,107 @@ public class Reporter implements LocationListener {
 
 	}
 	
-	public Location getLocation() {
-		
-		Location l = null;
-		Location l2 = null;
-		
-		locationManager = (LocationManager) service.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-		if (locationManager != null) {
-
-			
-			Criteria criteria = new Criteria();
-			
-			
-			l = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-
-			
-//			if (l!=null) {
-//				Log.i(TAG, d.toString() + l.toString());
-//
-//			}	
-//			
-//			if (l2!=null) {
-//				Log.i(TAG, d2.toString() + l2.toString());
-//
-//			}
-			
-
-		}
-//		
-//		else {
-//			
-//		}
-		return l;
+	public LocationManager getLocMan () {
+		return locationManager;
 	}
+	
+	private final Runnable gpsRun = new Runnable() {
+        public void run() {
+//        	Toast.makeText(service, "Location: " + locIsNew + " "+  newLocation.getLatitude() + " " 
+//        + newLocation.getLongitude(), Toast.LENGTH_LONG).show();
+            setGPS();      
+        }
+    };
+
+    private void setGPS() {
+
+
+    		if (locked==2 && !gpsstarted) {
+	            startGPS();
+	            gpsstarted = true; 
+	    	}      
+	    	
+	    	else if (locked !=2 && gpsstarted) {
+	    		stopGPS();
+    			gpsstarted = false; 
+	    	}
+	    
+    }
+
+
+	public void startGPS()
+    {
+
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,this);
+
+        Log.i(TAG, "gps start");
+        handler.removeCallbacks(gpsRun);
+    }
+
+    public void stopGPS()
+    {
+
+        locationManager.removeUpdates(this);
+        Log.i(TAG, "gps stop");
+        handler.removeCallbacks(gpsRun);
+    }
+    
+    private static final int TWO_MINUTES = 1000 * 60 * 2;
+
+    /** Determines whether one Location reading is better than the current Location fix
+      * @param location  The new Location that you want to evaluate
+      * @param currentBestLocation  The current Location fix, to which you want to compare the new one
+      */
+    protected boolean isBetterLocation(Location location, Location currentBestLocation) {
+        if (currentBestLocation == null) {
+            // A new location is always better than no location
+            return true;
+        }
+
+        // Check whether the new location fix is newer or older
+        long timeDelta = location.getTime() - currentBestLocation.getTime();
+        boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
+        boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+        boolean isNewer = timeDelta > 0;
+
+        // If it's been more than two minutes since the current location, use the new location
+        // because the user has likely moved
+        if (isSignificantlyNewer) {
+            return true;
+        // If the new location is more than two minutes older, it must be worse
+        } else if (isSignificantlyOlder) {
+            return false;
+        }
+
+        // Check whether the new location fix is more or less accurate
+        int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+        boolean isLessAccurate = accuracyDelta > 0;
+        boolean isMoreAccurate = accuracyDelta < 0;
+        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+
+        // Check if the old and new location are from the same provider
+        boolean isFromSameProvider = isSameProvider(location.getProvider(),
+                currentBestLocation.getProvider());
+
+        // Determine location quality using a combination of timeliness and accuracy
+        if (isMoreAccurate) {
+            return true;
+        } else if (isNewer && !isLessAccurate) {
+            return true;
+        } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+            return true;
+        }
+        return false;
+    }
+
+    /** Checks whether two providers are the same */
+    private boolean isSameProvider(String provider1, String provider2) {
+        if (provider1 == null) {
+          return provider2 == null;
+        }
+        return provider1.equals(provider2);
+    }
 
 	
 

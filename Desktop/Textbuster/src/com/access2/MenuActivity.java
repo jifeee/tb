@@ -57,6 +57,7 @@ public class MenuActivity extends Activity {
 		ctx=this;
 		
 		myUserStatus = Constants.myUserStatus;
+
 		
 		if (myUserStatus.getTrips().size()>0) {
 		
@@ -82,13 +83,7 @@ public class MenuActivity extends Activity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
-			
-			
-	        
-		
-		
+
 		}
 
         final Button trips = (Button) findViewById(R.id.button1);

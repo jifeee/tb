@@ -245,7 +245,23 @@ public class ChangePwActivity extends Activity {
 			}
 			
 			else {
-				finish();
+				final AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
+		      	alertDialog.setTitle("Success");
+		      	alertDialog.setMessage("Your password has been changed.");
+		      	
+		      	alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+		    	      public void onClick(DialogInterface dialog, int which) {
+		    	    	  alertDialog.dismiss();
+		    	    		finish();
+		    	    	  
+		    	    } }); 
+		    	 
+		    	alertDialog.show();
+		    	
+		    	myUserStatus.setPassword(newPass);
+		    	Constants.myUserStatus = myUserStatus;
+		    	
+			
 			}
 		
 		}	

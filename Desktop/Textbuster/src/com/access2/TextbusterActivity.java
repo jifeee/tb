@@ -40,6 +40,9 @@ public class TextbusterActivity extends Activity {
 	int currentActivity;
 	String TextbusterMAC;
 	
+	
+
+	
 	UserStatus myUserStatus; 
 	
 	/** Called when the activity is first created. */
