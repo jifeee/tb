@@ -38,6 +38,8 @@ public class TripDetailsActivity extends Activity {
 	ProgressDialog pd; 
 	Context ctx; 
 	
+	//Showing details of trip
+	
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,7 +129,7 @@ public class TripDetailsActivity extends Activity {
 	            HttpConnectionParams.setSoTimeout(client.getParams(), 10000);
 	            HttpResponse response;	
 		            
-		            
+		        //Getting details of trip    
 	        	JSONObject json = new JSONObject();
 	            String url = "http://textbuster.mobilezapp.de/api/trips";
 	            url = url.concat("/" + selectedTripID);
@@ -142,6 +144,7 @@ public class TripDetailsActivity extends Activity {
 	            
 	            response = client.execute(get);
 	            Log.i(TAG, "RESP" + response.toString());
+	            
 	            /*Checking response */
 	            if(response!=null){
 	                BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));

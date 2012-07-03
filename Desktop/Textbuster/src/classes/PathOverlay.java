@@ -13,6 +13,8 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.Projection;
 
 public class PathOverlay extends Overlay {
+	
+	//drawing a pagth on the map for the trip, this is property of somebody else, need to check license
 
 	private int _pathColor;
 	private final List<GeoPoint> _points;

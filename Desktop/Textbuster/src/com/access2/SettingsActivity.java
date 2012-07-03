@@ -32,6 +32,11 @@ public class SettingsActivity extends Activity {
 		static final int CHANGE = 0;
 		
 		
+		// Enter settings, send them to web api and check the response; 
+		
+		//TODO: API calls on the backend
+		//TODO: Actually send out the call, have to wait for the backend to have it implemented
+		
 		
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);

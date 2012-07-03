@@ -21,6 +21,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo.State;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
@@ -28,7 +30,6 @@ import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import classes.AllowedPackages;
-import classes.Logger;
 import classes.Reporter;
 import classes.Writer;
 
@@ -74,6 +75,8 @@ public class TextbusterService extends Service{
 	AllowedPackages myAllowedPacks;
 	Set<String> myPacks;
 	
+	String lastMac=" ";
+	
 	PowerManager pm;
 	
 	Writer w;
@@ -100,33 +103,38 @@ public class TextbusterService extends Service{
 	
 	private Reporter reporter = null;
 	
+	
+	//This is the main service. It check
+	
 	public void onCreate(){
 		
 		TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 		imei = tm.getDeviceId();
 		
-		w = new Writer();
-		reporter = new Reporter(this, w);
 		
-
+		
+		w = new Writer();								//writes logs to a file on the sdcard
+		reporter = new Reporter(this, w);				// class that prepares the events to be sent out to the server
+		
 		Log.i(TAG, "TB Service started");
 		
 		context=this; 
 
-		setupReceivers();
+		setupReceivers();								//setting up a couple of broadcastreceivers
 		
 		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		myAllowedPacks = new AllowedPackages();
+		myAllowedPacks = new AllowedPackages();			//class that contains the names of packages of apps that are allowed when the phone is locked
 		myPacks = myAllowedPacks.getAllowed();
-		
-		locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+
 
     	settings = getSharedPreferences("textbuster", 0);
     	editor = settings.edit();
     	
-    	macAddresses.add("00:12:A1:C8:00:06");
+    	macAddresses.add("00:12:A1:C8:00:06");			//hardcoded textbuster mac for tests
     	
-    	for (int i=0; i>-1; i++) {
+    	
+    	//getting mac addresses that are stored in the shared preferences
+    	for (int i=0; i>-1; i++) {				
     		if (settings.getString(String.valueOf(i), "").equals("")) {
     			break;
     		}
@@ -136,7 +144,8 @@ public class TextbusterService extends Service{
     		}
     	}
 
-		new Timer().scheduleAtFixedRate(mainloop, 0, lockCheckInterval*1000);
+    	//start the loop
+		new Timer().scheduleAtFixedRate(mainloop, 0, lockCheckInterval*1000);	
 	}
 	
 	
@@ -147,11 +156,13 @@ public class TextbusterService extends Service{
 			runCount++;
 			Log.i(TAG, "locked: " + locked + " locked by BT: " + lockedByBT + " locked by TB: " + lockedByTB);
 
+			
+			//collect data about the phone every 15 seconds	
 			if (runCount==15) {
 				runCount = 0;
 				eventCount++;
 				try {
-					reporter.collectData(lockType());
+					reporter.collectData(lockType(), lastMac);
 					reporter.writeData();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -161,8 +172,8 @@ public class TextbusterService extends Service{
 
 			}
 
-
-
+			
+			//send out package to the server every minute (4*15sec)
 			if (eventCount==4) {
 				
 				try {
@@ -187,6 +198,7 @@ public class TextbusterService extends Service{
 				connectCount=0;
 			}
 			
+			//checking if the phones screen is on, set true for tests
 //			boolean isScreenOn = pm.isScreenOn();
 			boolean isScreenOn = true; 
 			
@@ -313,7 +325,7 @@ public class TextbusterService extends Service{
 		boolean allowedPackInFront = false; 
 		
 
-		
+		//get the set of allowed packages and check if an allowed app is in front
 		Iterator it = myPacks.iterator();
 		while (it.hasNext()) {
 		    // Get element
@@ -332,10 +344,7 @@ public class TextbusterService extends Service{
 			Log.i(TAG, "allowed activity is in front, :" + reporter.getTopActivity());
 		}
 		
-		// Is unlocked anyway because com.android.phone is on top
-//		else if (incomingCall) {
-//			Log.i(TAG, "call in process");
-//		}
+
 		
 		else{
 			
@@ -367,6 +376,7 @@ public class TextbusterService extends Service{
 	}
 	
 	
+	//check if there is an incoming call and unlock if there is
 	private void checkCalls(){
 		
 		TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
@@ -401,18 +411,16 @@ public class TextbusterService extends Service{
 					
 					lastACL = new Date().getTime();
 					
-					reporter.log.set("lock", address);
-					reporter.log.write(100);
-					
-//					lock(LockActivity.LOCK_TEXTBUSTER);
+					lastMac=address;
+
 				} else if(action.equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)){
 					event = "ACDC";
 					Log.d(TAG, "ACL disconnected from " + address);
 //					w.appendLog("\nacldis" + address);
 					lastACL = new Date().getTime();
 					
-					reporter.log.set("lock", address);
-					reporter.log.write(100);
+					
+					lastMac=address;
 					
 					if(rfcommSocket != null && rfcommSocket.getRemoteDevice().getAddress().equals(address)){
 						rfcommSocket = null;
@@ -465,6 +473,7 @@ public class TextbusterService extends Service{
 					active = false; 
 				}
 				
+				//receive mac address from DetectActivity
 				if (intent.getAction().equals(SEND_MAC)) {
 					Log.i(TAG, "service received mac adress: " + intent.getStringExtra("MAC"));
 					
@@ -496,6 +505,8 @@ public class TextbusterService extends Service{
 					 
 				}
 				
+				
+				//receive broadcasts from LockActivity when user wants to make a call or navigate
 				if (intent.getAction().equals(OUTGOING_CALL_START)) {
 					
 	            	unlock();
@@ -503,6 +514,8 @@ public class TextbusterService extends Service{
 	            	i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	            	startActivity(i);
 	        		PackageManager pm = getPackageManager();
+	        		
+	        		//resolve the app that is going to handle the call intent & add it to allowed
 	        		allowedCallPackage=i.resolveActivity(pm).getClassName();
 	        		Log.i(TAG, "allowed for call: " + i.resolveActivity(pm).getClassName());
 	        		myAllowedPacks.addPackage(allowedCallPackage);
@@ -527,19 +540,14 @@ public class TextbusterService extends Service{
 	        		myPacks=myAllowedPacks.getAllowed();
 
 				}
-				
-				if (intent.getAction().equals(APP_START)) {
-//					Log.i(TAG, "APP_START");
-//					unlock();
-//					Intent i = new Intent(getApplicationContext(), TextbusterActivity.class);  
-//	            	startActivity(i);
 
-				}
 					
 			}
 			
 		};
 		
+		
+		//Receive intents when the guardian app is uninstalled and write out an event immediately
 		BroadcastReceiver uninstallReceiver = new BroadcastReceiver() {
 //			Logger log = new Logger(imei, w);
 		    public void onReceive(Context context, Intent intent) {
@@ -547,7 +555,7 @@ public class TextbusterService extends Service{
 //		        
 //		        if(intent.toString().contains("eu.toasternet")){
 //					log.set("state", (byte)0, (byte)0, (byte)0, 
-//							(byte)0, (byte)5);							//alert value increased by 1
+//							(byte)0, (byte)4);						
 //					log.write();
 //
 //				} 

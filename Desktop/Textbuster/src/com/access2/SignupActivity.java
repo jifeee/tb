@@ -60,6 +60,9 @@ public class SignupActivity extends Activity {
 		setContentView(R.layout.signup);
 		ctx=this;
 		
+		
+		//Sign up with the backend
+		
 		TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 		imei = tm.getDeviceId();
 		
@@ -208,8 +211,7 @@ public class SignupActivity extends Activity {
 		                	String error = responsejson.get("message").toString();
 		                	myUserStatus[0].setLastError(error);
 		                }
-		                
-//		                token = responsejson.get("token").toString();
+
 		                
 		            }    
 		
@@ -224,9 +226,7 @@ public class SignupActivity extends Activity {
 	            pd.dismiss();
 	 
 	        }
-		    	
-		    	
-		    	
+	
 		    	return myUserStatus[0];
 		    }
 		

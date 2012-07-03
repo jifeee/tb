@@ -4,13 +4,18 @@ package classes;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,8 +24,9 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
 
+
+// putting to together the events that are being sent out to the servcie
 
 
 public class Reporter implements LocationListener {
@@ -55,6 +61,8 @@ public class Reporter implements LocationListener {
 	boolean gpsstarted=false;
 	boolean locIsNew=false;
 	
+	String currentMac=" ";
+	
 	File f;
 	public Logger log;
 	
@@ -86,17 +94,18 @@ public class Reporter implements LocationListener {
 		w = new Writer();
 		log = new Logger(imei);
 		
+		//just for test purposes we always start GPS; in real use gps is started and stopped according to if the phone is locked via handler.post(gpsRun);
 		startGPS();
 
 
 	}
 	
 	
-	public void collectData (int lockType) throws IOException  {
+	public void collectData (int lockType, String mac) throws IOException  {
 		
 //		handler.post(gpsRun);
 		locked = lockType;
-
+		currentMac = mac;
 
 		
 		int sc = getScreenState();
@@ -107,7 +116,7 @@ public class Reporter implements LocationListener {
 		
 
 		log.set("state", (byte)sc, (byte)bt, (byte)lc, 
-				(byte)lt, (byte)al);
+				(byte)lt, (byte)al, currentMac);
 		
 //		  `screen` enum('OFF','ON','IL1','IL2') DEFAULT NULL,
 //		  `bluetooth` enum('NA','OFF','ON','SCN') DEFAULT NULL,
@@ -127,8 +136,6 @@ public class Reporter implements LocationListener {
 					(double)newLocation.getBearing());
 			locIsNew = false; 
 		}
-		
-	
 
 		eventCount++;
 		
@@ -199,6 +206,7 @@ public class Reporter implements LocationListener {
 			Log.i(TAG, "getLocationState, newLocLat: " + newLocation.getLatitude() + " isNew: " + locIsNew 
 				+ " dist: " + dist + "isBetter: " + isBetterLocation(newLocation, lastLocation));
 			
+			//dont send out location all the time, only when we have a new & gopod location
 			if (newLocation.getLatitude()!=0  && dist > 1 && locIsNew  && isBetterLocation(newLocation, lastLocation)) { //&& locked!=0,&& locIsNew
 		
 				
@@ -228,7 +236,7 @@ public class Reporter implements LocationListener {
 
 	
 	
-	
+	//currently not used
 	public Location getLocation() {
 			
 			Location l = null;
@@ -252,7 +260,8 @@ public class Reporter implements LocationListener {
 			return l;
 		}
 
-
+	
+	//check if something is wrong, eg the guardian app is not running on the system 
 	public int getAlert () {
 			alert=0;
 			
@@ -275,10 +284,6 @@ public class Reporter implements LocationListener {
 		}
 
 
-	public String toString(){
-		return "BT : " + new Integer(getBluetoothState()).toString() +
-			   " | Front : " + getTopActivity();
-	}
 	
 	@Override
 	public void onLocationChanged(Location arg0) {
@@ -287,7 +292,24 @@ public class Reporter implements LocationListener {
 		newLocation = arg0;
 		locIsNew=true;
 		
-
+		
+		
+		//just wanted to try something
+		
+//		Geocoder gc = new Geocoder(service, Locale.US);
+//		ArrayList <Address>adr = new ArrayList<Address>();
+//		try {
+//			adr = (ArrayList)gc.getFromLocation(40.374428, -80.697769, 3);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			Log.d(TAG, e.toString());
+//			e.printStackTrace();
+//		}
+//		
+//		for (int i=0; i<adr.size(); i++) {
+//			Log.i(TAG, "Adress: " + adr.get(i).toString());
+//		}
+		
 	}
 
 	@Override

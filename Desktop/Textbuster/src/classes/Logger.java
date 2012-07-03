@@ -93,7 +93,7 @@ public class Logger{
 	 */
 	
 	private static final String[][] LOGSET_DEFINITIONS = {
-		{"state", "TINYINT", "TINYINT", "TINYINT", "TINYINT", "TINYINT"},
+		{"state", "TINYINT", "TINYINT", "TINYINT", "TINYINT", "TINYINT", "TEXT"},
 		{"lock", "TEXT"},
 		{"gps", "BIGINT", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE"}
 	};
@@ -130,6 +130,8 @@ public class Logger{
 	 */
 	
 	public Logger(String uuid){
+		
+		Log.d(TAG, uuid);
 		
 		/* Turn the UUID string into a byte array.
 		 */

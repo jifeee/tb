@@ -49,12 +49,15 @@ public class TripsActivity extends Activity{
 	TripListTask myTripListTask;
 	int orderBy = 0;								// 0 by date 1 by miles 
 	
+	
+	//Show a list of trips
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listlayout);
 		ctx=this;
 		
-//		myUserStatus = (UserStatus)getIntent().getSerializableExtra("UserStatus");
+
 		myUserStatus = Constants.myUserStatus;
 		Log.i(TAG, "size in trips "  + myUserStatus.getTrips().size());
 		

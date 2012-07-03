@@ -49,7 +49,7 @@ public class MenuActivity extends Activity {
 	TripListTask myTripListTask;
 	UserStatus myUserStatus; 
 	
-	
+	//Main Menu activity
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

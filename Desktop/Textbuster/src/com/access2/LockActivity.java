@@ -38,6 +38,8 @@ public class LockActivity extends Activity {
 	Button appButton;
 	ImageView tbLogo;
 	
+	//Locking the Phone
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -52,17 +54,17 @@ public class LockActivity extends Activity {
 		
 		this.setContentView((type == LOCK_BLUETOOTH) ? R.layout.lockbt : R.layout.locktb);
 		
-		// Make sure that only UNLOCK broadcasts are send to the receiver.
+		//Listen for UNLOCK from the service
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(BROADCAST_UNLOCK);
-		filter.addAction(MOVED_AWAY_FROM_CALL);
-		filter.addAction(MOVED_AWAY_FROM_NAVI);
+
 		
 		registerReceiver(receiver, filter);
 		
 		TextView tv1 = (TextView) findViewById(R.id.textView1);
 		tv1.setText("TextBuster\u2122");
 		
+		//Check if the Phone is locked because theres a Textbuster near or because Bluetooth has been turned off
 		if (type == LOCK_TEXTBUSTER) {
 		
 		    	callButton = (Button)findViewById(R.id.button1);
@@ -70,6 +72,7 @@ public class LockActivity extends Activity {
 		        	
 		            public void onClick(View v) {
 		            	
+		            	//Let user make a phonecall, Broadcast will be received in TextbusterService
 		            	Intent i = new Intent();
 		        		i.setAction(TextbusterService.OUTGOING_CALL_START);
 		                getApplicationContext().sendBroadcast(i);
@@ -84,25 +87,14 @@ public class LockActivity extends Activity {
 		        	
 		            public void onClick(View v) {
 		            	
+		            	//Let user use navigation, Broadcast will be received in TextbusterService
 		            	Intent i = new Intent();
 		        		i.setAction(TextbusterService.NAVIGATION_START);
 		                getApplicationContext().sendBroadcast(i);
 		                
 		        		}
 		            });
-		        
-//		    	appButton = (Button)findViewById(R.id.button3);
-//		        appButton.setOnClickListener(new OnClickListener() {
-//		        	
-//		            public void onClick(View v) {
-//		            	Log.i(TAG, "CLICK");
-//		            	Intent i = new Intent();
-//		        		i.setAction(TextbusterService.APP_START);
-//		                getApplicationContext().sendBroadcast(i);
-//		                
-//		        		}
-//		            });
-    
+ 
 			}
 		
 		else {
@@ -119,7 +111,6 @@ public class LockActivity extends Activity {
 			
 	}	
 	protected void onDestroy() {
-		Log.i(TAG, "LOCK DESTROYED");
 		unregisterReceiver(receiver);
 		super.onDestroy();
 	}
@@ -136,27 +127,10 @@ public class LockActivity extends Activity {
 				Log.d(TAG, "Unlocked");
 				finish();
 			}	
-			if (intent.getAction().equals(MOVED_AWAY_FROM_CALL)) {
-				
-			}
-			if (intent.getAction().equals(MOVED_AWAY_FROM_NAVI)) {
-				
-			}
+
 		}
 		
 	};
-	
-	
-    public void stopLock () {
-		Intent i = new Intent();
-		i.setAction(TextbusterService.SET_INACTIVE);
-		getApplicationContext().sendBroadcast(i);
-    }
-    
-    public void stopActs () {
-    	finishActivity(NAVI);
-    }
 
-	
 	
 }

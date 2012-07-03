@@ -9,6 +9,8 @@ import android.util.Log;
 public class TBReceiver extends BroadcastReceiver{
 	
 	String TAG="TEX";
+	
+	// Starts the main service on boot completed
 
 	
     @Override

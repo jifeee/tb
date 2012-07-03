@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.access2.R;
 
+//for use with the multiline listview in TripsActivity
+
+
 public class CustomBaseAdapter extends BaseAdapter {
 
 private ArrayList<TripListItem> items;
