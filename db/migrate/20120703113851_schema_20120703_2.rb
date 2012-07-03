@@ -25,7 +25,7 @@ class Schema201207032 < ActiveRecord::Migration
 			t.datetime 'seen', :null => false
 		end
 
-		add_index "phones_log", "imei", :unique => true unless index_exists?('devices', 'imei') 
+		add_index "devices", "imei", :unique => true unless index_exists?('devices', 'imei') 
 
   end
 
