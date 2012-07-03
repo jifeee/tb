@@ -6,8 +6,8 @@
 <div class="input map-input" id='map-input'>
   <div id="map-canvas" style="width:500px;height:300px;"></div>
     <div id="controls_1" class="data_container">
-        <%= hidden_field_tag :latitude, @location.latitude, :id => "placeLat_1" %>
-        <%= hidden_field_tag :longitude, @location.longitude, :id => "placeLng_1" %>
+        <%= hidden_field_tag :latitude, @location.lat, :id => "placeLat_1" %>
+        <%= hidden_field_tag :longitude, @location.lng, :id => "placeLng_1" %>
         <%= hidden_field_tag :radius, 0, :id => "placeRad_1" %>
     </div>
   </div>
@@ -15,7 +15,7 @@
 
 <script type="text/javascript">
   $(window).load( function () {
-    showPoint('<%= @location.latitude %>', '<%= @location.longitude %>');
+    showPoint('<%= @location.lat %>', '<%= @location.lng %>');
   });
 </script>
 

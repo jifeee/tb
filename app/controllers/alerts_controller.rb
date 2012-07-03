@@ -1,8 +1,8 @@
 # Alerts controller: pages for alerts settings
 class AlertsController < ApplicationController
-  load_and_authorize_resource
   layout "parents"
   before_filter :find_owner, :only => :index
+  load_and_authorize_resource
 
   def new
     @alert = Alert.new(:phone_ids => [params[:phone_id]])

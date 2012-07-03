@@ -9,7 +9,7 @@ class TripsController < ApplicationController
     @trips = @family.trips
     if filter = params[:event]
       @trips = @trips.where(:phone_id => filter[:phone_id]) if filter[:phone_id].present?
-      @trips = @trips.where(:device_id => filter[:device_id]) if filter[:device_id].present?
+      @trips = @trips.where(:device => filter[:device]) if filter[:device].present?
     end
   end
   

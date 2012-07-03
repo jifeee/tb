@@ -1,5 +1,5 @@
 class ParentsController < ApplicationController
-  load_and_authorize_resource
+  # authorize_resource
   layout "parents"
   
   respond_to :html, :js

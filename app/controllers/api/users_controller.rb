@@ -12,7 +12,7 @@ class Api::UsersController < ApplicationController
       user.reset_authentication_token!
       user_sign_in user, params[:imei]
       
-      render_with_log :json => {:token => user.authentication_token, :devices => user.devices.flatten.uniq.map(&:mac)}
+      render_with_log :json => {:token => user.authentication_token, :devices => user.devices.flatten.uniq.map(&:imei)}
     else
       render_with_log :json => {:status => 403, :message => 'email and/or password is incorrect'}
     end

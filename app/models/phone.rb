@@ -11,7 +11,7 @@ class Phone < ActiveRecord::Base
   bitmask :abilities, :as => ABILITIES
   
   def last_position
-    events.where("latitude is not null and longitude is not null").order("created_at desc").first
+    events.where("locations_id is not null").order("created_at desc").first
   end
   
   def restrictions

@@ -1,6 +1,6 @@
 module AppResources
 
-  def possible_permissions
+  def possible_permissions 
     @permissions = []
     Dir.new("#{Rails.root}/app/controllers").entries.each do |controller|
       if controller =~ /_controller/
@@ -15,6 +15,12 @@ module AppResources
     @permissions.uniq
   end
   
+  def action_aliases(action)
+    {
+      :destroy => [:batch_delete]
+    }[action.to_sym] || Array(action)
+  end
+
   private
   def routes_hash
     @routes ||= Rails.application.routes.routes.map(&:defaults).inject({}) do |rez, route|

@@ -3,6 +3,7 @@ class Family < ActiveRecord::Base
   has_many :devices
   has_many :phones, :through => :members
   has_many :trips, :through => :members
+  has_many :users
   has_many :members, :class_name => "User", :order => :role_id
   has_many :authored_alerts, :through => :members
   accepts_nested_attributes_for :members, :allow_destroy => true, :reject_if => :all_blank

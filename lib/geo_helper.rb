@@ -8,8 +8,11 @@ module GeoHelper
   
   # assume the class has latitude/longitude methods defined
   def self.included(other)
-    unless (other.column_names & ['latitude', 'longitude']).size.eql? 2
-      raise "latitude/longitude methods required"
+    if other.class == Event
+      raise "latitude/longitude methods required for Event" unless (other.column_names & ['lat', 'lon']).size.eql? 2
+    end
+    if other.class == Restriction
+      raise "latitude/longitude methods required for Restriction" unless (other.column_names & ['latitude', 'longitude']).size.eql? 2      
     end
   end
   

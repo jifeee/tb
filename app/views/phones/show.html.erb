@@ -15,7 +15,7 @@
               <% last_pos = @phone.last_position %>
               <% if last_pos %>
                 <!--%= last_pos.geolocate %-->
-                <% @location = Location.new(:latitude => last_pos.latitude, :longitude => last_pos.longitude) %>
+                <% @location = Location.new(:lat => last_pos.lat, :lng => last_pos.lng) %>
                 <%= render :partial => 'locations/map' %>
               <% else %>
                 None

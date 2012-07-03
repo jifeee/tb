@@ -1,6 +1,8 @@
 class Event < ActiveRecord::Base
   include GeoHelper
 
+  set_inheritance_column :itsnotinheritanceclass
+
   enum_attr :type, [:updated_GPS_position, :textbuster_discovered, :textbuster_lost], :plural=>:type_values
   enum_attr :gps_state, %w(^no_gps gps_off gps_on new_position), :plural=>:gps_state_values
   enum_attr :bt_state, %w(^no_bt bt_on bt_off), :plural=>:bt_state_values

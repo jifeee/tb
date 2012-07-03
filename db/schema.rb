@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120615140013) do
+ActiveRecord::Schema.define(:version => 20120703092820) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -48,6 +48,11 @@ ActiveRecord::Schema.define(:version => 20120615140013) do
     t.integer "user_id"
   end
 
+  create_table "click", :force => true do |t|
+    t.integer "x"
+    t.integer "y"
+  end
+
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
     t.integer  "attempts",   :default => 0
@@ -65,10 +70,14 @@ ActiveRecord::Schema.define(:version => 20120615140013) do
   add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
   create_table "devices", :force => true do |t|
-    t.string  "mac",       :limit => 50, :null => false
-    t.string  "name"
-    t.integer "family_id"
+    t.string   "imei"
+    t.string   "name"
+    t.integer  "family_id"
+    t.datetime "created"
+    t.datetime "seen"
   end
+
+  add_index "devices", ["imei"], :name => "index_devices_on_imei", :unique => true
 
   create_table "devices_phones", :id => false, :force => true do |t|
     t.integer "device_id"
@@ -77,29 +86,44 @@ ActiveRecord::Schema.define(:version => 20120615140013) do
 
   create_table "events", :force => true do |t|
     t.string   "event_type"
-    t.integer  "conditions"
-    t.decimal  "latitude",   :precision => 9, :scale => 6
-    t.decimal  "longitude",  :precision => 9, :scale => 6
-    t.decimal  "speed",      :precision => 8, :scale => 2
     t.integer  "device_id"
     t.integer  "user_id"
     t.integer  "phone_id"
     t.datetime "created_at"
     t.integer  "report_id"
+    t.datetime "time",                                      :null => false
+    t.string   "screen",       :limit => 12,                :null => false
+    t.string   "bluetooth",    :limit => 12,                :null => false
+    t.string   "gps",          :limit => 12,                :null => false
+    t.integer  "locations_id"
+    t.integer  "type",         :limit => 2,  :default => 0, :null => false
+    t.string   "locked"
+    t.string   "alert"
+    t.integer  "click_id"
+    t.datetime "created"
   end
+
+  add_index "events", ["click_id"], :name => "index_events_on_click_id"
+  add_index "events", ["device_id"], :name => "index_events_on_devices_id"
+  add_index "events", ["locations_id"], :name => "index_events_on_locations_id"
 
   create_table "families", :force => true do |t|
   end
 
   create_table "locations", :force => true do |t|
-    t.decimal  "latitude",   :precision => 8, :scale => 6
-    t.decimal  "longitude",  :precision => 8, :scale => 6
+    t.decimal  "lat",        :precision => 8, :scale => 6
+    t.decimal  "lng",        :precision => 8, :scale => 6
     t.string   "address"
     t.integer  "trip_id"
     t.datetime "created_at"
     t.string   "country"
     t.string   "city"
     t.string   "zip"
+    t.decimal  "alt",        :precision => 8, :scale => 6
+    t.decimal  "spd",        :precision => 8, :scale => 6
+    t.decimal  "bear",       :precision => 8, :scale => 6
+    t.integer  "time"
+    t.float    "acc"
   end
 
   add_index "locations", ["created_at"], :name => "index_locations_on_created_at"

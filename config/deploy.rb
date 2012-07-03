@@ -11,6 +11,8 @@ task :tst do
   set :password, "c9J0mcCQ1"
   set :keep_releases, 2
 
+  # set :rails_env, "test"
+  set :rails_env, "production"
   set :scm, "git"
   set :repository, "https://juliavetl:VbifRheu10@github.com/mobilezapp/Access2.git"
   set :branch, "master"
@@ -24,7 +26,7 @@ task :tst do
   namespace :unicorn do
     desc "start unicorn"
     task :start, :roles => :app, :except => {:no_release => true} do
-      run "cd #{current_path} && bundle exec unicorn_rails -o 127.0.0.1 -c #{unicorn_cfg} -E production -D -p 3000"
+      run "cd #{current_path} && bundle exec unicorn_rails -o 127.0.0.1 -c #{unicorn_cfg} -E #{rails_env} -D -p 3000"
     end
     desc "stop unicorn"
     task :stop, :roles => :app, :except => {:no_release => true} do
@@ -34,8 +36,8 @@ task :tst do
     desc "unicorn restart"
     task :restart, :roles => :app, :except => {:no_release => true} do
       run "kill -9 `cat #{unicorn_pid}`"
-      sleep 3
-      run "cd #{current_path} && bundle exec unicorn_rails -o 127.0.0.1 -c #{unicorn_cfg} -E production -D -p 3000"
+      sleep 6
+      run "cd #{current_path} && bundle exec unicorn_rails -o 127.0.0.1 -c #{unicorn_cfg} -E #{rails_env} -D -p 3000"
     end
 
     desc "unicorn reload"

@@ -5,45 +5,111 @@
 #include <time.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sys/types.h> 
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+#include <openssl/sha.h>
+
 #include <mysql.h>
 
-struct Package{
-	char         	magic[2];
-	unsigned short  version;
-	char            imei[65];
-	long   length;
+#define FIELD_TINYINT	0
+#define FIELD_SMALLINT	1
+#define FIELD_INT		2
+#define FIELD_BIGINT	3
+#define FIELD_FLOAT		10
+#define FIELD_DOUBLE	11
+#define FIELD_TEXT		20
+
+#define MAX_SETCOUNT		3
+#define MAX_FIELDCOUNT		8
+#define MAX_VALUELENGTH		1024
+#define MAX_QUERYLENGTH		1024 * 1024
+#define MAX_DATASIZE		1024 * 1024
+
+#define SERVER_PORT	12345
+
+struct Field{
+	char *name;
+	int type;
 };
 
-struct Event{
-	unsigned long long time;
-	unsigned char      screen;
-	unsigned char      bluetooth;
-	unsigned char      gps;
-	double             lat;
-	double             lon;
-	double             alt; 
-
+struct Set{
+	char *name;
+	char *table;
+	struct Field fields[MAX_FIELDCOUNT];
+	int field_cnt;
+	char *values[MAX_FIELDCOUNT];
 };
 
-char screen_str   [4][4] = { "OFF", "ON", "IL1", "IL2" };
-char bluetooth_str[4][4] = { "NA", "OFF", "ON", "SCN" };
-char gps_str      [4][4] = { "NA", "OFF", "ON", "NPOS" };
+char *device_table = "devices";
+char *event_table = "events";
+
+struct Set sets[] = {
+	{.name = "state", .table = NULL, .fields = { 
+		{ .name = "screen",		.type = FIELD_TINYINT}, 
+		{ .name = "bluetooth",	.type = FIELD_TINYINT}, 
+		{ .name = "gps",		.type = FIELD_TINYINT}, 
+		{ .name = "locked",		.type = FIELD_TINYINT}, 
+		{ .name = "alert",		.type = FIELD_TINYINT},
+	}, .field_cnt = 5},
+	{.name = "gps", .table = "locations", .fields = { 
+		{ .name = "time",	.type = FIELD_BIGINT},
+		{ .name = "lat",	.type = FIELD_DOUBLE}, 
+		{ .name = "lng",	.type = FIELD_DOUBLE}, 
+		{ .name = "alt",	.type = FIELD_DOUBLE}, 
+		{ .name = "spd",	.type = FIELD_DOUBLE}, 
+		{ .name = "acc",	.type = FIELD_DOUBLE}, 
+		{ .name = "bear",	.type = FIELD_DOUBLE}, 
+	}, .field_cnt = 7},
+	{.name = "click", .table = "click", .fields = { 
+		{ .name = "x",		.type = FIELD_INT},
+		{ .name = "y",	 	.type = FIELD_INT},
+		{ .name = "event",	.type = FIELD_TEXT}
+	}, .field_cnt = 3},
+};
+int set_count = 3;
+
+struct Header{
+	uint16_t	magic;
+	uint16_t	version;
+	uint32_t	event_count;
+	uint32_t	payload_size;
+	uint8_t	uuid[68];
+	uint8_t	set_hash[20];
+};
+
+struct Index{
+	uint64_t time_stamp;
+	uint32_t data_size;
+	uint32_t type;
+};
+
+struct Response{
+	uint64_t code;
+	uint64_t last_log;
+};
+
+int bitfield_size = 8;
 
 MYSQL *mysql_conn;
 MYSQL_RES *mysql_res;
 MYSQL_ROW mysql_row;
-char *mysql_server = "127.0.0.1";
-char *mysql_user = "root";
-char *mysql_password = "test"; /* set me first */
-char *mysql_database = "Textbuster";
+
+char *mysql_server = "localhost";
+char *mysql_user = "textbuster";
+char *mysql_password = "asv1T8s8t"; /* set me first */
+char *mysql_database = "textbuster";
 
 void error(const char *msg)
 {
-    perror(msg);
+    printf("ERROR %s\n", msg);
+}
+
+void error_a(const char *msg)
+{
+    error(msg);
     exit(1);
 }
 
@@ -56,191 +122,431 @@ int kbhit()
     return select(1, &fds, NULL, NULL, &tv);
 }
 
-int main(int argc, char *argv[])
-{
-     int sockfd, newsockfd, portno = 8888;
-     socklen_t clilen;
-     
-     struct sockaddr_in serv_addr, cli_addr;
-     
-     int n;
-     
-     sockfd = socket(AF_INET, SOCK_STREAM, 0);
-     
-     int optval = 1;
-	 setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof optval);
-     
-     if (sockfd < 0) error("ERROR opening socket");
-     
-     bzero((char *) &serv_addr, sizeof(serv_addr));
-     
-     
-     serv_addr.sin_family = AF_INET;
-     serv_addr.sin_addr.s_addr = INADDR_ANY;
-     serv_addr.sin_port = htons(portno);
-     
-     if (bind(sockfd, (struct sockaddr *) &serv_addr,
-              sizeof(serv_addr)) < 0) 
-              error("ERROR on binding");
-     listen(sockfd,5);
-     clilen = sizeof(cli_addr);
+// Socket globals;
 
+int sockfd, newsockfd, portno = SERVER_PORT;
+socklen_t clilen;
+	
+struct sockaddr_in serv_addr, cli_addr;
 
-     
-     while(1){
-	     newsockfd = accept(sockfd, 
-	                 (struct sockaddr *) &cli_addr, 
-	                 &clilen);
-	     
-	     pid_t pID = fork();
+void error_r(int type){
+	struct Response response = {type, 0};
+		   
+	int n = write(newsockfd, &response, sizeof(struct Response));
+	if (n < 0) error_a("writing to socket");
+			
+	close(newsockfd);
+	close(sockfd);
+	
+	const char *state_msg[] = {
+		"OK", 
+		"Internal service error",
+		"Reading socket failed",
+		"MySQL error",
+		"5",
+		"6",
+		"7",
+		"8",
+		"9",
+		"Set mismatch",
+		"Illegal data size"
+	};
+	
+	char msg[64];
+	snprintf(msg, 64, "Server reported: %s\n", state_msg[type]);
+	perror(msg);		
+	exit(2);
+}
+
+int main(int argc, char *argv[]){
+
+	printf("+++++++++++++++++++++\n+ CONFIG\n+++++++++++++++++++++\n\n");
+	
+	printf("MYSQL\n=====\n Server   : %s\n Database : %s\n User     : %s\n\n", mysql_server, mysql_database, mysql_user);
+	
+	printf("STRUCTS\n=======\n");
+	printf(" Header   : %i\n", sizeof(struct Header) );
+	printf(" Index    : %i\n", sizeof(struct Index) );
+	printf(" Response : %i\n", sizeof(struct Response) );
+	printf("\n");
+	
+	printf("DATATYPES\n=========\n");
+	printf(" TINYINT  : %i\n", sizeof(char));
+	printf(" SMALLINT : %i\n", sizeof(uint16_t));
+	printf(" INT      : %i\n", sizeof(uint32_t));
+	printf(" BIGINT   : %i\n", sizeof(uint64_t));
+	printf(" FLOAT    : %i\n", sizeof(float));
+	printf(" DOUBLE   : %i\n", sizeof(double));
+	printf("\n");
+	
+	printf("MAXIMAL SIZES\n=========\n");
+	printf(" MAX_DATASIZE : %i\n", MAX_DATASIZE);
+	printf("\n");
+	
+	char set_fingerprint[1024] = "";
+	char set_fingerprint_tmp[16];
+	
+	printf("DEFINITIONS\n===========\n");
+	
+	printf(" LOGSET_DEFINITIONS = {\n");
+	int s; for(s = 0; s < set_count; s++){
+	 printf("\t{\"%s\", ", sets[s].name);
+	 
+	 snprintf(set_fingerprint_tmp, 16, "[%i] ", s);
+	 strncat(set_fingerprint, set_fingerprint_tmp, 1024);
+	 int f; for(f = 0; f < sets[s].field_cnt; f++){
+		printf("\"");
+		switch(sets[s].fields[f].type){
+			case FIELD_TINYINT: printf("TINYINT"); break;
+			case FIELD_SMALLINT: printf("SMALLINT"); break;
+			case FIELD_INT: printf("INT"); break;
+			case FIELD_BIGINT: printf("BIGINT"); break;
+			case FIELD_FLOAT: printf("FLAOT"); break;
+			case FIELD_DOUBLE: printf("DOUBLE"); break;
+			case FIELD_TEXT: printf("TEXT"); break;
+		}
+		printf("\"");
+		if(f + 1 != sets[s].field_cnt) printf(", ");
+		
+		snprintf(set_fingerprint_tmp, 16, "%i ", sets[s].fields[f].type);
+		strncat(set_fingerprint, set_fingerprint_tmp, 1024);
+	 }
+	 printf("}");
+	 if(s + 1 != set_count) printf(",");
+	 printf("\n");
+	}
+	printf("};\n\n");
+	
+	unsigned char set_hash[SHA_DIGEST_LENGTH];
+	SHA1((unsigned char*)set_fingerprint, strnlen(set_fingerprint, 1024), set_hash);
+	
+	printf("FINGERPRINT\n===========\n");
+	
+	printf(" Set Fingerprint: \"%s\"\n", set_fingerprint);
+	printf(" Set Hash       : \"");
+	int i; for(i = 0; i < SHA_DIGEST_LENGTH; i++) printf("%X", set_hash[i]);
+	printf("\"\n\n");
+	
+	// Open local service socket.
+	
+	int n;
+	
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	
+	int optval = 1;
+	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof optval);
+	
+	if (sockfd < 0) error_a("opening socket");
+	
+	bzero((char *) &serv_addr, sizeof(serv_addr));
+	
+	
+	serv_addr.sin_family = AF_INET;
+	serv_addr.sin_addr.s_addr = INADDR_ANY;
+	serv_addr.sin_port = htons(portno);
+	
+	if (bind(sockfd, (struct sockaddr *) &serv_addr,
+		  sizeof(serv_addr)) < 0) 
+		  error_a("on binding");
+	listen(sockfd, 5);
+	clilen = sizeof(cli_addr);
+	
+	
+	printf("+++++++++++++++++++++\n+ RUNTIME\n+++++++++++++++++++++\n\n");
+	
+	// Prevent zombie process from fork.
+	signal(SIGCHLD, SIG_IGN);
+	
+	while(1){
+		 newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
+		 
+		 pid_t pID = fork();
 		 if (pID == 0){
 			
-			int header_length = 77;
-			char* buffer = malloc(header_length);
-		    if(buffer == NULL){ error("ERROR allocating header buffer"); }
+			char* header_buf = malloc(sizeof(struct Header));
+			if(header_buf == NULL){ error("allocation header buffer"); error_r(1); }
 			
-		    if (newsockfd < 0){ error("ERROR on accept"); };
-		      
-		    n = read(newsockfd, buffer, header_length);
-		     
-		    if (n != header_length) { error("ERROR reading from heading");};
-		    
-		    struct Package pk;
-		    
-		    pk.magic[0] = buffer[0];
-		    pk.magic[1] = buffer[1];
-		    pk.version = *(short*)(buffer + 2);
-		    sprintf(pk.imei, "%llX%llX%llX%llX",
-				*(unsigned long long*)(buffer + 4),
-				*(unsigned long long*)(buffer + 12),
-				*(unsigned long long*)(buffer + 20),
-				*(unsigned long long*)(buffer + 28));
-			pk.length = *(long*)(buffer + 69);
+			if (newsockfd < 0){ error("reading header"); error("on accept"); };
+			  
+			n = recv(newsockfd, header_buf, sizeof(struct Header), MSG_WAITALL);
 			
-			printf("%i - MAGIC: %c%c VER: %i LEN: %lu DEV: %s\n", (int)time(NULL), pk.magic[0], pk.magic[1], pk.version, pk.length, pk.imei);
-		    
-		    mysql_conn = mysql_init(NULL);
+			if (n != sizeof(struct Header)) { error("reading header"); error_r(1); };
 			
-			/* Connect to database */
-			if (!mysql_real_connect(mysql_conn, mysql_server,
-				 mysql_user, mysql_password, mysql_database, 0, NULL, 0)) {
-			  fprintf(stderr, "%s\n", mysql_error(mysql_conn));
-			  exit(1);
-			}
+			// Read Header.
 			
-			char query[4096];
-			sprintf(query,
-				"INSERT INTO devices (imei, created, seen) VALUES ('%s', NOW(), NOW()) ON DUPLICATE KEY UPDATE iddevices=LAST_INSERT_ID(iddevices), seen=NOW();"
-			, pk.imei );
-
-			
-			/* send SQL query */
-			if (mysql_query(mysql_conn, query)) { fprintf(stderr, "SQLSEND - %s\n", mysql_error(mysql_conn)); exit(1);}
-			
-			/* send SQL query */
-			if (mysql_query(mysql_conn, "SET @deviceid = LAST_INSERT_ID();")) { fprintf(stderr, "[ERR] %i - SQLSEND - %s\n", (int)time(NULL), mysql_error(mysql_conn)); exit(1); }
-			
+			struct Header *header = (struct Header*)header_buf;
+			header->uuid[65] = 0;
 		   
-		    buffer = malloc(pk.length);
-
-
-		    if(buffer == NULL){ error("ERROR allocating payload buffer"); }
-		    
-		    int bytes_read = 0;
-
-
-		    while(n != 0 && bytes_read != pk.length){
-				n = read(newsockfd, buffer + bytes_read, pk.length);
-				if (n < -1){ error("ERROR reading payload"); }
-				bytes_read += n;
-				printf("%lu %i %i\n", pk.length, n, bytes_read);
-			}    
-		    
-		    int event_count = 0;
-		    n = 0;
-		    while(n < pk.length){
-			    struct Event ev;
-			    
- 			    ev.time		 = *(unsigned long long*)(buffer + n);
-			    n = n + 8;
+			// Compare set_hash from header with the one of the server.
 			
-
-			    //ev.screen 	 =  (*(char*)(buffer + 0) >> 6);
-			    //ev.bluetooth =  (*(char*)(buffer + 1) >> 4);
-			    //ev.gps       =  (*(char*)(buffer + 2));
-			    //n += 3;
-
-
-		   	    ev.screen 	 =  (*(char*)(buffer + n));
-			    n = n + 1;
-
-			    ev.bluetooth =  (*(char*)(buffer + n));
-			    n = n + 1;
-
-		            ev.gps       =  (*(char*)(buffer + n));
-			    n = n + 1;
- 		
-
-                            ev.lat		 = *(double*)(buffer + n);
-			    n = n + 8;
-
-                            ev.lon		 = *(double*)(buffer + n);
-			    n = n + 8;
-
-			    ev.alt		 = *(double*)(buffer + n);
-			    n = n + 8;
-			
-			    
-    char lat_str[50]; 
-    char lon_str[50];
-    char alt_str[50];
-    sprintf(lat_str , "%lf" , ev.lat);
-    sprintf(lon_str , "%lf" , ev.lon);
-    sprintf(alt_str , "%lf" , ev.alt);
-
-
-    
-			     
-		
-			    
-			    event_count++;
-			     
-				sprintf(query,
-					"INSERT INTO events (device, time, screen, bluetooth, gps, lat, lon, alt) VALUES (@deviceid, FROM_UNIXTIME(%llu), '%s', '%s', '%s', '%s', '%s', '%s');"
-				, ev.time / 1000, screen_str[ev.screen], bluetooth_str[ev.bluetooth], gps_str[ev.gps], lat_str, lon_str, alt_str);
-				
-				/* send SQL query */
-				if (mysql_query(mysql_conn, query)) { fprintf(stderr, "[ERR] %i - SQLSEND - %s\n", (int)time(NULL), mysql_error(mysql_conn)); exit(1); }
-			     
-			    printf(" %llu %s %s %s %f %f %f %X\n", ev.time, screen_str[ev.screen], bluetooth_str[ev.bluetooth], gps_str[ev.gps], ev.lat, ev.lon, ev.alt, *(char*)(buffer + n - 1));
+			if(memcmp(set_hash, header->set_hash, SHA_DIGEST_LENGTH) != 0){
+				error("Set mismatch"); error_r(10);
 			}
 			
-			printf("%i events stored\n", event_count);
+			if(header->payload_size > MAX_DATASIZE){
+				error("Illegal data size"); error_r(11);
+			}
 			
-		    mysql_close(mysql_conn);
+			//printf("Header - magic(0x%X), version(%i), events(%i), payload(%i bytes), imei(%s)\n", header->magic, header->version, header->event_count, header->payload_size, header->uuid);
 			
-			 
-		    n = write(newsockfd,"OKko",4);
-		    if (n < 0) error("ERROR writing to socket");
-		    
-		    close(newsockfd);
-		    close(sockfd);
+			// Read indexes.
 			
-			printf("Done\n");
+			char* index_buf = malloc(sizeof(struct Index) * header->event_count);
+			if(index_buf == NULL){ error("allocating index buffer"); error_r(1); }
 			
-			free(buffer);
+			char* data_buf = malloc(MAX_DATASIZE);
+			if(data_buf == NULL){ error("allocating data buffer"); error_r(1); }
 			
-		    return 0;
+			n = recv(newsockfd, index_buf, sizeof(struct Index) * header->event_count, MSG_WAITALL);
+			
+			if (n != sizeof(struct Index) * header->event_count) { error("reading index"); error_r(2); };
+			
+			int i; for(i = 0; i < header->event_count; i++){
+				 
+				struct Index *index = (struct Index*)(index_buf + (i * sizeof(struct Index)));
+				 
+				//printf(" Event - time(%llu) data(%i bytes)\n", index->time_stamp, index->data_size);
+				
+				int n = recv(newsockfd, data_buf, index->data_size, MSG_WAITALL);
+			
+				if (n != index->data_size) { error("reading data"); error_r(2); };
+				
+				char *values[set_count][MAX_FIELDCOUNT];
+				
+				// Loop through sets to load data payload from socket.
+				
+				int a = set_count / 8 + 1;
+				int s; for(s = 0; s < set_count; s++){
+					
+					char bitfield = data_buf[s / 8];
+					if(bitfield & 1 << (s % 8)){
+						
+						// Loop through fields.
+						
+						int f; for(f = 0; f < sets[s].field_cnt; f++){
+							
+							char *value = malloc(MAX_VALUELENGTH + 1);
+							if (value == NULL) { error("allocating value buffer"); error_r(1); };
+							value[0] = 0;
+							
+							if(sets[s].fields[f].type == FIELD_TINYINT){
+								snprintf(value, MAX_VALUELENGTH, "%i", *(uint8_t*)(data_buf + a));
+								a += 1;
+							}else if(sets[s].fields[f].type == FIELD_SMALLINT){
+								snprintf(value, MAX_VALUELENGTH, "%i", *(uint16_t*)(data_buf + a));
+								a += 2;
+							}else if(sets[s].fields[f].type == FIELD_INT){
+								snprintf(value, MAX_VALUELENGTH, "%i", *(uint32_t*)(data_buf + a));
+								a += 4;
+							}else if(sets[s].fields[f].type == FIELD_BIGINT){
+								snprintf(value, MAX_VALUELENGTH, "%llu", *(uint64_t*)(data_buf + a));
+								a += 8;
+							}else if(sets[s].fields[f].type == FIELD_FLOAT){
+								snprintf(value, MAX_VALUELENGTH, "%f", *(float*)(data_buf + a));
+								a += 4;
+							}else if(sets[s].fields[f].type == FIELD_DOUBLE){
+								snprintf(value, MAX_VALUELENGTH, "%F", *(double*)(data_buf + a));
+								a += 8;
+							}else if(sets[s].fields[f].type == FIELD_TEXT){
+								mysql_escape_string(value, (char*)(data_buf + a), strnlen((char*)(data_buf + a), MAX_VALUELENGTH));
+								a += strnlen(value, MAX_VALUELENGTH);
+							}
+							
+							int value_len = strnlen(value, MAX_VALUELENGTH);
+							
+							if(value_len > 0){
+								void *ptr = realloc(value, value_len);
+								
+								if (ptr == NULL) { error("reallocating value buffer"); error_r(1); };
+								
+								values[s][f] = value;
+							}else{
+								values[s][f] = "";
+							}
+							
+							
+							
+						}
+						
+					}else{
+						
+						values[s][0] = NULL;
+						
+					}
+					
+				}
+				
+				// Loop through sets to process values.
+				
+				char *queries[2 + set_count];
+				
+				
+				queries[0] = malloc(1024);
+				if (queries[0] == NULL) { error("allocating 1st query buffer"); error_r(1); };
+				 snprintf(queries[0], 1024,
+					"INSERT INTO `%s` (`imei`, `created`, `seen`) VALUES ('%s', NOW(), NOW()) ON DUPLICATE KEY UPDATE `id` = LAST_INSERT_ID(`id`), `seen` = NOW();",
+					device_table, header->uuid
+				);
+				
+				queries[1] = malloc(1024);
+				if (queries[1] == NULL) { error("allocating 2nd query buffer"); error_r(1); };
+				snprintf(queries[1], 1024, "SET @%s_id = LAST_INSERT_ID();", device_table );
+				
+				queries[2] = malloc(1024);
+				if (queries[2] == NULL) { error("allocating 3rd query buffer"); error_r(1); };
+				 snprintf(queries[2], 1024,
+					"INSERT INTO %s (`%s_id`, `time`, `created`) VALUES (@%s_id, FROM_UNIXTIME('%llu'), NOW());",
+					event_table, device_table, device_table, index->time_stamp / 1000
+				);
+				
+				queries[3] = malloc(1024);
+				if (queries[3] == NULL) { error("allocating 4th query buffer"); error_r(1); };
+				snprintf(queries[3], 1024, "SET @%s_id = LAST_INSERT_ID();", event_table );
+				
+				int query_cnt = 4;
+			
+				for(s = 0; s < set_count; s++){
+					
+					queries[query_cnt] = malloc(MAX_QUERYLENGTH);
+					if (queries[query_cnt] == NULL) { error("allocating query buffer"); error_r(1); };
+					
+					if(sets[s].table != NULL){
+						
+						if(values[s][0] == NULL){
+							free(queries[query_cnt]);
+							
+							continue;
+						}else{
+							
+							char *cols = malloc(MAX_QUERYLENGTH);
+							if (cols == NULL) { error("allocating columns buffer"); error_r(1); };
+							char *vals = malloc(MAX_QUERYLENGTH);
+							if (vals == NULL) { error("allocating values buffer"); error_r(1); };
+							cols[0] = 0;
+							vals[0] = 0;
+							
+							int f; for(f = 0; f < sets[s].field_cnt; f++){
+								
+								strncat(cols, "`", MAX_QUERYLENGTH);
+								strncat(cols, sets[s].fields[f].name, MAX_QUERYLENGTH);
+								strncat(cols, "`,", MAX_QUERYLENGTH);
+								
+								strncat(vals, "'", MAX_QUERYLENGTH);
+								strncat(vals, values[s][f], MAX_QUERYLENGTH);
+								strncat(vals, "',", MAX_QUERYLENGTH);
+								
+							}
+							cols[strnlen(cols, MAX_QUERYLENGTH) - 1] = 0;
+							vals[strnlen(vals, MAX_QUERYLENGTH) - 1] = 0;
+							
+							snprintf(queries[query_cnt], MAX_QUERYLENGTH, "INSERT INTO `%s` (%s) VALUES (%s);", sets[s].table, cols, vals);
+				
+							void *ptr = realloc(queries[query_cnt], strnlen(queries[query_cnt], MAX_QUERYLENGTH));
+							if (ptr == NULL) { error("reallocating queries[query_cnt] buffer"); error_r(1); };
+						
+							free(cols);
+							free(vals);
+							
+							query_cnt++;
+							
+							queries[query_cnt] = malloc(MAX_QUERYLENGTH);
+							if (queries[query_cnt] == NULL) { error("allocating query lastid buffer"); error_r(1); };
+							
+							snprintf(queries[query_cnt], MAX_QUERYLENGTH, "UPDATE `%s` SET `%s_id`=LAST_INSERT_ID() WHERE `id` = @%s_id;", event_table, sets[s].table, event_table);
+							
+							ptr = realloc(queries[query_cnt], strnlen(queries[query_cnt], MAX_QUERYLENGTH));
+							if (ptr == NULL) { error("reallocating queries[query_cnt] buffer"); error_r(1); };
+							
+							query_cnt++;
+						}
+						
+					}else{
+						
+						if(values[s][0] == NULL){
+							free(queries[query_cnt]);
+							
+							continue;
+						}else{
+						
+							char *set = malloc(MAX_QUERYLENGTH);
+							if (set == NULL) { error("allocating sets buffer"); error_r(1); };
+							set[0] = 0;
+							
+							int f; for(f = 0; f < sets[s].field_cnt; f++){
+								
+								strncat(set, "`", MAX_QUERYLENGTH);
+								strncat(set, sets[s].fields[f].name, MAX_QUERYLENGTH);
+								strncat(set, "` = '", MAX_QUERYLENGTH);
+								
+								strncat(set, values[s][f], MAX_QUERYLENGTH);
+								strncat(set, "',", MAX_QUERYLENGTH);
+								
+							}
+							set[strnlen(set, MAX_QUERYLENGTH) - 1] = 0;
+							
+							snprintf(queries[query_cnt], MAX_QUERYLENGTH, "UPDATE `%s` SET %s WHERE id = @%s_id;", event_table, set, event_table);
+						
+							void *ptr = realloc(queries[query_cnt], strnlen(queries[query_cnt], MAX_QUERYLENGTH));
+							if (ptr == NULL) { error("reallocating queries[query_cnt] buffer"); error_r(1); };
+							
+							free(set);
+							
+							query_cnt++;
+						}
+						
+					}
+					
+				}
+				
+				mysql_conn = mysql_init(NULL);
+			
+				/* Connect to database */
+				if (!mysql_real_connect(mysql_conn, mysql_server, mysql_user, mysql_password, mysql_database, 0, NULL, 0)) {
+				  error(mysql_error(mysql_conn));
+				  error_r(3); 
+				}
+				
+				int q; for(q = 0; q < query_cnt; q++){
+					//printf("%s\n\n", queries[q]);
+					
+					if (mysql_query(mysql_conn, queries[q])) {
+						error(mysql_error(mysql_conn));
+					}
+				}
+				
+				mysql_close(mysql_conn);
+					 
+			}
+			
+			// Send back last received index.
+			
+			struct Index *last_index = (struct Index*)(index_buf + ((header->event_count - 1) * sizeof(struct Index)));
+			
+			struct Response response = {0, last_index->time_stamp};
+		   
+			n = write(newsockfd, &response, sizeof(struct Response));
+			if (n < 0){ error_a("writing to socket"); }
+			
+			close(newsockfd);
+			close(sockfd);
+			
+			printf("%i events from '%s' up to %llu \n", header->event_count, header->uuid, response.last_log);
+			
+			free(header_buf);
+			free(index_buf);
+			free(data_buf);
+			
+			exit(0);
 		 }else{
 			close(newsockfd);
 		 }
 		 
 		 if(kbhit()) break;
-	     
+		 
 	 }
 
 	close(sockfd);
-     
-    return 0; 
+	 
+	exit(0); 
 }
 

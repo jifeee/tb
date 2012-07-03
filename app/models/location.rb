@@ -10,7 +10,7 @@ class Location < ActiveRecord::Base
 
   # try to geolocate the point
   after_save do |record|
-    record.delay.set_address! if record.latitude_changed? or record.longitude_changed?
+    record.delay.set_address! if record.lat_changed? or record.lng_changed?
   end
 
   # checks if the location object inside of the allowed area
@@ -34,8 +34,8 @@ class Location < ActiveRecord::Base
 
   def api_point_detail
     {
-      :latitude => self.latitude,
-      :longitude => self.longitude,
+      :latitude => self.lat,
+      :longitude => self.lng,
       :address => self.address,
       :city => self.city,
       :zip => self.zip,
@@ -70,7 +70,7 @@ class Location < ActiveRecord::Base
     if @geo.nil? || @geo.blank?
       puts 'Getting geo locations ....'
       @geo = {}
-      response = RestClient.get 'maps.googleapis.com/maps/api/geocode/json', {:params => {:latlng => "#{self.latitude},#{self.longitude}", :sensor => false}}
+      response = RestClient.get 'maps.googleapis.com/maps/api/geocode/json', {:params => {:latlng => "#{self.lat},#{self.lng}", :sensor => false}}
       r = JSON.parse(response)['results']
       r.map do |a|
         @geo[:street] = a['formatted_address'] if @geo[:street].blank? || @geo[:street].size < a['formatted_address'].size

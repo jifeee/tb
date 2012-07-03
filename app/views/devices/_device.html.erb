@@ -15,11 +15,8 @@
     <% end %>
   </td>
   <td>
-    <% last_pos = device.last_position %>
-    <% if last_pos %>
-      <div class="date"><%= last_pos.created_at.strftime '%b. %d, ‘%y'%></div>
-      <div class="time"><%= last_pos.created_at.strftime '%R'%></div>
-      <div class="addr"><%= last_pos.address %></div>
+    <% unless device.last_position.nil? %>
+      <%= render :partial => 'last_position', :object => device.last_position %>
     <% else %>
       <div class="addr">None</div>
     <% end %>
