@@ -20,12 +20,12 @@ class Schema201207032 < ActiveRecord::Migration
 		add_index "events", ["phones_log_id"] unless index_exists?('events', 'phones_log_id') 
  
 		create_table "phones_log", :force => true, :options => 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
-			t.integer 'imei', :string, :limit => 65, :null => false
+			t.integer 'imei', :limit => 65, :null => false
 			t.datetime 'created', :null => false
 			t.datetime 'seen', :null => false
 		end
 
-		add_index "devices", "imei", :unique => true unless index_exists?('devices', 'imei') 
+		add_index "phones_log", "imei", :unique => true unless index_exists?('devices', 'imei') 
 
   end
 
