@@ -98,6 +98,9 @@ ActiveRecord::Schema.define(:version => 20120703113851) do
     t.datetime "created"
   end
 
+  add_index "events", ["locations_id"], :name => "index_events_on_locations_id"
+  add_index "events", ["phones_log_id"], :name => "index_events_on_phones_log_id"
+
   create_table "families", :force => true do |t|
   end
 
@@ -154,6 +157,13 @@ ActiveRecord::Schema.define(:version => 20120703113851) do
     t.integer  "abilities"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "phones_log", :force => true do |t|
+    t.integer  "imei",    :null => false
+    t.integer  "string",  :null => false
+    t.datetime "created", :null => false
+    t.datetime "seen",    :null => false
   end
 
   create_table "reports", :force => true do |t|
