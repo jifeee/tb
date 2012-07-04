@@ -13,6 +13,13 @@ class Location < ActiveRecord::Base
     record.delay.set_address! if record.lat_changed? or record.lng_changed?
   end
 
+  #  Redefine attributes read
+  %w(country city zip address).map do |attr|
+    define_method("#{attr}") do
+      get_attr_geo(attr.to_sym)    
+    end
+  end
+
   # checks if the location object inside of the allowed area
   def allowed?
     trip.restrictions.flatten.map {|r| r.contains?(self)}.reduce(:|)
@@ -45,40 +52,25 @@ class Location < ActiveRecord::Base
     }
   end
 
-  def country
-    if self['country'].nil?
-      self.update_attribute(:country, geo[:country])
-    end
-    self['country']
-  end
+protected
 
-  def city
-    if self['city'].nil?
-      self.update_attribute(:city, geo[:city]) 
-    end
-    self['city']
-  end
-
-  def zip
-    if self['zip'].nil?
-      self.update_attribute(:zip, geo[:zip]) 
-    end
-    self['zip']
+  def get_attr_geo(attr)
+    self.update_attribute(attr, geo[attr]) if self[attr].blank?
+    self[attr]
   end
 
   def geo
-    if @geo.nil? || @geo.blank?
-      puts 'Getting geo locations ....'
-      @geo = {}
-      response = RestClient.get 'maps.googleapis.com/maps/api/geocode/json', {:params => {:latlng => "#{self.lat},#{self.lng}", :sensor => false}}
-      r = JSON.parse(response)['results']
-      r.map do |a|
-        @geo[:street] = a['formatted_address'] if @geo[:street].blank? || @geo[:street].size < a['formatted_address'].size
-        a['address_components'].map do |aa|
-          @geo[:country] = aa['long_name'] if aa['types'] == ["country", "political"]
-          @geo[:city] = aa['long_name'] if aa['types'] == ["locality", "political"]
-          @geo[:zip] = aa['long_name'] if aa['types'] == ["postal_code"]
-        end
+    # if @geo.nil? || @geo.blank?
+    puts 'Getting geo locations ....'
+    @geo = {}
+    response = RestClient.get 'maps.googleapis.com/maps/api/geocode/json', {:params => {:latlng => "#{self.lat},#{self.lng}", :sensor => false}}
+    r = JSON.parse(response)['results']
+    r.map do |a|
+      @geo[:address] = a['formatted_address'] if @geo[:address].blank? || @geo[:address].size < a['formatted_address'].size
+      a['address_components'].map do |aa|
+        @geo[:country] = aa['long_name'] if aa['types'] == ["country", "political"]
+        @geo[:city] = aa['long_name'] if aa['types'] == ["locality", "political"]
+        @geo[:zip] = aa['long_name'] if aa['types'] == ["postal_code"]
       end
     end
     p @geo

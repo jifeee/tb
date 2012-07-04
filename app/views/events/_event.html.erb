@@ -3,12 +3,16 @@
   <td><%= event.time.strftime '%b. %d, ‘%y'%></td>
   <td>
     <div class="status">
-      <div class="whos"><%= link_to_if can?(:update, event.device), event.device.display_name, edit_textbuster_path(event.device) %></div>
+      <div class="whos">
+        <%= link_to(event.device.display_name, edit_textbuster_path(event.device)) if event.device && can?(:update, event.device) %>
+      </div>
     </div>
   </td>
   <td>
     <div class="ttl"><%= event.phone.user.name %></div>
-    <div class="device"><%= link_to_if can?(:update, event.phone), event.phone.name, edit_phone_path(event.phone) %></div>
+    <div class="device">
+      <%= link_to(event.phone.name, edit_phone_path(event.phone)) if event.phone && can?(:update, event.phone) %>
+    </div>
   </td>
   <td>
     <%= event.type %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120703113851) do
+ActiveRecord::Schema.define(:version => 20120704073815) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -105,17 +105,17 @@ ActiveRecord::Schema.define(:version => 20120703113851) do
   end
 
   create_table "locations", :force => true do |t|
-    t.decimal  "lat",        :precision => 8, :scale => 6
-    t.decimal  "lng",        :precision => 8, :scale => 6
+    t.decimal  "lat",        :precision => 10, :scale => 6
+    t.decimal  "lng",        :precision => 10, :scale => 6
     t.string   "address"
     t.integer  "trip_id"
     t.datetime "created_at"
     t.string   "country"
     t.string   "city"
     t.string   "zip"
-    t.decimal  "alt",        :precision => 8, :scale => 6
-    t.decimal  "spd",        :precision => 8, :scale => 6
-    t.decimal  "bear",       :precision => 8, :scale => 6
+    t.decimal  "alt",        :precision => 10, :scale => 6
+    t.decimal  "spd",        :precision => 8,  :scale => 6
+    t.decimal  "bear",       :precision => 10, :scale => 6
     t.integer  "time"
     t.float    "acc"
   end
@@ -160,11 +160,13 @@ ActiveRecord::Schema.define(:version => 20120703113851) do
   end
 
   create_table "phones_log", :force => true do |t|
-    t.integer  "imei",    :null => false
-    t.integer  "string",  :null => false
-    t.datetime "created", :null => false
-    t.datetime "seen",    :null => false
+    t.string   "imei",    :limit => 65, :null => false
+    t.datetime "created",               :null => false
+    t.datetime "seen",                  :null => false
   end
+
+  add_index "phones_log", ["imei"], :name => "imei_UNIQUE", :unique => true
+  add_index "phones_log", ["imei"], :name => "index_phones_log_on_imei", :unique => true
 
   create_table "reports", :force => true do |t|
     t.string   "imei"
@@ -176,9 +178,9 @@ ActiveRecord::Schema.define(:version => 20120703113851) do
   end
 
   create_table "restrictions", :force => true do |t|
-    t.decimal  "latitude",                  :precision => 9, :scale => 6
-    t.decimal  "longitude",                 :precision => 9, :scale => 6
-    t.decimal  "radius",                    :precision => 5, :scale => 1
+    t.decimal  "latitude",                  :precision => 10, :scale => 6
+    t.decimal  "longitude",                 :precision => 10, :scale => 6
+    t.decimal  "radius",                    :precision => 5,  :scale => 1
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "alert_id"
