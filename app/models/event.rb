@@ -8,6 +8,7 @@ class Event < ActiveRecord::Base
   enum_attr :bt_state, %w(^no_bt bt_on bt_off), :plural=>:bt_state_values
   enum_attr :locked, %w(^not_locked locked), :plural=>:locked_values
 
+  belongs_to :location, :foreign_key => 'locations_id'
   belongs_to :device, :class_name => 'Device', :foreign_key => 'textbuster_mac', :primary_key => 'imei'
   belongs_to :phones_log
   has_one :phone, :through => :phones_log

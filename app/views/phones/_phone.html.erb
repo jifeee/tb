@@ -22,9 +22,9 @@
   <td>
     <% last_pos = phone.last_position %>
     <% if last_pos %>
-      <div class="date"><%= last_pos.created_at.strftime '%b. %d, ‘%y'%></div>
-      <div class="time"><%= last_pos.created_at.strftime '%R'%></div>
-      <div class="addr"><!--%= last_pos.geolocate %--></div>
+      <div class="date"><%= last_pos.created.strftime '%b. %d, ‘%y'%></div>
+      <div class="time"><%= last_pos.created.strftime '%R'%></div>
+      <div class="addr"><%= last_pos.location.address %></div>
     <% else %>
       <div class="addr">None</div>
     <% end %>
