@@ -8,6 +8,8 @@ public class AllowedPackages {
 //	private ArrayList<String> allowed = new ArrayList<String>();
 	private HashSet<String> allowed = new HashSet<String>();
 	
+	//Apps that are allowed even when the phone is locked, to make a call or use navigation
+	
 	public AllowedPackages () {
 		allowed.add("com.android.phone");
 		allowed.add("com.android.contacts");

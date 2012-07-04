@@ -2,8 +2,10 @@ package com.access2;
 
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -41,7 +43,11 @@ public class TextbusterActivity extends Activity {
 	String TextbusterMAC;
 	
 	
-
+	
+	
+	// CURRENTLY NOT USED. LAUNCHER ACTIVITY IS LOGINACTIVITY
+	
+	
 	
 	UserStatus myUserStatus; 
 	
@@ -56,11 +62,7 @@ public class TextbusterActivity extends Activity {
         Intent service = new Intent(ctx, TextbusterService.class);
         ctx.startService(service);
         
-        
-        
-//        SmsManager sm = SmsManager.getDefault();
-//     String number = "01622896226";
-//     sm.sendTextMessage(number, null, "Test SMS Message", null, null);
+
      
      
     	Intent loginIntent = new Intent(TextbusterActivity.this, LoginActivity.class);      
@@ -136,15 +138,15 @@ public class TextbusterActivity extends Activity {
 
 	        }
 	    	
-	    	if (requestCode == TERMS) {
-	    		if (resultCode == RESULT_OK ) {
-	    	        Intent setupIntent = new Intent(TextbusterActivity.this, SetupPasswordActivity.class);      
-	    	    	TextbusterActivity.this.startActivityForResult(setupIntent, SETUP); 
-	    	    	currentActivity =2;
-	    			
-	    		}
-
-	        }
+//	    	if (requestCode == TERMS) {
+//	    		if (resultCode == RESULT_OK ) {
+//	    	        Intent setupIntent = new Intent(TextbusterActivity.this, SetupPasswordActivity.class);      
+//	    	    	TextbusterActivity.this.startActivityForResult(setupIntent, SETUP); 
+//	    	    	currentActivity =2;
+//	    			
+//	    		}
+//
+//	        }
 	    	
 	    	if (requestCode == SETUP) {
 	    		if (resultCode == RESULT_OK ) {

@@ -35,14 +35,17 @@ public class DetectActivity extends Activity {
 	TextView tv2; 
 	String MAC;
 	
+	//Activity to detect the Textbuster device and send it's MAC address to the service via Broadcast
+	
+	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) { 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detect);
         
-        // dont lock the phone right away
-//        stopLock();
+        
+        
         
         toggle = (ToggleButton)findViewById(R.id.bluetoothButton);
         pairButton = (Button)findViewById(R.id.pairButton);

@@ -33,8 +33,8 @@ public final class R {
         public static final int textbusterlogo=0x7f020013;
     }
     public static final class id {
-        public static final int LinearLayout2=0x7f05002a;
-        public static final int acceptButton=0x7f050022;
+        public static final int LinearLayout2=0x7f050029;
+        public static final int acceptButton=0x7f050021;
         public static final int bluetoothButton=0x7f05000a;
         public static final int bluetoothlogo=0x7f05000f;
         public static final int button1=0x7f050008;
@@ -50,22 +50,21 @@ public final class R {
         public static final int linearLayout1=0x7f050016;
         public static final int listView1=0x7f05000d;
         public static final int ll1=0x7f05001f;
-        public static final int ll2=0x7f050027;
+        public static final int ll2=0x7f050026;
         public static final int lll=0x7f05001e;
         public static final int logout=0x7f050014;
         public static final int mapview=0x7f050013;
-        public static final int miles=0x7f050028;
+        public static final int miles=0x7f050027;
         public static final int pairButton=0x7f05000c;
         public static final int progressBar1=0x7f05000b;
-        public static final int rl0=0x7f050023;
+        public static final int rl0=0x7f050022;
         public static final int rl1=0x7f050015;
         public static final int rl2=0x7f05001a;
         public static final int rl3=0x7f05001c;
-        public static final int rl4=0x7f050029;
+        public static final int rl4=0x7f050028;
         public static final int scrollView1=0x7f050020;
-        public static final int speed=0x7f050026;
-        public static final int startButton=0x7f050021;
-        public static final int starttime=0x7f050024;
+        public static final int speed=0x7f050025;
+        public static final int starttime=0x7f050023;
         public static final int test_image=0x7f050010;
         public static final int text=0x7f05000e;
         public static final int textView1=0x7f050001;
@@ -75,7 +74,7 @@ public final class R {
         public static final int textView5=0x7f050018;
         public static final int to=0x7f05001d;
         public static final int tripstarttime=0x7f050019;
-        public static final int triptime=0x7f050025;
+        public static final int triptime=0x7f050024;
     }
     public static final class layout {
         public static final int changepw=0x7f030000;
@@ -92,10 +91,9 @@ public final class R {
         public static final int settings=0x7f03000b;
         public static final int setup=0x7f03000c;
         public static final int signup=0x7f03000d;
-        public static final int startlocking=0x7f03000e;
-        public static final int terms=0x7f03000f;
-        public static final int tripdetails=0x7f030010;
-        public static final int triplistdetails=0x7f030011;
+        public static final int terms=0x7f03000e;
+        public static final int tripdetails=0x7f03000f;
+        public static final int triplistdetails=0x7f030010;
     }
     public static final class string {
         public static final int app_name=0x7f040001;

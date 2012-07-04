@@ -19,13 +19,17 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -54,11 +58,27 @@ public class LoginActivity extends Activity {
     String mail;
     String passw;
 	
+    //Launcher activity, letting the user login
+    
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		ctx=this;
 		
+        //Just something i wanted to test, not needed here, but please dont remove
+		
+		
+//        PendingIntent sentIntent = PendingIntent.getBroadcast(this, 0,new Intent("TRIP_SMS_SENT"), 0);
+//        registerReceiver(new BroadcastReceiver(){
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                Log.d(TAG, "SMS sent intent received.");
+//            }
+//        }, new IntentFilter("TRIP_SMS_SENT"));
+//        SmsManager sm = SmsManager.getDefault();
+//         String number = "01622896226";
+//         sm.sendTextMessage(number, null, "Test SMS Message", sentIntent, null);
+//		
         Intent service = new Intent(ctx, TextbusterService.class);
         ctx.startService(service);
 		
@@ -185,12 +205,10 @@ public class LoginActivity extends Activity {
 		            HttpConnectionParams.setSoTimeout(client.getParams(), 10000);
 		            HttpResponse response;	
 			        	
-			        // LOGIN	
+			        //Login
 			        	
 		        	JSONObject json = new JSONObject();
 		            HttpPost post = new HttpPost("http://textbuster.mobilezapp.de/api/login");
-	//	            json.put("email", myUserStatus[0].getEmail());
-	//	            json.put("password", myUserStatus[0].getPassword());
 		            json.put("email", mail);
 		            json.put("password", passw);
 		            StringEntity se = new StringEntity( json.toString());  
@@ -198,7 +216,8 @@ public class LoginActivity extends Activity {
 		            se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 		            post.setEntity(se);
 		            response = client.execute(post);
-		            /*Checking response */
+		            
+		            //Checking response
 		            if(response!=null){
 		                BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
 		                StringBuilder builder = new StringBuilder();
@@ -232,7 +251,6 @@ public class LoginActivity extends Activity {
 		                
 		                
 		                // GET TRIPS
-		                
 		                
 		                json = new JSONObject();
 			            String url = "http://textbuster.mobilezapp.de/api/trips";

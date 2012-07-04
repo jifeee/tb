@@ -12,6 +12,9 @@ public class RemoveReceiver extends BroadcastReceiver{
 	
 	String TAG="TEX";
 	
+	
+	// Currently not used. An equivalent receiver is on TextbusterService
+	
     @Override
     public void onReceive(Context context, Intent intent) {
     	Log.i(TAG, "RemoveReceiver: tostring: " + intent.toString());

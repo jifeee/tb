@@ -15,6 +15,8 @@ public class TermsActivity extends Activity{
 	TextView tv2;
 	Button acceptButton; 
 	
+	//Showing the terms of use
+	
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.terms);

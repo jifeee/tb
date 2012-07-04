@@ -58,7 +58,7 @@ public class ChangePwActivity extends Activity {
 		String newPass;
 		String newPassRep;
 		
-		
+		//Activity to change the user's password 
 		
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
@@ -69,7 +69,7 @@ public class ChangePwActivity extends Activity {
 			
 
 	        
-	        final EditText oldPw = (EditText) findViewById(R.id.editText1);
+	        oldPw = (EditText) findViewById(R.id.editText1);
 	        oldPw.setOnEditorActionListener(new OnEditorActionListener() {        
 	            @Override
 	            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -93,7 +93,7 @@ public class ChangePwActivity extends Activity {
 	            }
 	        });
 	        
-	        final EditText newPwRep = (EditText) findViewById(R.id.editText3);
+	        newPwRep = (EditText) findViewById(R.id.editText3);
 	        newPwRep.setOnEditorActionListener(new OnEditorActionListener() {        
 	            @Override
 	            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -148,12 +148,9 @@ public class ChangePwActivity extends Activity {
 		            HttpConnectionParams.setSoTimeout(client.getParams(), 10000);
 		            HttpResponse response;	
 			        	
-			        // LOGIN	
-			        	
-		        	JSONObject json = new JSONObject();
+			        // Login	
+			        JSONObject json = new JSONObject();
 		            HttpPost post = new HttpPost("http://textbuster.mobilezapp.de/api/change_password");
-	//	            json.put("email", myUserStatus[0].getEmail());
-	//	            json.put("password", myUserStatus[0].getPassword());
 		            json.put("token", myUserStatus[0].getToken());
 		            json.put("current_password", oldPass);
 		            json.put("new_password", newPass);
@@ -163,7 +160,8 @@ public class ChangePwActivity extends Activity {
 		            se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 		            post.setEntity(se);
 		            response = client.execute(post);
-		            /*Checking response */
+		            
+		            //Checking response 
 		            if(response!=null){
 		                BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
 		                StringBuilder builder = new StringBuilder();

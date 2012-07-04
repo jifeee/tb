@@ -5,6 +5,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.UUID;
+
+import org.joda.time.DateTime;
+
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Service;
@@ -19,8 +23,9 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
 
+
+// putting to together the events that are being sent out to the servcie
 
 
 public class Reporter implements LocationListener {
@@ -40,30 +45,30 @@ public class Reporter implements LocationListener {
 	private BluetoothAdapter bluetoothAdapter = null;
 	private ActivityManager activityManager = null;
 	private LocationManager locationManager = null;
-	
-	PowerManager pm;
-	TelephonyManager tm;
+	private PowerManager pm = null;
+	private TelephonyManager tm = null;
 	
 
 	private int locked;
 	private int alert;
-	Location lastLocation = new Location("x");;
-	Location newLocation = new Location("x");
 	int eventCount = 0;
 	String imei;
 	final Handler handler;
-	boolean gpsstarted=false;
-	boolean locIsNew=false;
-	
+	boolean gpsstarted = false;
+	boolean locIsNew = false;
+	String currentMac=" ";
 	File f;
 	public Logger log;
-	
 	Writer w;
-	
 	String textbusterMac;
-	
-	
 	Service service;
+	Location lastLocation = new Location("x");;
+	Location newLocation = new Location("x");
+	Location startLocation = new Location("x");
+	Location endLocation = new Location("x");
+	SmsSender sms = new SmsSender();
+	boolean tripRunning = false; 
+	DateTime lastLock;
 	
 
 	
@@ -86,17 +91,21 @@ public class Reporter implements LocationListener {
 		w = new Writer();
 		log = new Logger(imei);
 		
-		startGPS();
+		//just for test purposes we always start GPS; in real use gps is started and stopped according to if the phone is locked via handler.post(gpsRun);
+//		startGPS();
+
 
 
 	}
 	
 	
-	public void collectData (int lockType) throws IOException  {
+	public void collectData (int lockType, String mac) throws IOException  {
 		
-//		handler.post(gpsRun);
+		//start or stop gps according to lock status of phone
+		handler.post(gpsRun);
+		
 		locked = lockType;
-
+		currentMac = mac;
 
 		
 		int sc = getScreenState();
@@ -107,17 +116,17 @@ public class Reporter implements LocationListener {
 		
 
 		log.set("state", (byte)sc, (byte)bt, (byte)lc, 
-				(byte)lt, (byte)al);
+				(byte)lt, (byte)al, currentMac);
 		
 //		  `screen` enum('OFF','ON','IL1','IL2') DEFAULT NULL,
 //		  `bluetooth` enum('NA','OFF','ON','SCN') DEFAULT NULL,
 //		  `gps` enum('NA','OFF','ON','NPOS') DEFAULT NULL,
 //		  `locked` enum('NO','BT','TB','IL1') DEFAULT NULL,
 //		  `alert` enum('NO','TBN','TBU','GUN','GUU') DEFAULT NULL,
+
 		
-//		w.appendLog("collect Data, LocState: " + getLocationState() + " lat: " + newLocation.getLatitude() + 
-//				" lon: "+ newLocation.getLongitude() + "\n");
 		
+		//if we have a new location
 		if (lc==3) {
 			
 			Log.i(TAG, "Location LOGSET");
@@ -126,11 +135,32 @@ public class Reporter implements LocationListener {
 					newLocation.getAltitude(), (double)newLocation.getSpeed(), (double)newLocation.getAccuracy(), 
 					(double)newLocation.getBearing());
 			locIsNew = false; 
+			
+			//if this is the start of a trip, set startLocation
+//			if (!tripRunning) {
+//				tripRunning = true;
+//				startLocation = newLocation;
+//				Log.d(TAG, "set startLocation");
+//			}
 		}
 		
-	
+		//if phone is locked by Textbuster, set lastLock
+//		if (lt==2) {
+//			lastLock = new DateTime();
+//		}
+//		
+//		long sinceLastLock = new DateTime().getMillis() - lastLock.getMillis();
+//		
+////		if lastLock is more than 10 minutes earlier, we suppose the trip is over, take newest Location and set it as endLocation
+//		if (sinceLastLock < (1000 * 60 * 10)) {
+//			endLocation = newLocation;
+//			endOfTrip();
+//		}
+		
 
 		eventCount++;
+		
+//		sms.check(service);
 		
 		
 	}
@@ -199,6 +229,7 @@ public class Reporter implements LocationListener {
 			Log.i(TAG, "getLocationState, newLocLat: " + newLocation.getLatitude() + " isNew: " + locIsNew 
 				+ " dist: " + dist + "isBetter: " + isBetterLocation(newLocation, lastLocation));
 			
+			//dont send out location all the time, only when we have a new & gopod location
 			if (newLocation.getLatitude()!=0  && dist > 1 && locIsNew  && isBetterLocation(newLocation, lastLocation)) { //&& locked!=0,&& locIsNew
 		
 				
@@ -228,7 +259,7 @@ public class Reporter implements LocationListener {
 
 	
 	
-	
+	//currently not used
 	public Location getLocation() {
 			
 			Location l = null;
@@ -252,7 +283,8 @@ public class Reporter implements LocationListener {
 			return l;
 		}
 
-
+	
+	//check if something is wrong, eg the guardian app is not running on the system 
 	public int getAlert () {
 			alert=0;
 			
@@ -275,10 +307,6 @@ public class Reporter implements LocationListener {
 		}
 
 
-	public String toString(){
-		return "BT : " + new Integer(getBluetoothState()).toString() +
-			   " | Front : " + getTopActivity();
-	}
 	
 	@Override
 	public void onLocationChanged(Location arg0) {
@@ -287,7 +315,24 @@ public class Reporter implements LocationListener {
 		newLocation = arg0;
 		locIsNew=true;
 		
-
+		
+		
+		//just wanted to try something
+		
+//		Geocoder gc = new Geocoder(service, Locale.US);
+//		ArrayList <Address>adr = new ArrayList<Address>();
+//		try {
+//			adr = (ArrayList)gc.getFromLocation(40.374428, -80.697769, 3);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			Log.d(TAG, e.toString());
+//			e.printStackTrace();
+//		}
+//		
+//		for (int i=0; i<adr.size(); i++) {
+//			Log.i(TAG, "Adress: " + adr.get(i).toString());
+//		}
+		
 	}
 
 	@Override
@@ -408,6 +453,33 @@ public class Reporter implements LocationListener {
           return provider2 == null;
         }
         return provider1.equals(provider2);
+    }
+    
+    public void endOfTrip() {
+    	
+//    	if (startLocation.getLatitude()== 0 || endLocation.getLatitude()== 0) {
+//    		return;
+//    	}
+    	
+    	
+    	//send out SMS to parents
+    	
+    	
+    	
+    
+    	startLocation.setLatitude(45.767044);
+    	startLocation.setLongitude(-84.723473);
+   
+    	endLocation.setLatitude(52.584147);
+    	endLocation.setLongitude(13.396325);
+    	
+    	TripForSms tfs = new TripForSms(startLocation, endLocation, UUID.randomUUID().toString());
+    	
+    	sms.addTrip(tfs, service);
+    	sms.check(service);
+    	
+    	
+    	
     }
 
 	

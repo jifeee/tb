@@ -40,6 +40,8 @@ public class TripMapActivity extends MapActivity {
         
         List<GeoPoint> path = new ArrayList<GeoPoint>();
         
+        //Show trip on a map
+        
         try {
 
         	JSONObject o = new JSONObject(myUserStatus.getDetailsByID(myUserStatus.getSelectedTripID()));
