@@ -56,7 +56,7 @@ public class Logger{
 	 */
 	
 	private static final String[] LOG_DIRS = new String[]{
-		"/sdcard/data/com.access2.log",
+		"/sdcard/data/com.access2.test",
 		//"/data/data/com.toasternet.logapp/backup",
 		//Environment.getExternalStorageDirectory() + "/log"
 	};

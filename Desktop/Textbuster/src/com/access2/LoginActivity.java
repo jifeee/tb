@@ -79,8 +79,8 @@ public class LoginActivity extends Activity {
 //         String number = "01622896226";
 //         sm.sendTextMessage(number, null, "Test SMS Message", sentIntent, null);
 //		
-//        Intent service = new Intent(ctx, TextbusterService.class);
-//        ctx.startService(service);
+        Intent service = new Intent(ctx, TextbusterService.class);
+        ctx.startService(service);
 		
 		
         final EditText email = (EditText) findViewById(R.id.editText2);
