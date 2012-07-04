@@ -175,7 +175,7 @@ public class TextbusterService extends Service{
 			
 			//send out package to the server every minute (4*15sec)
 			if (eventCount==4) {
-				
+				 
 				try {
 					reporter.sendData();
 				} catch (UnknownHostException e) {

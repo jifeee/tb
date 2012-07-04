@@ -109,7 +109,7 @@ public class SmsSender {
       }, new IntentFilter("TRIP_SMS_SENT"));
       SmsManager sm = SmsManager.getDefault();
        String number = "01622896226";
-       sm.sendTextMessage(number, null, "Trip from " + tfs.getStartAdr() + "to " + tfs.getEndAdr(), sentIntent, null);
+//       sm.sendTextMessage(number, null, "Trip from " + tfs.getStartAdr() + "to " + tfs.getEndAdr(), sentIntent, null);
 		
 	}
 	
