@@ -43,7 +43,10 @@ namespace :trips do
 					:phone => phone
 				if trip.save
 					puts "  ... created new trip"
-					# 705130711_create_calculated_ev
+
+					last_event = CalculatedEvent.find_or_create_by_last_event_id(t[:end_id])
+					last_event.update_attributes :device => device , :phones_log => phones_log
+					last_event.save
 				end
 	    end
 	  end

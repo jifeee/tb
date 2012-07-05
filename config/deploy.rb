@@ -76,6 +76,10 @@ task :tst do
     task :bundle_install, :roles => :app do
       run "cd #{current_path} && bundle install --without test"
     end
+
+    task :calculate_trips do
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake trips:calculate"
+    end
   end
 
   desc "Config symlinks"

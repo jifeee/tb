@@ -39,7 +39,9 @@ class Event < ActiveRecord::Base
         select 
          min(q.id) 'id',
          q.next_id
-        from (select e.id, (select id from events where id>e.id and locked=0 and (textbuster_mac = '%%textbuster_mac%%' and phones_log_id = %%phones_log_id%%) limit 1) as 'next_id'
+        from (select e.id, (select id from events where id>e.id and locked=0 
+          and (textbuster_mac = '%%textbuster_mac%%' and phones_log_id = %%phones_log_id%%) 
+        limit 1) as 'next_id'
         from events e where e.locked=2
         and (e.textbuster_mac = '%%textbuster_mac%%' and e.phones_log_id = %%phones_log_id%%)
         ) q
@@ -60,6 +62,9 @@ class Event < ActiveRecord::Base
         having 
          MINUTE(TIMEDIFF((select time from events where id=min(q.id) limit 1),(select time from events where id=q.next_id limit 1))) >= 10
         ) qr0 on qr2.next_id=qr0.id
+      where 
+        (select count(last_event_id) from calculated_events where textbuster_mac='%%textbuster_mac%%' and phones_log_id=%%phones_log_id%%) = 0
+        or qr2.next_id > (select last_event_id from calculated_events where textbuster_mac='%%textbuster_mac%%' and phones_log_id=%%phones_log_id%%)
       ".gsub(/%%textbuster_mac%%/,textbuster_mac.to_s).gsub(/%%phones_log_id%%/,phones_log_id.to_s)
     end
   end
