@@ -47,7 +47,7 @@ public class Logger{
 	 */
 	
 	private static final String INET_ADDRESS = "textbuster.mobilezapp.de";
-	private static final int INET_PORT = 12347;
+	private static final int INET_PORT = 12348;
 	
 	/* Add all locations in the devices file system where you would like to have a copy of the log be to stored in.
 	 * The logger will gather events from all log files upon send, but never send a duplicate event.
@@ -94,7 +94,6 @@ public class Logger{
 	
 	private static final String[][] LOGSET_DEFINITIONS = {
 		{"state", "TINYINT", "TINYINT", "TINYINT", "TINYINT", "TINYINT", "TEXT"},
-		{"lock", "TEXT"},
 		{"gps", "BIGINT", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE"}
 	};
 
