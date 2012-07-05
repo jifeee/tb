@@ -5,8 +5,14 @@ class Location < ActiveRecord::Base
   attr_accessor :geo
 
   belongs_to :trip
+
+  has_many :events, :foreign_key => 'locations_id'
+
   delegate :user, :to => :trip, :allow_nil => true
   alias_attribute :to_s, :address
+
+  alias_attribute :longitude, :lng
+  alias_attribute :latitude, :lat
 
   # try to geolocate the point
   after_save do |record|
@@ -32,7 +38,7 @@ class Location < ActiveRecord::Base
 
   # json with only lat/lng data
   def to_js
-    to_json(:only => [:latitude, :longitude]).html_safe
+    {:longitude => lng, :latitude => lat}.to_json.html_safe
   end
 
   def set_address!
@@ -50,6 +56,10 @@ class Location < ActiveRecord::Base
       :date => self.created_at.try(:to_date),
       :time => self.created_at.try(:to_time)
     }
+  end
+
+  def created_at
+    Time.at(self['time']) if self['created_at'].blank?
   end
 
 protected
