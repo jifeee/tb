@@ -113,7 +113,7 @@ public class SignupActivity extends Activity {
         signup.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
 	            	
-	               	mail = email.getText().toString();
+	               	mail = email.getText().toString().trim();
 	               	passw = pass.getText().toString();
 	               	passwRep = passRep.getText().toString();
 	            	

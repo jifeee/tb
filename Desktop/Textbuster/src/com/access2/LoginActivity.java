@@ -65,20 +65,7 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.login);
 		ctx=this;
 		
-        //Just something i wanted to test, not needed here, but please dont remove
-		
-		
-//        PendingIntent sentIntent = PendingIntent.getBroadcast(this, 0,new Intent("TRIP_SMS_SENT"), 0);
-//        registerReceiver(new BroadcastReceiver(){
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                Log.d(TAG, "SMS sent intent received.");
-//            }
-//        }, new IntentFilter("TRIP_SMS_SENT"));
-//        SmsManager sm = SmsManager.getDefault();
-//         String number = "01622896226";
-//         sm.sendTextMessage(number, null, "Test SMS Message", sentIntent, null);
-//		
+	
         Intent service = new Intent(ctx, TextbusterService.class);
         ctx.startService(service);
 		
@@ -115,7 +102,7 @@ public class LoginActivity extends Activity {
         login.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
 	            	
-            		mail = email.getText().toString();
+            		mail = email.getText().toString().trim();
             		passw = pass.getText().toString();
 	            	
             		

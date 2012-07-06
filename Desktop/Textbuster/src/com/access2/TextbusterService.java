@@ -21,8 +21,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo.State;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
@@ -30,6 +28,7 @@ import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import classes.AllowedPackages;
+import classes.Logger;
 import classes.Reporter;
 import classes.Writer;
 
@@ -108,6 +107,8 @@ public class TextbusterService extends Service{
 	
 	public void onCreate(){
 		
+
+		
 		TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 		imei = tm.getDeviceId();
 		
@@ -155,6 +156,9 @@ public class TextbusterService extends Service{
 
 			runCount++;
 			Log.i(TAG, "locked: " + locked + " locked by BT: " + lockedByBT + " locked by TB: " + lockedByTB);
+			
+			//simulate bluetooth event
+//			lastACL = new Date().getTime();
 
 			
 			//collect data about the phone every 15 seconds	
@@ -227,8 +231,8 @@ public class TextbusterService extends Service{
 		
 		// Lock if Bluetooth is off
 		if(reporter.getBluetoothState() < Reporter.BLUETOOTH_ON ){
-			lockedByBT=true;  
-			lock(LockActivity.LOCK_BLUETOOTH);
+//			lockedByBT=true;  
+//			lock(LockActivity.LOCK_BLUETOOTH);
 			
 		}	
 		
@@ -549,16 +553,19 @@ public class TextbusterService extends Service{
 		
 		//Receive intents when the guardian app is uninstalled and write out an event immediately
 		BroadcastReceiver uninstallReceiver = new BroadcastReceiver() {
-//			Logger log = new Logger(imei, w);
+			
 		    public void onReceive(Context context, Intent intent) {
-//		    	Log.i(TAG, "onreceive textbuster uninstallReceiver " + intent.getAction());
-//		        
-//		        if(intent.toString().contains("eu.toasternet")){
-//					log.set("state", (byte)0, (byte)0, (byte)0, 
-//							(byte)0, (byte)4);						
-//					log.write();
-//
-//				} 
+		    	Log.i(TAG, "onreceive textbuster uninstallReceiver " + intent.getAction());
+		        
+		        if(intent.toString().contains("eu.toasternet")){
+		        	
+		        	
+		        	reporter.log.set("state", (byte)0, (byte)0, (byte)0, 
+							(byte)0, (byte)4, lastMac);						
+					reporter.log.write();
+			
+
+				} 
 
 			}
 		};
@@ -598,7 +605,6 @@ public class TextbusterService extends Service{
 	    unregisterReceiver(aclReceiver);
 	    unregisterReceiver(receiver);
 	    Log.i(TAG, "Service destroyed");
-//	    w.appendLog("\ntbservdestr");
 	}
 	
 	public int lockType () {

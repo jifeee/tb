@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import classes.Constants;
@@ -40,18 +41,26 @@ public class TripMapActivity extends MapActivity {
         
         List<GeoPoint> path = new ArrayList<GeoPoint>();
         
-        //Show trip on a map
+        //Get trip details String from UserStatus, convert to JSON, convert to points on the map
         
         try {
 
         	JSONObject o = new JSONObject(myUserStatus.getDetailsByID(myUserStatus.getSelectedTripID()));
         	
-            JSONArray array = new JSONArray(o.getString("points"));
+        	JSONArray array = new JSONArray(o.getString("points"));
+            Log.d(TAG, "array: " + array.toString());
+            
+            Log.d(TAG, "Array(i) to string: " + array.getJSONObject(0).toString());
+
+            
             for (int i = 0; i < array.length(); i++) {
+            	
                 JSONObject points = array.getJSONObject(i);
+                
                 Converter c = new Converter();
                 
                 int lat = c.convertDouble(Double.parseDouble(points.getString("latitude")));
+          
                 int lon = c.convertDouble(Double.parseDouble(points.getString("longitude")));
                 
                 Log.i(TAG, "Point lat: " + lat + " lon: " + lon);
@@ -60,6 +69,7 @@ public class TripMapActivity extends MapActivity {
 
             }
 
+
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -67,7 +77,8 @@ public class TripMapActivity extends MapActivity {
 		
 
 		mapView.getOverlays().add(new PathOverlay(path, Color.CYAN, true));
-		mapView.getController().animateTo(path.get(path.size()-1));
+		mapView.getController().animateTo(path.get(0));
+		mapView.getController().setZoom(14);
 
 	}
 	

@@ -92,7 +92,8 @@ public class Reporter implements LocationListener {
 		log = new Logger(imei);
 		
 		//just for test purposes we always start GPS; in real use gps is started and stopped according to if the phone is locked via handler.post(gpsRun);
-		startGPS();
+		//TODO : remove
+//		startGPS();
 
 
 
@@ -102,7 +103,7 @@ public class Reporter implements LocationListener {
 	public void collectData (int lockType, String mac) throws IOException  {
 		
 		//start or stop gps according to lock status of phone
-//		handler.post(gpsRun);
+		handler.post(gpsRun);
 		
 		locked = lockType;
 		currentMac = mac;
@@ -140,51 +141,55 @@ public class Reporter implements LocationListener {
 			
 			locIsNew = false; 
 			
-			
+		}
 			
 			
 			//SMS/Trip related stuff
 			
-			//if this is the start of a trip, set startLocation
-			if (!tripRunning) {
-				tripRunning = true;
-				startLocation = newLocation;
-							Log.d(TAG, "set startLocation");
-							w.appendLog(new DateTime().toString() + " set startlocation: " + startLocation.toString() + "\n");
-			}
+			//will be changed so we send sms tp 
 			
-			Log.d(TAG, "triprunning: " + tripRunning);
-			w.appendLog(new DateTime() +  "triprunning: " + tripRunning);
-		}
-		
-		//if phone is locked by Textbuster, set lastLock
-		if (lt==2) {
-			lastLock = new DateTime();
-							Log.d(TAG, "REPORTER: LAST LOCK SET");
-							w.appendLog(new DateTime().toString() + " last lock set\n");
-		}
-		
-		
-		
-		long sinceLastLock = new DateTime().getMillis() - lastLock.getMillis();
-							Log.d(TAG, "Reporter: sincelastlock/1000: " + sinceLastLock/1000);
-							w.appendLog(new DateTime().toString() + " sincelastlock/1000: " + sinceLastLock/1000 + "\n");
-		
-		
-		//if lastLock is more than 10 minutes earlier, we suppose the trip is over, take newest Location and set it as endLocation
-		if (sinceLastLock > (1000 * 60 * 10)) {
-			endLocation = newLocation;
-							Log.d(TAG, "Reporter: setEndLocation: " + endLocation.toString());
-							w.appendLog(new DateTime().toString() + " Reporter: setEndLocation: " + endLocation.toString() + "\n");
-			//only if there really was some driving
-			if (tripRunning) {
-					Log.d(TAG, "Reporter:  endOfTrip");
-//				endOfTrip();
-				tripRunning = false; 
-							Log.d(TAG, "Reporter: END OF TRIP, startloc: " + startLocation.toString() + " endloc: " + endLocation.toString());
-							w.appendLog(new DateTime().toString() + "Reporter: END OF TRIP, startloc: " + startLocation.toString() + " endloc: " + endLocation.toString());
-			}
-		}
+			
+			
+//			//if this is the start of a trip, set startLocation
+//			if (!tripRunning) {
+//				tripRunning = true;
+//				startLocation = newLocation;
+//							Log.d(TAG, "set startLocation");
+//							w.appendLog(new DateTime().toString() + " set startlocation: " + startLocation.toString() + "\n");
+//			}
+//			
+//			Log.d(TAG, "triprunning: " + tripRunning);
+//			w.appendLog(new DateTime() +  "triprunning: " + tripRunning);
+//		}
+//		
+//		//if phone is locked by Textbuster, set lastLock
+//		if (lt==2) {
+//			lastLock = new DateTime();
+//							Log.d(TAG, "REPORTER: LAST LOCK SET");
+//							w.appendLog(new DateTime().toString() + " last lock set\n");
+//		}
+//		
+//		
+//		
+//		long sinceLastLock = new DateTime().getMillis() - lastLock.getMillis();
+//							Log.d(TAG, "Reporter: sincelastlock/1000: " + sinceLastLock/1000);
+//							w.appendLog(new DateTime().toString() + " sincelastlock/1000: " + sinceLastLock/1000 + "\n");
+//		
+//		
+//		//if lastLock is more than 10 minutes earlier, we suppose the trip is over, take newest Location and set it as endLocation
+//		if (sinceLastLock > (1000 * 60 * 10)) {
+//			endLocation = newLocation;
+//							Log.d(TAG, "Reporter: setEndLocation: " + endLocation.toString());
+//							w.appendLog(new DateTime().toString() + " Reporter: setEndLocation: " + endLocation.toString() + "\n");
+//			//only if there really was some driving
+//			if (tripRunning) {
+//					Log.d(TAG, "Reporter:  endOfTrip");
+////				endOfTrip();
+//				tripRunning = false; 
+//							Log.d(TAG, "Reporter: END OF TRIP, startloc: " + startLocation.toString() + " endloc: " + endLocation.toString());
+//							w.appendLog(new DateTime().toString() + "Reporter: END OF TRIP, startloc: " + startLocation.toString() + " endloc: " + endLocation.toString());
+//			}
+//		}
 		
 
 		eventCount++;
@@ -259,8 +264,8 @@ public class Reporter implements LocationListener {
 				+ " dist: " + dist + "isBetter: " + isBetterLocation(newLocation, lastLocation));
 			
 			//dont send out location all the time, only when we have a new & gopod location
-//			if (newLocation.getLatitude()!=0  && dist > 1 && locIsNew  && isBetterLocation(newLocation, lastLocation)) { //&& locked!=0,&& locIsNew
-			if (newLocation.getLatitude()!=0) {
+			if (newLocation.getLatitude()!=0  && dist > 1 && locIsNew  && isBetterLocation(newLocation, lastLocation) ) { //&& locked!=0,&& locIsNew
+//			if (newLocation.getLatitude()!=0) {
 				
 				state = 3;
 			}
@@ -339,7 +344,7 @@ public class Reporter implements LocationListener {
 	
 	@Override
 	public void onLocationChanged(Location arg0) {
-		Log.i(TAG, "New Location: " + arg0.toString());
+
 		lastLocation = newLocation;
 		newLocation = arg0;
 		locIsNew=true;
