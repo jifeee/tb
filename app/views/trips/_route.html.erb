@@ -1,4 +1,3 @@
-
 <div class="input map-input" id='map-input'>
   <div id="map-canvas" class="google-map"></div>
   <% @trip.restrictions.flatten.each do |r| %>
@@ -17,7 +16,7 @@
   <%= javascript_include_tag "view-map" %>
   <script type="text/javascript">
     $(window).load( function () {
-      calcRoute(JSON.parse('<%=  @trip.start_point.to_js %>'), 
+      calcRoute(JSON.parse('<%= @trip.start_point.to_js %>'), 
                 JSON.parse('<%= @trip.end_point.to_js %>'), 
                 JSON.parse('[<%= @trip.stopps.map(&:to_js).join(',').html_safe %>]'));
     });

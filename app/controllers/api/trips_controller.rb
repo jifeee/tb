@@ -22,13 +22,14 @@ class Api::TripsController < ApplicationController
   def show
     user = User.find_by_authentication_token(params[:token])
     trip = user.trips.find(params[:id])
+    points = Location.where(:id => trip.start_point_id..trip.end_point_id).all.map {|l| {:longitude => l.lng, :latitude => l.lat}}
     render_with_log :json => {
       :trip_id => trip.id,
       :distance => trip.distance,
       :average_speed => trip.average_speed,
       :start => trip.start_point.api_point_detail,
       :end => trip.end_point.api_point_detail,
-      :points => trip.locations.map {|location| location.api_point_detail}
+      :points => points
     }
   rescue => e
     case e

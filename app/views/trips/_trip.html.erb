@@ -3,7 +3,7 @@
   <td><%= trip.start_point.created_at.strftime '%b. %d, ‘%y'%></td>
   <td>
     <div class="status">
-      <div class="whos"><%= link_to_if can?(:update, trip.device), trip.device.try(:display_name), 'edit_textbuster_path(trip.device)' %></div>
+      <div class="whos"><%= link_to_if can?(:update, trip.device), trip.device.try(:display_name), edit_textbuster_path(trip.device) %></div>
     </div>
   </td>
   <td>

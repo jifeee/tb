@@ -31,6 +31,14 @@ module GeoHelper
     a = (Math.sin(dlat/2))**2 + Math.cos(latitude*RAD_PER_DEG)*Math.cos(point.latitude*RAD_PER_DEG)*(Math.sin(dlon/2))**2
     (2 * Math.atan2( Math.sqrt(a), Math.sqrt(1-a)) * EARTH_RAD).round 2
   end
+
+  def self.distance_between (point_start, point_end)
+    dlon = (point_start[:longitude] - point_end[:longitude]) * RAD_PER_DEG
+    dlat = (point_start[:latitude] - point_end[:latitude]) * RAD_PER_DEG
+
+    a = (Math.sin(dlat/2))**2 + Math.cos(point_end[:latitude]*RAD_PER_DEG)*Math.cos(point_start[:latitude]*RAD_PER_DEG)*(Math.sin(dlon/2))**2
+    (2 * Math.atan2( Math.sqrt(a), Math.sqrt(1-a)) * EARTH_RAD).round 2
+  end
   
   # get geolocated address for given lat/lng
   def geolocate

@@ -505,3 +505,25 @@ form span.error { color: #610e0e; }
 
 .mailto {color: #FFFFFF;}
 .mailto:hover {color: #FFFF00;}
+
+/* Pagination */
+.pagination em {
+  font-style: normal;
+  padding: 0 4px;
+}
+.pagination {
+  height: 16px;
+  padding:0;
+  margin:0;
+}
+.pagination a:hover {
+  background-color: #1D797F;
+}
+.pagination a {
+  color: #FFF;
+  line-height: 16px;
+  border: none;
+  float: none;
+  padding: 0 4px;
+  margin: 0;
+}

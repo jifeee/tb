@@ -11,6 +11,7 @@ class TripsController < ApplicationController
       @trips = @trips.where(:phone_id => filter[:phone_id]) if filter[:phone_id].present?
       @trips = @trips.where(:device => filter[:device]) if filter[:device].present?
     end
+    @trips = @trips.page(params[:page])
   end
   
   # trip detailes view

@@ -28,6 +28,9 @@ gem 'delayed_job_active_record'
 gem 'unicorn'
 gem 'capistrano', :group => :development, :require => false
 
+#  Use pagination
+gem "will_paginate", "~> 3.0.3"
+
 # Deploy with Capistrano
 # gem 'capistrano'
 

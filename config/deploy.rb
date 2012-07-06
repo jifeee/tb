@@ -74,7 +74,11 @@ task :tst do
   
   namespace :bundler do
     task :bundle_install, :roles => :app do
-      run "cd #{current_path} && bundle install --without test"
+      run "cd #{current_path} && bundle install"
+    end
+
+    task :calculate_trips do
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake trips:calculate"
     end
   end
 
