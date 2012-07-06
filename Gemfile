@@ -29,7 +29,9 @@ gem 'unicorn'
 gem 'capistrano', :group => :development, :require => false
 
 #  Use pagination
-gem "will_paginate", "~> 3.0.3"
+# gem "will_paginate", "~> 3.0.3"
+gem 'kaminari'
+
 
 # Deploy with Capistrano
 # gem 'capistrano'

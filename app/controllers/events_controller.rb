@@ -10,6 +10,6 @@ class EventsController < ApplicationController
       @events = @events.where(:phone_id => filter[:phone_id]) if filter[:phone_id].present?
       @events = @events.where(:device => filter[:device]) if filter[:device].present?
     end
-    @events = @events.page(params[:page])
+    @events = @events.page(params[:page]).per(20)
   end
 end

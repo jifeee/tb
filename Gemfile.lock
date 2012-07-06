@@ -144,7 +144,6 @@ GEM
       raindrops (~> 0.6)
     warden (1.1.0)
       rack (>= 1.0)
-    will_paginate (3.0.3)
 
 PLATFORMS
   ruby
@@ -160,10 +159,10 @@ DEPENDENCIES
   enumerated_attribute
   jquery-rails
   json
+  kaminari
   mysql
   rails (= 3.0.9)
   rake (= 0.8.7)
   rest-client
   tiny_mce
   unicorn
-  will_paginate (~> 3.0.3)

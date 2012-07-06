@@ -19,7 +19,7 @@
 </table>
 <div class="dashboard-actions">
   <div class="pull-left"><a href="#" class="lnk">Show More Results</a></div>
-  <div class="pull-right"><%= will_paginate @events %></div>
+  <div class="pull-right"><%= paginate @trips if @trips %></div>
   <br clear="all" />
 </div>
 
