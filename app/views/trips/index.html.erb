@@ -17,9 +17,10 @@
     <%= render :partial => "trip", :collection => @trips %>
   </tbody>
 </table>
-            
 <div class="dashboard-actions">
-  <a href="#" class="lnk">Show More Results</a>
+  <div class="pull-left"><a href="#" class="lnk">Show More Results</a></div>
+  <div class="pull-right"><%= will_paginate @events %></div>
+  <br clear="all" />
 </div>
 
 <% content_for :javascripts do %>

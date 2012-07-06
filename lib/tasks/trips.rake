@@ -3,9 +3,18 @@ require 'geo_helper'
 namespace :trips do
   desc "Calculation trips by events"
   task :calculate => :environment do
+
+		def update_last_event(last_event_id,device,phones_log)
+			last_event = CalculatedEvent.find_or_create_by_last_event_id(last_event_id)
+			last_event.update_attributes :device => device , :phones_log => phones_log
+			last_event.save
+		end
+
+
   	puts 'Prepare calculation trips....'
 
   	grouped_events = Event.select('phones_log_id, textbuster_mac').joins(:phones_log,:device).group('phones_log_id, textbuster_mac')
+
 
  		grouped_events.each_with_index do |grouped_event,idx|
  			puts "Calculating #{idx+1} of #{grouped_events.size}"
@@ -20,7 +29,9 @@ namespace :trips do
 
 			#  Separating trips
 	    t = nil
+	    current_trip = nil
 	    events.map do |e|
+	    	current_trip = e['qr2_id'].to_i if e['qr2_next_id'].nil? && current_trip.nil?
 		    t = e['qr2_id'].to_i if e['qr0_id'].nil? && t.nil?
 		    if e['qr0_id'] && t
 		    	trips << {:start_id => t , :end_id => e['qr2_next_id']}
@@ -28,6 +39,8 @@ namespace :trips do
 		    end
 	    end
 
+
+	    #  Create a completed trips
 	    trips.map do |t|
 				z = []
 		  	locations = Location.joins(:events).where(:events => {:id => (t[:start_id].to_i..t[:end_id].to_i)})
@@ -44,11 +57,19 @@ namespace :trips do
 				if trip.save
 					puts "  ... created new trip"
 
-					last_event = CalculatedEvent.find_or_create_by_last_event_id(t[:end_id])
-					last_event.update_attributes :device => device , :phones_log => phones_log
-					last_event.save
+					update_last_event t[:end_id], device,phones_log
 				end
 	    end
+
+	    #  Create or update current trip
+	    # if current_trip
+	    	# locations = Location.joins(:events).where(:events => {:id > current_trip})
+	    # p locations.all.map &:id
+		  	#  Average speed
+			 # 	average_speed = locations.average('spd')
+				# distance = locations.count > 1 ? locations.inject(0) {|s,l| z.last.nil? ? (0 && z.push(l)) : l.distance_to(z.last)} : 0
+	    # end
+
 	  end
   end
 end
