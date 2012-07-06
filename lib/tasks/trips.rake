@@ -62,14 +62,6 @@ namespace :trips do
 	    end
 
 	    #  Create or update current trip
-	    if current_trip
-	    	locations = Location.joins(:events).where(:events => {['events.id > ?', current_trip]})
-	    	# locations = locations.where(:events => {})
-p locations.all.map &:id
-		  	#  Average speed
-			 # 	average_speed = locations.average('spd')
-				# distance = locations.count > 1 ? locations.inject(0) {|s,l| z.last.nil? ? (0 && z.push(l)) : l.distance_to(z.last)} : 0
-	    end
 
 	  end
   end
