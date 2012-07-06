@@ -28,8 +28,7 @@ class Api::TripsController < ApplicationController
       :average_speed => trip.average_speed,
       :start => trip.start_point.api_point_detail,
       :end => trip.end_point.api_point_detail,
-      # :points => trip.locations.map {|location| location.api_point_detail}
-      :points => Location.where(:id => trip.start_point_id..trip.end_point_id)
+      :points => Location.where(:id => trip.start_point_id..trip.end_point_id).all.map {|l| l.api_point_detail}
     }
   rescue => e
     case e
