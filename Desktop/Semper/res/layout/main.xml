@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="294dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Thank you for installing the TextBuster Guardian App. Tap the button to close. "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginTop="30dp" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="113dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Close"
+        android:layout_marginTop="30dp" />
+
+</LinearLayout>

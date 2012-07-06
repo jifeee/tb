@@ -21,16 +21,17 @@ public final class R {
         public static final int icon=0x7f020007;
         public static final int lock=0x7f020008;
         public static final int logo=0x7f020009;
-        public static final int scr1=0x7f02000a;
-        public static final int scr2=0x7f02000b;
-        public static final int scr3=0x7f02000c;
-        public static final int splash=0x7f02000d;
-        public static final int submitp=0x7f02000e;
-        public static final int tbbutton1=0x7f02000f;
-        public static final int tbbutton2=0x7f020010;
-        public static final int tbbuttonselected=0x7f020011;
-        public static final int tbbuttonunselected=0x7f020012;
-        public static final int textbusterlogo=0x7f020013;
+        public static final int logonew=0x7f02000a;
+        public static final int scr1=0x7f02000b;
+        public static final int scr2=0x7f02000c;
+        public static final int scr3=0x7f02000d;
+        public static final int splash=0x7f02000e;
+        public static final int submitp=0x7f02000f;
+        public static final int tbbutton1=0x7f020010;
+        public static final int tbbutton2=0x7f020011;
+        public static final int tbbuttonselected=0x7f020012;
+        public static final int tbbuttonunselected=0x7f020013;
+        public static final int textbusterlogo=0x7f020014;
     }
     public static final class id {
         public static final int LinearLayout2=0x7f050029;
