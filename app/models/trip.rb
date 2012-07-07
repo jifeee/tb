@@ -25,11 +25,7 @@ class Trip < ActiveRecord::Base
   def stopps(waypoins = nil)
     locations_array = locations - [start_point, end_point]
     if waypoins
-<<<<<<< HEAD
       z = (locations_array.size.to_f / waypoins).ceil rescue 1
-=======
-      z = (locations_array.size.to_f / waypoins).ceil
->>>>>>> ce56b1c541c0ce4948d79c651c3ceee172a135f1
       locations_array = locations_array.in_groups_of(z).map {|a| a.first}
     end
     locations_array
