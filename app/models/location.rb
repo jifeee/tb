@@ -39,6 +39,7 @@ class Location < ActiveRecord::Base
   # json with only lat/lng data
   def to_js
     {:longitude => lng, :latitude => lat}.to_json.html_safe
+    
   end
 
   def set_address!

@@ -22,8 +22,13 @@ class Trip < ActiveRecord::Base
   end
   
   # location points excluding start and end
-  def stopps
-    locations - [start_point, end_point]
+  def stopps(waypoins = nil)
+    locations_array = locations - [start_point, end_point]
+    if waypoins
+      z = (locations_array.size.to_f / waypoins).ceil
+      locations_array = locations_array.in_groups_of(z).map {|a| a.first}
+    end
+    locations_array
   end
   
   # short info as hash representation for API

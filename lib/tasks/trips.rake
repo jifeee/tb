@@ -78,8 +78,9 @@ namespace :trips do
 					:end_point => locations.last,
 					:phone => phone
 				if trip.save
-					puts "  ... created new trip, user: #{phone.user.email} trip_id: #{trip.id}"
+					locations.update_all :trip_id => trip.id
 					update_last_event t[:end_id], device, phones_log
+					puts "  ... created new trip, user: #{phone.user.email} trip_id: #{trip.id}"
 				end
 	    end
 
@@ -99,8 +100,9 @@ namespace :trips do
 					trip = Trip.find_or_create_by_user_id_and_device_id_and_phone_id_and_start_point_id( phone.user.id, device.id, phone.id, locations.first.id)
 					trip.update_attributes(:end_point => locations.last, :distance => distance, :average_speed => average_speed)
 					if trip.save
-						puts "  ... updated trip, user: #{phone.user.email} trip_id: #{trip.id}"
+						locations.update_all :trip_id => trip.id
 						update_last_event locations.select('events.id').last.id, device, phones_log
+						puts "  ... updated trip, user: #{phone.user.email} trip_id: #{trip.id}"
 					end
 				end
 	    end
