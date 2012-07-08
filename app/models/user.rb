@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :trackable, :validatable, :rememberable
 
   attr_accessible :password, :password_confirmation, :restrictions_attributes, *(column_names rescue [])
+  
   attr_accessor :pwd
 
   belongs_to :family
@@ -22,6 +23,7 @@ class User < ActiveRecord::Base
   before_create do |record| # fill the defaults if not set
     record.name ||= record.login
     record.role_id ||= Role.find_by_name('Parent').id
+    record.is_main = true unless record.family_id
     record.build_family unless record.admin? || record.family_id
   end
   after_create :send_welcome_email

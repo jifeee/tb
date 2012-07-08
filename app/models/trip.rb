@@ -13,7 +13,7 @@ class Trip < ActiveRecord::Base
   # get timezone form lat/lng for the trip
   after_create do |record|
     record.update_attribute :timezone, record.start_point.timeshift rescue nil
-  end
+  end  
   
   # show the most recent point if trip not finished
   alias :finish :end_point

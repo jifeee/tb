@@ -14,4 +14,5 @@ class Restriction < ActiveRecord::Base
   def to_s
     "#{radius} km away from #{location}"
   end
+  
 end
