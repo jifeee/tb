@@ -13,7 +13,6 @@ class Mailer < ActionMailer::Base
   end
 
   def alert_time_restriction
-p 'MMMMMMMMMMMMMMMMMMMMMMMMMMM'    
   	subject = 'Alert time restriction'
   	mail(:to => 'isbaysoft@gmail.com', :subject => subject)
   end

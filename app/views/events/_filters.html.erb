@@ -1,7 +1,8 @@
 <div class="filters">
-  <%= semantic_form_for 'events_filer', :remote => true, :url => request.url, :html => {:method => :get} do |f| %>
-    <%= f.input :phone, :as => :select, :collection => @family.phones, :label => false, :include_blank => "All Phones" %>
-    <%= f.input :device, :as => :select, :collection => @family.devices, :label => false, :include_blank => "All Textbusters" %>
+  <%= semantic_form_for 'events_filer', :url => request.url, :html => {:method => :get} do |f| %>
+    <%= f.input :phone, :as => :select, :collection => @family.phones, :label => false, :include_blank => "All Phones", :selected => (params[:events_filer][:phone] rescue nil) %>
+    <%= f.input :device, :as => :select, :collection => @family.devices, 
+      :label => false, :include_blank => "All Textbusters", :selected => (params[:events_filer][:device] rescue nil) %>
   <% end %>
 </div>
 

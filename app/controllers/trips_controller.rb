@@ -7,9 +7,10 @@ class TripsController < ApplicationController
   # list of trips
   def index
     @trips = @family.trips
-    if filter = params[:event]
-      @trips = @trips.where(:phone_id => filter[:phone_id]) if filter[:phone_id].present?
-      @trips = @trips.where(:device => filter[:device]) if filter[:device].present?
+    if filter = params[:events_filer]
+p "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"      
+      @trips = @trips.where(:phone_id => filter[:phone]) if filter[:phone].present?
+      @trips = @trips.where(:device_id => filter[:device]) if filter[:device].present?
     end
     @trips = @trips.page(params[:page]).per(20)
   end

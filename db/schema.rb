@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120707124118) do
+ActiveRecord::Schema.define(:version => 20120708121757) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -27,6 +27,14 @@ ActiveRecord::Schema.define(:version => 20120707124118) do
   add_index "active_admin_comments", ["namespace"], :name => "index_active_admin_comments_on_namespace"
   add_index "active_admin_comments", ["resource_type", "resource_id"], :name => "index_admin_notes_on_resource_type_and_resource_id"
 
+  create_table "alert_trip_notifications", :force => true do |t|
+    t.integer  "alert_id"
+    t.integer  "trip_id"
+    t.integer  "counter",    :default => 1
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "alerts", :force => true do |t|
     t.string   "name"
     t.string   "event_type"
@@ -36,6 +44,9 @@ ActiveRecord::Schema.define(:version => 20120707124118) do
     t.string   "restricted_time_start"
     t.string   "restricted_time_end"
     t.integer  "author_id"
+    t.boolean  "is_repeat",             :default => true
+    t.integer  "repeat_freq",           :default => 15
+    t.integer  "repeat_count",          :default => 3
   end
 
   create_table "alerts_phones", :id => false, :force => true do |t|

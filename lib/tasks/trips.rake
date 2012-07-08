@@ -5,20 +5,33 @@ namespace :trips do
   desc "Calculation trips by events"
   task :calculate => :environment do
 
+  	MAILING_FREQ = 15 # in minutes
   	KM_PER_MILE = 1.609344
   	MILE_PER_KM = 0.621371192
 
 		def update_last_event(last_event_id,device,phones_log,trip = nil)
-
 			if trip
 				event = Event.find(last_event_id)
-				trip.phone.alerts.where(['? not between restricted_time_start and restricted_time_end',event.time.strftime('%H:%M')]).map do |e|
-					Mailer.alert_time_restriction.deliver
+				trip_alert = trip.phone.alerts.where(['? not between restricted_time_start and restricted_time_end',event.time.strftime('%H:%M')])
+				trip_alert.map do |e|
+					alert_trip_notifications = AlertTripNotification.find_or_initialize_by_trip_id_and_alert_id(trip.id, e.id)
+					if (alert_trip_notifications.counter < e.repeat_count) && (alert_trip_notifications.updated_at.nil? || alert_trip_notifications.updated_at <= MAILING_FREQ.minutes.ago)
+						10.times do
+							Mailer.delay.alert_time_restriction
+							# Mailer.alert_time_restriction.deliver
+						end
+						
+						if alert_trip_notifications.new_record? 
+							alert_trip_notifications.save
+						else
+							alert_trip_notifications.update_attribute(:alert_id, e.id) 
+						end
+					end
 				end
 			end
 
 			last_event = CalculatedEvent.find_or_create_by_textbuster_mac_and_phones_log_id(device.imei,phones_log.id)
-			# last_event.update_attributes :last_event_id => last_event_id
+			last_event.update_attributes :last_event_id => last_event_id
 		end
 
 		def calculate_distance(locations)
@@ -39,7 +52,7 @@ namespace :trips do
 			distance *= MILE_PER_KM
 		end
 
-  	puts 'Prepare calculation trips....'
+  	puts "#{Time.now} Start. Prepare calculation trips...."
 
   	grouped_events = Event.select('phones_log_id, textbuster_mac').joins(:phones_log,:device).group('phones_log_id, textbuster_mac')
 
@@ -113,7 +126,7 @@ namespace :trips do
 					end
 				end
 	    end
-
 	  end
+	  puts "#{Time.now} Finish"
   end
 end

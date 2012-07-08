@@ -5,6 +5,7 @@ class Trip < ActiveRecord::Base
   belongs_to :phone
   
   has_many :locations, :order => :created_at
+  has_many :alert_trip_notifications
   belongs_to :start_point, :class_name => 'Location', :foreign_key => :start_point_id
   belongs_to :end_point, :class_name => 'Location', :foreign_key => :end_point_id
   
@@ -14,7 +15,7 @@ class Trip < ActiveRecord::Base
   after_create do |record|
     record.update_attribute :timezone, record.start_point.timeshift rescue nil
   end  
-  
+
   # show the most recent point if trip not finished
   alias :finish :end_point
   def end_point

@@ -4,6 +4,7 @@ class Alert < ActiveRecord::Base
   has_and_belongs_to_many :users
   belongs_to :author, :class_name => "User"
   has_many :restrictions
+  has_many :alert_trip_notifications
   accepts_nested_attributes_for :restrictions, :allow_destroy => true, :reject_if => :all_blank
   
   enum_attr :event_type, ["^Leaving area", "Driving at a specific time"], :nil => false
