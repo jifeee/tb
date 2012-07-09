@@ -3,6 +3,9 @@ ActiveAdmin.register User do
 
   # table for index action
   index do
+    column 'Main' do |user|
+      image_tag 'icons/boss.png' if user.is_main?
+    end
     column :email
     column :login
     column :name
@@ -38,7 +41,7 @@ ActiveAdmin.register User do
     f.buttons
   end
 
-  # show parents/kids in separate panel for the show action, depending on user role
+  # show kids in separate panel for the show action, depending on user role
   sidebar "Relations Details", :only => :show do
     unless user.admin?
       b user.parent? ? "Kids watched by this parent" : "Parents watching this kid"
@@ -49,6 +52,20 @@ ActiveAdmin.register User do
       table_for collection do |t|
         t.column(:email)
         t.column(:name) { |child| link_to(child.name, admin_user_path(child)) }
+      end if collection
+    end
+  end
+
+  # show parents/kids in separate panel for the show action, depending on user role
+  sidebar "Family", :only => :show do
+    unless user.admin?
+      collection = user.parents
+
+      table_for collection do |parent|
+        parent.column(:name) {|p| link_to(p.name, admin_user_path(p))}
+        parent.column do |p|
+          image_tag 'icons/boss.png' if p.is_main?
+        end
       end if collection
     end
   end
@@ -64,6 +81,6 @@ ActiveAdmin.register User do
   # tabs to group users by roles
   scope :all, :default => true
   scope :admins do |users| users.where(:role_id => Role.by_name(:admin)) end
-  scope :parents do |users| users.where(:role_id => Role.by_name(:parent)) end
+  scope :parents do |users| users.where(:role_id => Role.by_name(:parent), :is_main => true) end
 end
 

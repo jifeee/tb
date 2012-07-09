@@ -16,11 +16,8 @@ namespace :trips do
 				trip_alert.map do |e|
 					alert_trip_notifications = AlertTripNotification.find_or_initialize_by_trip_id_and_alert_id(trip.id, e.id)
 					if (alert_trip_notifications.counter < e.repeat_count) && (alert_trip_notifications.updated_at.nil? || alert_trip_notifications.updated_at <= MAILING_FREQ.minutes.ago)
-						10.times do
-							Mailer.delay.alert_time_restriction
-							# Mailer.alert_time_restriction.deliver
-						end
-						
+						Mailer.delay.alert_time_restriction(e,device,phones_log,trip)
+						# Mailer.alert_time_restriction(e,device,phones_log,trip).deliver
 						if alert_trip_notifications.new_record? 
 							alert_trip_notifications.save
 						else

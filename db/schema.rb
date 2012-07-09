@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120708121757) do
+ActiveRecord::Schema.define(:version => 20120709094902) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -124,18 +124,18 @@ ActiveRecord::Schema.define(:version => 20120708121757) do
   end
 
   create_table "locations", :force => true do |t|
-    t.decimal  "lat",        :precision => 10, :scale => 6
-    t.decimal  "lng",        :precision => 10, :scale => 6
+    t.decimal  "lat",                     :precision => 10, :scale => 6
+    t.decimal  "lng",                     :precision => 10, :scale => 6
     t.string   "address"
     t.integer  "trip_id"
     t.datetime "created_at"
     t.string   "country"
     t.string   "city"
     t.string   "zip"
-    t.decimal  "alt",        :precision => 10, :scale => 6
-    t.decimal  "spd",        :precision => 8,  :scale => 6
-    t.decimal  "bear",       :precision => 10, :scale => 6
-    t.integer  "time"
+    t.decimal  "alt",                     :precision => 10, :scale => 6
+    t.decimal  "spd",                     :precision => 8,  :scale => 6
+    t.decimal  "bear",                    :precision => 10, :scale => 6
+    t.integer  "time",       :limit => 8
     t.float    "acc"
   end
 
