@@ -11,4 +11,10 @@ class Mailer < ActionMailer::Base
   def reset_password_instructions(record)
     devise_mail(record, :reset_password_instructions)
   end
+
+  def alert_time_restriction
+  	subject = 'Alert time restriction'
+  	mail(:to => 'isbaysoft@gmail.com', :subject => subject)
+  end
+
 end

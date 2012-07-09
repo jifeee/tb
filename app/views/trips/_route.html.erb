@@ -18,7 +18,7 @@
     $(window).load( function () {
       calcRoute(JSON.parse('<%= @trip.start_point.to_js %>'), 
                 JSON.parse('<%= @trip.end_point.to_js %>'), 
-                JSON.parse('[<%= @trip.stopps.map(&:to_js).join(',').html_safe %>]'));
+                JSON.parse('[<%= @trip.stopps(8).map(&:to_js).join(',').html_safe %>]'));
     });
   </script>
 <% end %>

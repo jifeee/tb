@@ -38,7 +38,7 @@
         <% @family.authored_alerts.each do |alert| %>
           <div>
           <%= check_box_tag "phone[alert_ids][]", alert.id, f.object.alerts.include?(alert) %>
-          <%= alert.event_type %>
+          <%= link_to alert.name, alert_path(alert) %> <%= image_tag 'icons/info.png', :title => alert.event_type %>
           </div>
         <% end %>
       </td>

@@ -12,13 +12,13 @@
 
 <div class="dashboard-actions">
   <%= link_to 'Change Password', edit_password_path, :class => 'btn', :remote => true %>
-  <% if can? :create, User %>
+  <% if can?(:create, User) %>
     <%= link_to 'Add new parent', new_parent_path, :class => "btn", :remote => true %>
-  <% end %><% if can? :update, @family %>
+  <% end %>
+  <% if can?(:update, Family) %>
     <%= link_to "Edit members", edit_family_path(@family), :class => "btn" %>
   <% end %>
 </div>
-
 
 <script type="text/javascript">
   function showNewParent() {

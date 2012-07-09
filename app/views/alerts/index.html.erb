@@ -13,9 +13,10 @@
 </table>
 
 <div class="dashboard-actions">
-  <% if can? :create, Alert %>
+  <% if can?(:create, Alert) %>
     <%= link_to "Add new Alert", new_alert_path, :class => "btn" %>
-  <% end %><% if can? :destroy, Alert %>
+  <% end %>
+  <% if can?(:destroy, Alert) %>
     <%= link_to "Remove Alert", delete_alerts_path, :class => "btn", :id => 'delete_alert' %>
   <% end %>
 </div>

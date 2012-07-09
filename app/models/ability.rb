@@ -20,6 +20,14 @@ class Ability
         if add = AppResources::action_aliases(permission.action.to_sym)
           add.map {|a| can(add, permission.subject_class.constantize)}
         end
+
+        #  Create user can main parent only
+        unless user.is_main?
+          [User, Family, Alert, Device, Phone, Restriction].map do |c| 
+            cannot([:create, :edit, :update, :destroy], c) 
+          end
+        end
+
       end
       #cannot manage other family
     end

@@ -61,10 +61,11 @@ function calcRoute(start, end, stops) {
   directionsDisplay.setPanel(document.getElementById("directionsPanel"));
 
   var waypts = [];
+
   for (var i = 0; i < stops.length; i++) {
     waypts.push({
       location: new google.maps.LatLng(stops[i]['latitude'], stops[i]['longitude']),
-      stopover:true
+      stopover:false
     });
   }
 
@@ -74,10 +75,12 @@ function calcRoute(start, end, stops) {
       waypoints: waypts,
       travelMode: google.maps.TravelMode.DRIVING
   };
-  
+
   directionsService.route(request, function(response, status) {
     if (status == google.maps.DirectionsStatus.OK) {
       directionsDisplay.setDirections(response);
+    } else {
+      $('.google-map').html(status);
     }
   });
 }
