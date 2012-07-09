@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.joda.time.DateTime;
+
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -29,7 +31,6 @@ import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import classes.AllowedPackages;
-import classes.Logger;
 import classes.Reporter;
 import classes.Writer;
 
@@ -174,7 +175,13 @@ public class TextbusterService extends Service{
 					e.printStackTrace();
 					Log.i(TAG, e.toString());
 				}
-
+				
+				
+				String time = new DateTime().toString("dd.MM.yy") + " " + new DateTime().toString("kk:mm");
+				long sinceLastACL = new Date().getTime() - lastACL;
+				w.appendLog(time  + "topact: " + reporter.getTopActivity() + "mac size " + macAddresses.size() + " count " + connectCount + " lbyBT? " + lockedByBT + " lbyTB? " + lockedByTB + " locked? " + locked + " sincelast: " + sinceLastACL + "\n");
+				
+				
 			}
 
 			
@@ -197,7 +204,7 @@ public class TextbusterService extends Service{
 				
 	
 			
-			Log.i(TAG, "topact: " + reporter.getTopActivity() + " active: " + active + "mac size " + macAddresses.size() + " count " + connectCount);
+//			Log.i(TAG, "topact: " + reporter.getTopActivity() + " active: " + active + "mac size " + macAddresses.size() + " count " + connectCount);
 			
 			if (connectCount==macAddresses.size()) {
 				connectCount=0;
@@ -232,8 +239,12 @@ public class TextbusterService extends Service{
 		
 		// Lock if Bluetooth is off
 		if(reporter.getBluetoothState() < Reporter.BLUETOOTH_ON ){
-//			lockedByBT=true;  
-//			lock(LockActivity.LOCK_BLUETOOTH);
+			
+			String time = new DateTime().toString("dd.MM.yy") + " " + new DateTime().toString("kk:mm");
+			w.appendLog(time  + " bluetooth off" + "\n");
+			
+			lockedByBT=true;  
+			lock(LockActivity.LOCK_BLUETOOTH);
 			
 		}	
 		
@@ -289,6 +300,7 @@ public class TextbusterService extends Service{
 	public void connect () {
 			long sinceLastACL = new Date().getTime() - lastACL;
 			Log.i(TAG, sinceLastACL/1000 + " since last connection");
+
 			if(sinceLastACL < discoveryDelay * 1000){
 				
 			}
@@ -301,6 +313,8 @@ public class TextbusterService extends Service{
 		
 						String mac = macAddresses.get(connectCount); 
 						Log.d(TAG, "Trying to connect to " + mac);
+						String time = new DateTime().toString("dd.MM.yy") + " " + new DateTime().toString("kk:mm");
+						w.appendLog(time + " tyring connect " + mac + " size of macs: " + macAddresses.size());
 					
 						
 						if (!(macAddresses.get(connectCount).equals("null"))) {
@@ -354,6 +368,8 @@ public class TextbusterService extends Service{
 		else{
 			
 			Log.i(TAG, "new Lockscreen");
+			String time = new DateTime().toString("dd.MM.yy") + " " + new DateTime().toString("kk:mm");
+			w.appendLog(time + " new lockscreen, type: "+ type  + ", in front: "+  reporter.getTopActivity() + "\n");
 			
 			Intent intent = new Intent(context, LockActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
@@ -369,6 +385,8 @@ public class TextbusterService extends Service{
 	// Send the broadcast to unlock
 	private void unlock(){
 //		Log.i(TAG, "unlock");
+		String time = new DateTime().toString("dd.MM.yy") + " " + new DateTime().toString("kk:mm");
+		w.appendLog(time + " unlock" + "\n");
 		Intent i = new Intent();
 		i.setAction(LockActivity.BROADCAST_UNLOCK);
         getApplicationContext().sendBroadcast(i);
@@ -412,7 +430,9 @@ public class TextbusterService extends Service{
 				
 				if(action.equals(BluetoothDevice.ACTION_ACL_CONNECTED)){
 					event = "ACCN";
-					Log.d(TAG, "ACL connected from " + address);
+						Log.d(TAG, "ACL connected from " + address);
+						String time = new DateTime().toString("dd.MM.yy") + " " + new DateTime().toString("kk:mm");
+						w.appendLog(time + " aclcon" + address + "\n");
 					
 					lastACL = new Date().getTime();
 					
@@ -420,8 +440,9 @@ public class TextbusterService extends Service{
 
 				} else if(action.equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)){
 					event = "ACDC";
-					Log.d(TAG, "ACL disconnected from " + address);
-//					w.appendLog("\nacldis" + address);
+							Log.d(TAG, "ACL disconnected from " + address);
+							String time = new DateTime().toString("dd.MM.yy") + " " + new DateTime().toString("kk:mm");
+							w.appendLog(time + " acldis" + address + "\n");
 					lastACL = new Date().getTime();
 					
 					
