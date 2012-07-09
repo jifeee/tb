@@ -11,7 +11,7 @@ class Phone < ActiveRecord::Base
 
   ABILITIES = [:GPS, :Bluetooth]
 
-  validates :imei, :presence => true
+  validates :imei, :presence => true, :uniqueness => true
   
   bitmask :abilities, :as => ABILITIES
   
