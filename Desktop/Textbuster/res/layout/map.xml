@@ -25,9 +25,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:text="Trip Details"
+            android:text="@string/trip_Text"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#29c9cc"
+            android:textColor="@color/sea_blue"
             android:textStyle="bold" />
 
     </RelativeLayout>
@@ -44,7 +44,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:clickable="true"
-        android:apiKey="0Oe2Uz4IxJ1pUVqu9RJbZn_6w9ulEaNimi6v3iQ"
+        android:apiKey="0Oe2Uz4IxJ1pxDI14AD1at0p_q2jew2TT1SURKA"
     />
     
     

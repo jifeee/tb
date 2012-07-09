@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:onClick="enableBluetooth" >
+    android:onClick="enableBluetooth" android:background="@drawable/bg">
 
     <TextView android:id="@+id/text"
               android:layout_width="wrap_content"
@@ -12,14 +12,14 @@
               android:text="Bluetooth needs to be enabled."
               android:drawablePadding="4dip"
               android:layout_gravity="center_horizontal"
-    />
+    android:textColor="@color/black"/>
 	<TextView android:id="@+id/text"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="Tap on the logo to enable it."
               android:drawablePadding="4dip"
               android:layout_gravity="center_horizontal"
-    />
+    android:textColor="@color/black"/>
     
     <ImageView
         android:id="@+id/bluetoothlogo"
@@ -36,7 +36,7 @@
               android:text="Locked by"
               android:drawablePadding="4dip"
               android:layout_gravity="center_horizontal"
-    />
+    android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/textView1"
@@ -48,6 +48,6 @@
         android:shadowDy=".25"
         android:shadowRadius="3.0"
         android:text="TextBuster"
-        android:textStyle="bold" />
+        android:textStyle="bold" android:textColor="@color/black"/>
 
 </LinearLayout>

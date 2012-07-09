@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" android:background="@drawable/bg">
     
         <RelativeLayout
         android:layout_width="fill_parent"
@@ -36,6 +36,26 @@
         android:orientation="vertical" >
     </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="right" android:padding="5dip">
+
+                <Button
+                    android:id="@+id/button3"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date" android:background="@drawable/date" android:textColor="@color/white" android:textSize="16sp"/>
+
+                <Button
+                    android:id="@+id/button2"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Miles" android:background="@drawable/miles_pressed" android:textColor="@color/white"/>
+
+            </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"

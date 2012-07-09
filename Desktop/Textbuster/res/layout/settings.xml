@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
-    
+    android:orientation="vertical" android:background="@drawable/bg">
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="60dp"
@@ -25,111 +25,116 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:text="Settings"
-            android:textColor="#29c9cc"
-            android:textStyle="bold"
-            
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
+            android:text="@string/setting_Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/sea_blue"
+            android:textStyle="bold" />
     </RelativeLayout>
-    
-        <LinearLayout
+
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="7dp"
         android:background="@drawable/fancylinebg"
         android:orientation="vertical" >
     </LinearLayout>
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.10"
-        android:orientation="vertical" >
-    </LinearLayout>
+        android:layout_height="fill_parent" >
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.37"
-        android:orientation="vertical" >
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:text="Email trip report"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.10"
+                android:orientation="vertical" >
+            </LinearLayout>
 
-        <EditText
-            android:id="@+id/editText1"
-            android:layout_width="234dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            
-            android:hint="Email" >
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.37"
+                android:orientation="vertical" >
 
-        </EditText>
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="15dp"
+                    android:text="Email trip report"
+                    android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/black" android:layout_marginBottom="5dp" android:layout_marginLeft="20dip" android:layout_marginRight="20dip"/>
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:text="SMS trip report"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+                <EditText
+                    android:id="@+id/editText1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dip"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress" android:background="@drawable/input" android:layout_marginLeft="20dip" android:layout_marginRight="20dip" android:padding="5dip">
+                </EditText>
 
-        <EditText
-            android:id="@+id/editText2"
-            android:layout_width="234dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:ems="10"
-            android:inputType="number"
-            
-            android:hint="Phone number" />
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="15dp"
+                    android:text="SMS trip report"
+                    android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/black" android:layout_marginBottom="5dp" android:layout_marginLeft="20dip" android:layout_marginRight="20dip"/>
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:text="Auto reply message"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+                <EditText
+                    android:id="@+id/editText2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dip"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:hint="Phone number"
+                    android:inputType="number" android:background="@drawable/input" android:layout_marginLeft="20dip" android:layout_marginRight="20dip" android:padding="5dip"/>
 
-        <EditText
-            android:id="@+id/editText3"
-            android:layout_width="234dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:ems="10"
-            android:inputType="text"
-            
-            android:hint="Message" />
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="15dp"
+                    android:text="Auto reply message"
+                    android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/black" android:layout_marginBottom="5dp" android:layout_marginLeft="20dip" android:layout_marginRight="20dip"/>
 
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/buttonstates"
-            android:text="@string/submit" />
-        
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/buttonstates"
-            android:text="Change password" />
+                <EditText
+                    android:id="@+id/editText3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dip"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:hint="Message"
+                    android:inputType="text" android:background="@drawable/input" android:layout_marginLeft="20dip" android:layout_marginRight="20dip" android:padding="5dip"/>
 
-    </LinearLayout>
+                <Button
+                    android:id="@+id/button1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/menu_buttons"
+                    android:text="@string/submit" android:layout_marginLeft="20dip" android:layout_marginRight="20dip"/>
+
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/menu_buttons"
+                    android:text="Change password" android:layout_marginLeft="20dip" android:layout_marginRight="20dip"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

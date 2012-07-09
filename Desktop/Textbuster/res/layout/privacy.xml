@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" android:background="@drawable/bg">
     
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -16,9 +16,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:text="Privacy Policy"
+            android:text="@string/pPolicy_Text"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#29c9cc"
+            android:textColor="@color/sea_blue"
             android:textStyle="bold" />
 
         <ImageView
@@ -38,11 +38,20 @@
         android:background="@drawable/fancylinebg"
         android:orientation="vertical" >
     </LinearLayout>
+     <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+       android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/ll1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_weight="0.76"
         android:orientation="vertical" >
         
@@ -66,8 +75,8 @@
              android:layout_height="fill_parent"
              android:layout_marginLeft="10dp"
              android:layout_marginRight="10dp"
-             android:text="Privacy Policy"
-             android:textAppearance="?android:attr/textAppearanceMedium" />
+             android:text="@string/pPolicy_Text"
+             android:textAppearance="?android:attr/textAppearanceMedium" android:textColor="@color/gray"/>
 
      </LinearLayout>
             
@@ -89,5 +98,7 @@
              android:text="Back" />
 
     </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
