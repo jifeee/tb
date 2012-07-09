@@ -31,6 +31,10 @@ class Location < ActiveRecord::Base
     trip.restrictions.flatten.map {|r| r.contains?(self)}.reduce(:|)
   end
 
+  def restricted_zones
+    trip.restrictions.flatten.select {|r| r.contains?(self) == false}
+  end
+
   # lat/lng or geolocated address
   def location
     address || "#{latitude} #{longitude}"

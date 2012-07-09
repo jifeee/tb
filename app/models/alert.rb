@@ -12,6 +12,9 @@ class Alert < ActiveRecord::Base
   validates :name, :event_type, :presence => true
   validates :restricted_time_start, :restricted_time_end, :format => /^(([0-9])|([0-1][0-9])|([2][0-3])):(([0-9])|([0-5][0-9]))$/, :if => :time_type?
   validate :restrictions_present, :unless => :time_type?
+
+  scope :time_resrtriction, where(:event_type => 'Driving at a specific time')
+  scope :zone_resrtriction, where(:event_type => 'Leaving area')
   
   def conditions
     "Alert if " << if event_type.eql? :"Leaving area"

@@ -9,21 +9,37 @@ namespace :trips do
   	KM_PER_MILE = 1.609344
   	MILE_PER_KM = 0.621371192
 
-		def update_last_event(last_event_id,device,phones_log,trip = nil)
-			if trip
-				event = Event.find(last_event_id)
-				trip_alert = trip.phone.alerts.where(['? not between restricted_time_start and restricted_time_end',event.time.strftime('%H:%M')])
-				trip_alert.map do |e|
-					alert_trip_notifications = AlertTripNotification.find_or_initialize_by_trip_id_and_alert_id(trip.id, e.id)
-					if (alert_trip_notifications.counter < e.repeat_count) && (alert_trip_notifications.updated_at.nil? || alert_trip_notifications.updated_at <= MAILING_FREQ.minutes.ago)
-						Mailer.delay.alert_time_restriction(e,device,phones_log,trip)
-						# Mailer.alert_time_restriction(e,device,phones_log,trip).deliver
-						if alert_trip_notifications.new_record? 
-							alert_trip_notifications.save
-						else
-							alert_trip_notifications.update_attribute(:alert_id, e.id) 
-						end
-					end
+  	def send_alert(trip, alert)
+			alert_trip_notifications = AlertTripNotification.find_or_initialize_by_trip_id_and_alert_id(trip.id, alert.id)
+			if (alert_trip_notifications.counter < alert.repeat_count) && (alert_trip_notifications.updated_at.nil? || alert_trip_notifications.updated_at <= MAILING_FREQ.minutes.ago)		
+				yield
+				if alert_trip_notifications.new_record? 
+					alert_trip_notifications.save
+				else
+					alert_trip_notifications.update_attribute(:alert_id, e.id) 
+				end
+			end
+  	end
+
+		def update_last_event(last_event_id,device,phones_log,trip)
+			event = Event.find(last_event_id)
+			#  Check time restrictions
+			trip_alert = trip.phone.alerts.time_resrtriction.where(['? not between restricted_time_start and restricted_time_end',event.time.strftime('%H:%M')])
+			trip_alert.map do |e|
+				send_alert(trip, e) do
+					Mailer.delay.alert_time_restriction(e,device,phones_log,trip)
+					# Mailer.alert_time_restriction(e,device,phones_log,trip).deliver
+				end
+			end
+
+			#  Check leave zone restriction
+			puts event.location.allowed?
+
+			if event.location && !event.location.allowed?
+				alert = event.location.restricted_zones.first.alert
+				send_alert(trip, alert) do
+					Mailer.delay.alert_zone_restriction(e,device,phones_log,trip)
+					# Mailer.alert_zone_restriction(alert,device,phones_log,trip).deliver
 				end
 			end
 

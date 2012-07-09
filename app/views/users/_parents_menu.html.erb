@@ -14,7 +14,6 @@
   <% if can? :read, Family %>
     <li class="<%= menu_item_class('families') %>"><%= link_to menu_item_label(:parents, "Family"), family_path(@family || 1) %></li>
   <% end %>
-    <li class="<%= menu_item_class('kids') %>"><%= link_to menu_item_label(:kids, "Kids"), family_kids_path(@family || 1) %></li>
 
 </ul>
 
