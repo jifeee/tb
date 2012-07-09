@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import classes.AllowedPackages;
@@ -559,11 +560,16 @@ public class TextbusterService extends Service{
 		        
 		        if(intent.toString().contains("eu.toasternet")){
 		        	
-		        	
+		        	// write 'alert' event 
 		        	reporter.log.set("state", (byte)0, (byte)0, (byte)0, 
 							(byte)0, (byte)4, lastMac);						
 					reporter.log.write();
 			
+					// send out 'alert' sms
+					 SmsManager sm = SmsManager.getDefault();
+				     String number = "somephonenumber";   // has to be set from the backend
+				     sm.sendTextMessage(number, null, "TextBuster Guardian App has been uninstalled on phone " + imei, null, null);
+					
 
 				} 
 

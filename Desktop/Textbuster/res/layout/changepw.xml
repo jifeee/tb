@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
-    
+    android:orientation="vertical" android:background="@drawable/bg">
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="60dp"
@@ -25,109 +25,114 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:text="Password"
-            android:textColor="#29c9cc"
-            android:textStyle="bold"
-            
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
+            android:text="@string/password_Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/sea_blue"
+            android:textStyle="bold" />
     </RelativeLayout>
-    
-        <LinearLayout
+
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="7dp"
         android:background="@drawable/fancylinebg"
         android:orientation="vertical" >
     </LinearLayout>
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.10"
-        android:orientation="vertical" >
-    </LinearLayout>
+        android:layout_height="fill_parent" >
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.37"
-        android:orientation="vertical" >
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:text="Enter current password"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.10"
+                android:orientation="vertical" >
+            </LinearLayout>
 
-        <EditText
-            android:id="@+id/editText1"
-            android:layout_width="234dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:ems="10"
-            android:inputType="textPassword"
-            
-            android:hint="Current Password" >
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.37"
+                android:orientation="vertical" >
 
-        </EditText>
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="15dip"
+                    android:text="Enter current password"
+                    android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/black" android:layout_marginBottom="5dip"/>
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:text="New Password"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+                <EditText
+                    android:id="@+id/editText1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:hint="Current Password"
+                    android:inputType="textPassword" android:background="@drawable/input" android:layout_marginLeft="20dip" android:layout_marginRight="20dip" android:padding="5dip">
+                </EditText>
 
-        <EditText
-            android:id="@+id/editText2"
-            android:layout_width="234dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:ems="10"
-            android:inputType="textPassword"
-            
-            android:hint="New Password" />
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="15dip"
+                    android:text="New Password"
+                    android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/black" android:layout_marginBottom="5dip"/>
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:text="Re- type new Password"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+                <EditText
+                    android:id="@+id/editText2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:hint="New Password"
+                    android:inputType="textPassword" android:background="@drawable/input" android:layout_marginLeft="20dip" android:layout_marginRight="20dip" android:padding="5dip"/>
 
-        <EditText
-            android:id="@+id/editText3"
-            android:layout_width="234dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:ems="10"
-            android:inputType="textPassword"
-            
-            android:hint="New Password" />
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="15dip"
+                    android:text="Re- type new Password"
+                    android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/black" android:layout_marginBottom="5dip"/>
 
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="123dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
-            android:text="@string/submit" />
-        
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="123dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:text="Cancel" />
+                <EditText
+                    android:id="@+id/editText3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:hint="New Password"
+                    android:inputType="textPassword" android:background="@drawable/input" android:layout_marginLeft="20dip" android:layout_marginRight="20dip" android:padding="5dip"/>
 
-    </LinearLayout>
+                <Button
+                    android:id="@+id/button1"
+                    android:layout_width="123dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:text="@string/submit" />
+
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="123dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:text="Cancel" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

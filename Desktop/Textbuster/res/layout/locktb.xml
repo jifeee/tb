@@ -3,7 +3,7 @@
               android:layout_width="fill_parent" 
               android:layout_height="fill_parent" 
               android:orientation="vertical"
-              android:gravity="center_vertical" >
+              android:gravity="center_vertical" android:background="@drawable/bg">
     <ImageView 
 	   android:id="@+id/test_image"
 	   android:src="@drawable/textbusterlogo"
@@ -20,7 +20,7 @@
               android:text="Locked by"
               android:drawablePadding="4dip"
               android:layout_gravity="center_horizontal"
-    />
+    android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/textView1"
@@ -33,7 +33,7 @@
         android:shadowDy=".25"
         android:shadowRadius="3.0"
         android:text="TextBuster"
-        android:textStyle="bold" />
+        android:textStyle="bold" android:textColor="@color/black"/>
 
     <!--Button android:id="@+id/button"
             android:layout_width="wrap_content"

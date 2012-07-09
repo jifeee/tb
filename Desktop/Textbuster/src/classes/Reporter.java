@@ -93,7 +93,7 @@ public class Reporter implements LocationListener {
 		
 		//just for test purposes we always start GPS; in real use gps is started and stopped according to if the phone is locked via handler.post(gpsRun);
 		//TODO : remove
-//		startGPS();
+		startGPS();
 
 
 
@@ -103,7 +103,7 @@ public class Reporter implements LocationListener {
 	public void collectData (int lockType, String mac) throws IOException  {
 		
 		//start or stop gps according to lock status of phone
-		handler.post(gpsRun);
+//		handler.post(gpsRun);
 		
 		locked = lockType;
 		currentMac = mac;
@@ -137,6 +137,8 @@ public class Reporter implements LocationListener {
 			log.set("gps", newLocation.getTime(), newLocation.getLatitude(), newLocation.getLongitude(), 
 					newLocation.getAltitude(), (double)newLocation.getSpeed(), (double)newLocation.getAccuracy(), 
 					(double)newLocation.getBearing());
+			
+			Log.d(TAG, "time in location: " + newLocation.getTime());
 			
 			
 			locIsNew = false; 
@@ -272,8 +274,8 @@ public class Reporter implements LocationListener {
 
 		}	
 		Log.i(TAG, "LOCATIONSTATE: (na, off, on, new)" + state);
-		return state;
-//		return 3; 
+//		return state;
+		return 3; 
 	}
 	
 	public int getScreenState () {

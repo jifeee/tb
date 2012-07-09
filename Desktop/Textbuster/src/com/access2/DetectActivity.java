@@ -36,6 +36,7 @@ public class DetectActivity extends Activity {
 	String MAC;
 	
 	//Activity to detect the Textbuster device and send it's MAC address to the service via Broadcast
+	//This is probably not in the final product as we receive the TB MACs to connect to from the backend. 
 	
 	
 	/** Called when the activity is first created. */
@@ -264,7 +265,6 @@ public class DetectActivity extends Activity {
     
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-      Log.i(TAG, "OSIS detact");
       super.onSaveInstanceState(savedInstanceState);
 
     }
@@ -272,7 +272,6 @@ public class DetectActivity extends Activity {
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
     	super.onRestoreInstanceState(savedInstanceState);
-    	Log.i(TAG, "ORIS detact");
       
     }
 
