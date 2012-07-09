@@ -325,7 +325,7 @@ body {
     border-radius: 8px;
     position:relative;
     z-index:10;
-    min-height:200px;
+    min-height:300px;
     }
     .dashboard .tab-content_i{
       padding:40px 4px 18px 4px;

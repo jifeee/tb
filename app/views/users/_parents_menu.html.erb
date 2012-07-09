@@ -4,12 +4,17 @@
   <% end %>
   <% if can? :read, Phone %>
     <li class="<%= menu_item_class('phones') %>"><%= link_to menu_item_label(:phones, "Phone"), phones_path %></li>
-  <% end %><% if can? :read, Device %>
+  <% end %>
+  <% if can? :read, Device %>
     <li class="<%= menu_item_class('devices') %>"><%= link_to menu_item_label(:devices, "Device"), textbusters_path %></li>
-  <% end %><% if can? :read, Alert %>
+  <% end %>
+  <% if can? :read, Alert %>
     <li class="<%= menu_item_class('alerts') %>"><%= link_to menu_item_label(:authored_alerts, "Alert"), alerts_path %></li>
-  <% end %><% if can? :read, Family %>
+  <% end %>
+  <% if can? :read, Family %>
     <li class="<%= menu_item_class('families') %>"><%= link_to menu_item_label(:parents, "Family"), family_path(@family || 1) %></li>
   <% end %>
+    <li class="<%= menu_item_class('kids') %>"><%= link_to menu_item_label(:kids, "Kids"), family_kids_path(@family || 1) %></li>
+
 </ul>
 

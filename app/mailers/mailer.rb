@@ -12,9 +12,16 @@ class Mailer < ActionMailer::Base
     devise_mail(record, :reset_password_instructions)
   end
 
-  def alert_time_restriction
-  	subject = 'Alert time restriction'
-  	mail(:to => 'isbaysoft@gmail.com', :subject => subject)
+  def alert_time_restriction(alert,device,phones_log,trip)
+    puts 'alert_time_restriction.....................................................'
+    @user = phones_log.phone.user
+    @device = device
+    @trip = trip
+    alert.users.map do |user|
+    	subject = 'Alert time restriction. Don\'t answer this message'
+      puts "alert ,ailinig to #{user.email}"
+    	mail(:to => user.email, :subject => subject)
+    end
   end
 
 end

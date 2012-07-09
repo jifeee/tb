@@ -9,7 +9,7 @@
     <% @family.phones.each do |phone| %>
       <div class="status">
         <div class="ttl"><%= phone.user.name %></div>
-        <div class="num"><%= link_to_if can?(:update, phone), phone.name, edit_phone_path(phone) %></div>
+        <div class="num"><%= link_to_if can?(:update, phone), (phone.name || 'noname'), edit_phone_path(phone) %></div>
         <% status = alert.phones.include?(phone) ? :enabled : :disabled %>
         <div class="st <%= 'st-d' if status.eql? :disabled %>"><%= status.to_s.capitalize %></div>
       </div>

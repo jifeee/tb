@@ -17,7 +17,9 @@ Textbuster::Application.routes.draw do
     get 'textbusters/delete' => "devices#batch_delete", :on => :collection, :as => :delete
   end
   resources :events, :only => :index
-  resources :families, :except => [:new, :create, :destroy]
+  resources :families, :except => [:new, :create, :destroy] do
+    resources :kids
+  end
   resources :parents, :only => [:new, :create]
   resources :pages, :only => :show
   resources :trips, :only => [:index, :show]
