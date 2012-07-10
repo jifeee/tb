@@ -1,5 +1,7 @@
 <tr>
-  <td width="15"><%= image_tag "icons/#{trip.status}.png", :width => 15, :height => 16, :alt => "on" %></td>
+  <td width="15">
+    <%= image_tag "icons/#{trip.status}.png", :width => 15, :height => 16, :alt => "on" %>
+  </td>
   <td><%= trip.start_point.created_at.strftime '%b. %d, ‘%y'%></td>
   <td>
     <div class="status">

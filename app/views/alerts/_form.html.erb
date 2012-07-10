@@ -27,18 +27,19 @@
       <td>
         <% @family.phones.each do |phone| %>
           <div>
-            <%= check_box_tag "alert[phone_ids][]", phone.id, f.object.phones.include?(phone) %>
+            <%= check_box_tag "alert[phone_ids][]", phone.id, f.object.phones.map {|p| p.id}.include?(phone.id) %>
             <%= phone.name || phone.user.name %>
           </div>
         <% end %>
       </td>
     </tr>
     <tr>
-      <th>Contacts</th>
+      <th>Contacts
+      </th>
       <td>
         <% @family.parents.each do |parent| %>
           <div>
-            <%= check_box_tag "alert[user_ids][]", parent.id, f.object.users.include?(parent) %>
+            <%= check_box_tag "alert[user_ids][]", parent.id, f.object.users.map {|p| p.id}.include?(parent.id) %>
             <%= parent.name || parent.email %>
           </div>
         <% end %>

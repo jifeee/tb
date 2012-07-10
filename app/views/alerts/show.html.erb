@@ -29,7 +29,7 @@
         <td>
           <% @family.phones.each do |phone| %>
             <div>
-              <%= check_box_tag "alert[phone_ids][]", phone.id, @alert.phones.include?(phone), :disabled => true %>
+              <%= check_box_tag "alert[phone_ids][]", phone.id, @alert.phones.map {|p| p.id}.include?(phone.id), :disabled => true %>
               <%= phone.name || phone.user.name %>
             </div>
           <% end %>
@@ -39,7 +39,7 @@
         <td>
           <% @family.parents.each do |parent| %>
             <div>
-              <%= check_box_tag "alert[user_ids][]", parent.id, @alert.users.include?(parent), :disabled => true %>
+              <%= check_box_tag "alert[user_ids][]", parent.id, @alert.users.map {|p| p.id}.include?(parent.id), :disabled => true %>
               <%= parent.name || parent.email %>
             </div>
           <% end %>

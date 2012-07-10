@@ -1,33 +1,38 @@
 <table class="dashboard-table table table-bordered">
       <tbody>
         <tr>
-          <th>Distance</th>
+          <th width="140">Distance</th>
           <td><%= @trip.distance %> mi</td>
-        <tr>
+        </tr>
         <tr>
           <th>Average Speed</th>
           <td><%= @trip.average_speed %> mph</td>
-        <tr>
+        </tr>
         <tr>
           <th>Start Point</th>
           <td><%= @trip.start_point %></td>
-        <tr>
+        </tr>
         <tr>
           <th>Start date</th>
           <td><%= @trip.created_at.strftime("%d %b %Y") %></td>
-        <tr>
+        </tr>
         <tr>
           <th>Start time</th>
           <td><%= @trip.created_at.strftime("%X") %></td>
-        <tr>
+        </tr>
         <tr>
           <th>End Point</th>
           <td><%= @trip.end_point %></td>
-        <tr>
+        </tr>
         <tr>
           <th>Duration</th>
           <td><%= distance_of_time_in_words(@trip.created_at, @trip.end_point.created_at) %></td>
+        </tr>
         <tr>
+          <th>Alert violations</th>
+          <td>
+            <%= @trip.alert_histories.map {|alert_history| alert_history.short_description}.join(', ') %>
+          </td>
         </tr>
         <tr>
           <th>Route</th>

@@ -5,6 +5,7 @@ class Alert < ActiveRecord::Base
   belongs_to :author, :class_name => "User"
   has_many :restrictions
   has_many :alert_trip_notifications
+  has_many :alert_histories
   accepts_nested_attributes_for :restrictions, :allow_destroy => true, :reject_if => :all_blank
   
   enum_attr :event_type, ["^Leaving area", "Driving at a specific time"], :nil => false
@@ -28,7 +29,8 @@ class Alert < ActiveRecord::Base
     errors[:restricted_time_start] || errors[:restricted_time_end]
   end
   
-  private
+private
+
   def time_type?
     event_type.to_s =~ /specific time/
   end

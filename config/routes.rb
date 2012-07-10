@@ -34,6 +34,7 @@ Textbuster::Application.routes.draw do
     post 'login' => 'users#login' #post
     post 'sign_up' => 'users#sign_up' #post
     post 'change_password' => 'users#change_password' #post
+    get 'get_textbusters/:imei' => 'users#get_textbusters'    
     
     resources :trips
   end

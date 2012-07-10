@@ -1,10 +1,16 @@
 namespace :alerts do
-  task :time,  :event_datetime, :needs => :environment do |t, args|
-  	puts "Hello"
-  	puts args[:event_datetime]
+  task :t1, :event_datetime, :needs => :environment do |t, args|
+  	@force = "test"
+  end
 
-  	alerts = Event.find(10790)
-  	p alerts
+  task :t2 => :t1 do |t|
+  	aaa('bbb')
+  	puts "Hello, (#{@force})"
+  end
+
+  def aaa(force = nil)
 
   end
+
 end
+ 

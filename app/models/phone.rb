@@ -22,4 +22,9 @@ class Phone < ActiveRecord::Base
   def restrictions
     alerts.map(&:restrictions)
   end
+
+  def name
+    self['name'] || ('imei ' << self['imei'][0,4] << 'xxxxxxxx' << self['imei'][-4,4])
+  end
+
 end
