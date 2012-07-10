@@ -22,7 +22,7 @@ public class Writer {
 
 	public void appendLog(String text)
 	{
-	   File logFile = new File("/sdcard/TBlog.file");
+	   File logFile = new File("/sdcard/TBlogv2.file");
 	   if (!logFile.exists())
 	   {
 	      try
