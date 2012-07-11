@@ -6,6 +6,7 @@ class Trip < ActiveRecord::Base
   
   has_many :locations, :order => :created_at
   has_many :alert_trip_notifications
+  has_many :alert_histories
   belongs_to :start_point, :class_name => 'Location', :foreign_key => :start_point_id
   belongs_to :end_point, :class_name => 'Location', :foreign_key => :end_point_id
   

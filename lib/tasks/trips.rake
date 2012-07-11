@@ -16,30 +16,30 @@ namespace :trips do
 				if alert_trip_notifications.new_record? 
 					alert_trip_notifications.save
 				else
-					alert_trip_notifications.update_attribute(:alert_id, e.id) 
+					alert_trip_notifications.update_attribute(:alert_id, alert.id) 
 				end
 			end
   	end
 
 		def update_last_event(last_event_id,device,phones_log,trip)
 			event = Event.find(last_event_id)
+			
 			#  Check time restrictions
 			trip_alert = trip.phone.alerts.time_resrtriction.where(['? not between restricted_time_start and restricted_time_end',event.time.strftime('%H:%M')])
 			trip_alert.map do |e|
 				send_alert(trip, e) do
-					Mailer.delay.alert_time_restriction(e,device,phones_log,trip)
-					# Mailer.alert_time_restriction(e,device,phones_log,trip).deliver
+					puts '.... mailing alert time'
+					Mailer.delay.alert_notification(event.time,e,phones_log,event,trip)
 				end
 			end
 
 			#  Check leave zone restriction
-			puts event.location.allowed?
-
-			if event.location && !event.location.allowed?
-				alert = event.location.restricted_zones.first.alert
+			if event.location && rz = event.location.restricted_zones
+				alert = rz.first.alert
 				send_alert(trip, alert) do
-					Mailer.delay.alert_zone_restriction(e,device,phones_log,trip)
-					# Mailer.alert_zone_restriction(alert,device,phones_log,trip).deliver
+					puts '.... mailing alert zone'
+					Mailer.delay.alert_notification(event.time,alert,phones_log,event,trip)
+					# Mailer.alert_notification(event.time,alert,phones_log).deliver
 				end
 			end
 
@@ -75,6 +75,9 @@ namespace :trips do
 			device = Device.find_by_imei(grouped_event.textbuster_mac)
 			phones_log = PhonesLog.find(grouped_event.phones_log_id)
 			phone = phones_log.phone
+
+			raise 'Fatal error. Phone is not defined' if (phone.nil? || phones_log.nil?)
+			raise 'Fatal error. textbuster device is not defined' if device.nil?
 
  			trips,trip = [],{}
  			query = Event.query_for_trips_calculation(grouped_event.textbuster_mac,grouped_event.phones_log_id)

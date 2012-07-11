@@ -35,17 +35,31 @@
 <script type="text/javascript">
   $(document).ready(function() {
     $('#reset').click(function(){
-      $.ajax({
-        type: 'POST',
-        url: '<%= reset_passwords_url %>',
-        data: {'email':$('#user_email').val()},
-        dataType: 'json',
-        complete: function(msg) {
-          $('#user_new').html("<p>We've sent an email to <strong>"+$('#user_email').val()+"</strong> containing a temporary url that will allow you to reset your password for the next 24 hours. Please check your spam folder if the email doesn't appear within a few minutes.</p>");          
-        }
-      });
+      if ($.isEmptyObject($('#user_email').val()) == false) {
+        $.ajax({
+          type: 'POST',
+          url: '<%= reset_passwords_url %>',
+          data: {'email':$('#user_email').val()},
+          dataType: 'json',
+          complete: function(msg) {
+            
+          },
+          success: function(data, textStatus, jqXHR){
+            if (data['status'] == 200) {
+              $('#user_new').html("<p>We've sent an email to <strong>"+$('#user_email').val()+"</strong> containing a temporary url that will allow you to reset your password for the next 24 hours. Please check your spam folder if the email doesn't appear within a few minutes.</p>");
+            }
+            if (data['status'] == 401) {
+              alert('Incorrect email');
+            }
+          }
+        });
+      } else {
+        $('#user_email').focus();
+        alert('Please input your email address');
+      }
 
-      return false;
+
+      
     })
   });
 

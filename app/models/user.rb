@@ -27,12 +27,12 @@ class User < ActiveRecord::Base
     record.build_family unless record.admin? || record.family_id
   end
   after_create :send_welcome_email
-  before_validation :generate_pwd, :on => :create, :if => "password.blank? && password_confirmation.blank?"
+  # before_validation :generate_pwd, :on => :create, :if => "password.blank? && password_confirmation.blank?"
 
   after_validation :email_validation_only_one_message
   
   validates :email, :format =>  /^[a-z0-9,!#\$%&'\*\+\/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+\/=\?\^_`\{\|}~-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})$/
-  # validates :login, :name, :password, :presence => true
+  validates :email, :name, :password, :password_confirmation, :phone, :presence => true
   
   # methods determining if the user belongs to a particular role
   # example:

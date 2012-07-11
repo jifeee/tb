@@ -12,6 +12,7 @@ class Event < ActiveRecord::Base
   belongs_to :device, :class_name => 'Device', :foreign_key => 'textbuster_mac', :primary_key => 'imei'
   belongs_to :phones_log
   has_one :phone, :through => :phones_log
+  has_many :alert_histories
 
   [:type, :gps_state, :bt_state, :locked].each do |att|
     alias :"e#{att}=" :"#{att}="

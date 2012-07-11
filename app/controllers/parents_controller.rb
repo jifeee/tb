@@ -20,6 +20,8 @@ class ParentsController < ApplicationController
             page << "window.location.href = '#{family_path(current_user.family_id || 1)}';"
           end
         else
+p @parent.errors.full_messages.join(',')
+
           render :new
         end
       end

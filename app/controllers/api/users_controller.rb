@@ -50,6 +50,17 @@ class Api::UsersController < ApplicationController
     render_with_log :json => {:status => 403, :message => e.message}
   end
 
+  def get_textbusters
+    phone = Phone.find_by_imei(params[:imei])
+    if phone 
+      render_with_log :json => {:status => 200, :textbusters => phone.devices.select('imei').all.map(&:imei)}
+    else
+      render_with_log :json => {:status => 401, :message => 'Phone was not found for specified imei'}
+    end
+  rescue => e
+    render_with_log :json => {:status => 403, :message => e.message}
+  end
+
 protected
 
   def render_with_log options = {}

@@ -32,7 +32,8 @@ class Location < ActiveRecord::Base
   end
 
   def restricted_zones
-    trip.restrictions.flatten.select {|r| r.contains?(self) == false}
+    z = trip.restrictions.flatten.select {|r| r.contains?(self) == false}
+    z.any? ? z : nil
   end
 
   # lat/lng or geolocated address
