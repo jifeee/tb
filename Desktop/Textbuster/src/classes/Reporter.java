@@ -66,7 +66,6 @@ public class Reporter implements LocationListener {
 	Location newLocation = new Location("x");
 	Location startLocation = new Location("x");
 	Location endLocation = new Location("x");
-	SmsSender sms = new SmsSender();
 	boolean tripRunning = false; 
 	DateTime lastLock = new DateTime();
 	
@@ -137,9 +136,7 @@ public class Reporter implements LocationListener {
 			log.set("gps", newLocation.getTime(), newLocation.getLatitude(), newLocation.getLongitude(), 
 					newLocation.getAltitude(), (double)newLocation.getSpeed(), (double)newLocation.getAccuracy(), 
 					(double)newLocation.getBearing());
-			
-			Log.d(TAG, "time in location: " + newLocation.getTime());
-			
+
 			
 			locIsNew = false; 
 			

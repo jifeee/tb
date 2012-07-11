@@ -113,8 +113,7 @@ public class TextbusterService extends Service{
 		
 		TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 		imei = tm.getDeviceId();
-		
-		
+
 		
 		w = new Writer();								//writes logs to a file on the sdcard
 		reporter = new Reporter(this, w);				// class that prepares the events to be sent out to the server

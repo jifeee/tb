@@ -277,8 +277,4 @@ public class DetectActivity extends Activity {
 
 
 }
-        
 
-        
-//        
-    

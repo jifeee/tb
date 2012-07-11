@@ -39,6 +39,7 @@ import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
 import classes.Constants;
+import classes.GetMac;
 import classes.UserStatus;
 
 public class LoginActivity extends Activity {

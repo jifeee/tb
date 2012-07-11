@@ -32,7 +32,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import classes.Constants;
-import classes.Trips;
 import classes.UserStatus;
 
 
