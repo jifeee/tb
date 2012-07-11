@@ -61,6 +61,8 @@ class Api::UsersController < ApplicationController
     render_with_log :json => {:status => 403, :message => e.message}
   end
 
+  
+
 protected
 
   def render_with_log options = {}

@@ -35,6 +35,8 @@ Textbuster::Application.routes.draw do
     post 'sign_up' => 'users#sign_up' #post
     post 'change_password' => 'users#change_password' #post
     post 'get_textbusters/:imei' => 'users#get_textbusters'    
+
+    get 'textbusters/create/:imei/:mac/:token' => 'textbusters#create'
     
     resources :trips
   end
