@@ -7,7 +7,6 @@
       <th>Email</th>
       <th>Aux emails</th>
       <th>Phone</th>
-      <th>Role</th>
     </tr>
   </thead>
   <tbody>
@@ -16,7 +15,7 @@
     <% end %>
     <% if can? :create, User %>
       <tr>
-        <td colspan="6" style="text-align:right;"><%= link_to "Add parent", "#", :id => Role.by_name('Parent').first.id, :class => :add %></td>
+        <td colspan="5" style="text-align:right;"><%= link_to "Add parent", "#", :id => Role.by_name('Parent').first.id, :class => :add %></td>
       </tr>     
     <% end %>
   </tbody>

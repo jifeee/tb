@@ -1,12 +1,17 @@
 class PasswordsController < ApplicationController
-	respond_to :html, :js
+	respond_to :json, :html
 
 	def reset
 		user = User.find_by_email(params[:email])
-		user.send_reset_password_instructions
 		respond_with(user) do |format|
-			format.js {render :nothing => true}
-			format.any {render :nothing => true}
+			format.json do
+				unless user.nil?
+					user.send_reset_password_instructions
+					render :json => {:status => 200}
+				else
+					render :json => {:status => 401}
+				end
+			end			
 		end
 	end
 

@@ -8,7 +8,7 @@ class Device < ActiveRecord::Base
   has_many :calculated_events, :foreign_key => 'imei', :primary_key => 'textbuster_mac'
   
   validates :imei, :presence => true, :uniqueness => true, :length => {:maximum => 50}
-  validates :name, :presence => true, :length => {:maximum => 255}
+  validates :name, :presence => true, :length => {:maximum => 255}, :uniqueness => {:case_sensitive => true}
   
   def last_position
     events.where('locations_id IS NOT NULL').order("created desc").first
