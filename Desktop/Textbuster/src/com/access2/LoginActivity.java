@@ -68,6 +68,9 @@ public class LoginActivity extends Activity {
 	
         Intent service = new Intent(ctx, TextbusterService.class);
         ctx.startService(service);
+        
+        GetMac gm = new GetMac();
+        gm.getMac(ctx);
 		
 		
         final EditText email = (EditText) findViewById(R.id.editText2);

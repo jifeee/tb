@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:onClick="enableBluetooth" android:background="@drawable/bg">
+    android:onClick="enableBluetooth" android:background="#000000">
 
     <TextView android:id="@+id/text"
               android:layout_width="wrap_content"

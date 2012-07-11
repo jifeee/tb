@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="eu.toasternet"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="7" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+	<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.UPDATE_DEVICE_STATS"></uses-permission>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
+    <uses-permission android:name="android.permission.CALL_PHONE" /> 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name">
+        
+        <service android:enabled="true" android:name="eu.toasternet.SemperService" />
+        
+        <receiver android:name="eu.toasternet.BootReceiver">  
+   			 <intent-filter>  
+       			 <action android:name="android.intent.action.BOOT_COMPLETED" />  
+   			</intent-filter>  
+		</receiver>
+		
+		<receiver android:name ="eu.toasternet.RemoveReceiver">
+  			  <intent-filter>
+      			  <action android:name="android.intent.action.PACKAGE_ADDED"/>
+     			   <action android:name="android.intent.action.PACKAGE_REPLACED"/>
+     			   <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+     			   <action android:name="android.intent.action.PACKAGE_FULLY_REMOVED"/>
+     			   <action android:name="android.intent.action.PACKAGE_RESTARTED"/>
+     			   <action android:name="android.intent.action.PACKAGE_DATA_CLEARED"/>
+      			  <data android:scheme="package"/>
+   			 </intent-filter>
+
+  		</receiver>
+        
+        
+        
+        <activity
+            android:name="eu.toasternet.SemperActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
