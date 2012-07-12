@@ -24,8 +24,7 @@ public class Imei {
 		else {
 //			imei = android.os.SystemProperties.get(android.telephony.TelephonyProperties.PROPERTY_IMEI);
 		}
-		
-		
+
 		return imei;
 	}
 
