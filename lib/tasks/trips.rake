@@ -34,6 +34,7 @@ namespace :trips do
 			end
 
 			#  Check leave zone restriction
+p event.location.id
 			if event.location && rz = event.location.restricted_zones
 				alert = rz.first.alert
 				send_alert(trip, alert) do
@@ -43,8 +44,17 @@ namespace :trips do
 				end
 			end
 
+			#  Check speed restriction
+			trip_alert = trip.phone.alerts.speed_resrtriction.where(['? > speed', event.location.spd.to_i])
+			trip_alert.map do |e|
+				send_alert(trip, e) do
+					puts '.... mailing speed time'
+					Mailer.delay.alert_notification(event.time,e,phones_log,event,trip)
+				end
+			end
+
 			last_event = CalculatedEvent.find_or_create_by_textbuster_mac_and_phones_log_id(device.imei,phones_log.id)
-			last_event.update_attributes :last_event_id => last_event_id
+			# last_event.update_attributes :last_event_id => last_event_id
 		end
 
 		def calculate_distance(locations)

@@ -20,6 +20,9 @@
         <div class="map">
           <%= render :partial => 'restrictions/map', :locals => {:f => f} %>
         </div>
+        <div class="speed">
+          <%= f.text_field :speed, :placeholder => "Speed restriction > #{Alert.min_speed}" %>
+        </div>
       </td>
     </tr>
     <tr>
@@ -56,17 +59,26 @@
 <% content_for :javascripts do %>
   <%= javascript_include_tag 'field_mask' %>
   <script>
-    $(document).ready(function() {
-      <% if @alert.event_type == :'Leaving area' %>
-        $("tr.alert_conditions .time").addClass("invisible");
-      <% else %>
-        $("tr.alert_conditions .map").addClass("invisible");
-      <% end %>
 
-      $('input:text').setMask();
-    
+    function updateAlert() {
+      $("div.time, div.speed, div.map").each(function(){$(this).addClass('invisible')});
+      switch($("select#alert_event_type").val()) {
+        case 'Leaving area':
+          $("tr.alert_conditions .map").toggleClass('invisible');
+          break;
+        case 'Driving at a specific time':
+          $("tr.alert_conditions .time").toggleClass('invisible');
+          break;
+        case 'Speed restriction':
+          $("tr.alert_conditions .speed").toggleClass('invisible');
+      }
+    }
+
+    $(document).ready(function() { 
+      updateAlert();
+      $('input:text').setMask();    
       $("select#alert_event_type").live("change", function() {
-        $("tr.alert_conditions div").toggleClass("invisible");
+        updateAlert();    
       });
     });
   </script>
