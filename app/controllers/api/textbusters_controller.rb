@@ -2,15 +2,14 @@ class Api::TextbustersController < ApplicationController
 
 	def create
 		user = User.find_by_authentication_token(params[:token])
-		if user
-			phone = user.family.phones.where(:imei => params[:imei])
-			device = user.family.devices.new :imei => params[:mac], 
-				:name => params[:mac]
-			if device.valid? && device.save
+		phone = user.family.phones.find_by_imei params[:imei]
+		if user && phone
+			device = user.family.devices.find_or_create_by_imei params[:mac]
+			unless device.phones.include?(phone)
 				device.phones << phone
-				render :json => {:status => 200}
+				render :json => {:status => 200} and return
 			else
-				render :json => {:status => 400, :message => device.errors.full_messages.first}
+				render :json => {:status => 200, :message => "already connected"} and return
 			end
 		else
 			render :json => {:status => 400, :message => 'User was not found'}			
