@@ -6,8 +6,8 @@ ActiveAdmin.register Trip do
     column :device, :sortable => false
     column :distance
     column :average_speed
-    column :start_point, :sortable => false
-    column :end_point, :sortable => false
+    # column :start_point, :sortable => false
+    # column :end_point, :sortable => false
   end
   
   # DISALLOWED - form for edit/new action
