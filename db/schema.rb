@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120710142106) do
+ActiveRecord::Schema.define(:version => 20120712130422) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(:version => 20120710142106) do
     t.boolean  "is_repeat",             :default => true
     t.integer  "repeat_freq",           :default => 15
     t.integer  "repeat_count",          :default => 3
+    t.integer  "speed"
   end
 
   create_table "alerts_phones", :id => false, :force => true do |t|
@@ -141,7 +142,7 @@ ActiveRecord::Schema.define(:version => 20120710142106) do
     t.string   "city"
     t.string   "zip"
     t.decimal  "alt",                     :precision => 10, :scale => 6
-    t.decimal  "spd",                     :precision => 8,  :scale => 6
+    t.integer  "spd"
     t.decimal  "bear",                    :precision => 10, :scale => 6
     t.integer  "time",       :limit => 8
     t.float    "acc"

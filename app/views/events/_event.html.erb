@@ -15,7 +15,7 @@
     </div>
   </td>
   <td>
-    <%= event.type %>
+    <%= event.alert_histories.first.alert.conditions if event.alert_histories.any? %>
   </td>
 </tr>
 

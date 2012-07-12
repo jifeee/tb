@@ -81,6 +81,6 @@ ActiveAdmin.register User do
   # tabs to group users by roles
   scope :all, :default => true
   scope :admins do |users| users.where(:role_id => Role.by_name(:admin)) end
-  scope :parents do |users| users.where(:role_id => Role.by_name(:parent), :is_main => true) end
+  scope :account_managers do |users| users.where(:role_id => Role.by_name(:parent), :is_main => true) end
 end
 
