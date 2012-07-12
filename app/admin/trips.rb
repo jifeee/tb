@@ -1,5 +1,7 @@
 # Admin pages for trips resource
 ActiveAdmin.register Trip do
+  actions :index
+
   # table view for index action
   index do
     column :user, :sortable => false
