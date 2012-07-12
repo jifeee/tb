@@ -8,7 +8,6 @@ class TripsController < ApplicationController
   def index
     @trips = @family.trips
     if filter = params[:events_filer]
-p "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"      
       @trips = @trips.where(:phone_id => filter[:phone]) if filter[:phone].present?
       @trips = @trips.where(:device_id => filter[:device]) if filter[:device].present?
     end
