@@ -16,6 +16,6 @@ class EventsController < ApplicationController
         @events = @events.where(:textbuster_mac => device.try(:imei).to_s) 
       end
     end
-    @events = @events.page(params[:page]).per(20)
+    @events = @events.order('time DESC').page(params[:page]).per(20)
   end
 end

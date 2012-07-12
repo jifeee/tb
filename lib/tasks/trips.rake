@@ -44,11 +44,13 @@ namespace :trips do
 			end
 
 			#  Check speed restriction
-			trip_alert = trip.phone.alerts.speed_resrtriction.where(['? > speed', event.location.spd.to_i])
-			trip_alert.map do |e|
-				send_alert(trip, e) do
-					puts '.... mailing speed time'
-					Mailer.delay.alert_notification(event.time,e,phones_log,event,trip)
+			if event.location
+				trip_alert = trip.phone.alerts.speed_resrtriction.where(['? > speed', event.location.spd.to_i])
+				trip_alert.map do |e|
+					send_alert(trip, e) do
+						puts '.... mailing speed time'
+						Mailer.delay.alert_notification(event.time,e,phones_log,event,trip)
+					end
 				end
 			end
 
