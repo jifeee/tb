@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   after_validation :email_validation_only_one_message
   
   validates :email, :format =>  /^[a-z0-9,!#\$%&'\*\+\/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+\/=\?\^_`\{\|}~-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})$/
-  validates :email, :name, :password, :password_confirmation, :phone, :presence => true
+  validates :email, :name, :presence => true
   
   # methods determining if the user belongs to a particular role
   # example:

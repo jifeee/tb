@@ -215,6 +215,13 @@ body {
 /* DASHBOARD
 -------------------------------------------------------------- */
 .dashboard{
+position:relative;
+}
+.dashboard .nav-tabs{
+position: absolute;
+}
+
+.dashboard{
 
   }
   .dashboard .nav-tabs{

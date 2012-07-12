@@ -1,5 +1,4 @@
 class Alert < ActiveRecord::Base
-
   has_and_belongs_to_many :phones
   has_and_belongs_to_many :users
   belongs_to :author, :class_name => "User"
@@ -14,13 +13,16 @@ class Alert < ActiveRecord::Base
   validates :restricted_time_start, :restricted_time_end, :format => /^(([0-9])|([0-1][0-9])|([2][0-3])):(([0-9])|([0-5][0-9]))$/, :if => :time_type?
   validate :restrictions_present, :unless => :time_type?
 
+  validates :speed, :numericality => true #{:greater_than => 5}
+  validate :valid_speed, :if => :speed_type?
+
   scope :time_resrtriction, where(:event_type => 'Driving at a specific time')
   scope :zone_resrtriction, where(:event_type => 'Leaving area')
   scope :speed_resrtriction, where(:event_type => 'Speed restriction')
   
 
   def self.min_speed
-    30
+    Setting.find_by_name('alert_min_speed').value || 5
   end
 
   def conditions
@@ -42,8 +44,16 @@ private
   def time_type?
     event_type.to_s =~ /specific time/
   end
+
+  def speed_type?
+    event_type.to_s =~ /Speed restriction/
+  end
   
   def restrictions_present
     errors.add(:restrictions, "At least 1 restriction should be added") if event_type == :'Leaving area' && (restrictions.size.zero? || !restrictions.map(&:_destroy).include?(false))
+  end
+
+  def valid_speed
+    errors.add(:speed, "must be greater than #{Alert.min_speed}") if speed < Alert.min_speed.to_i
   end
 end
