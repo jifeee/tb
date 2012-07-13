@@ -23,7 +23,7 @@
     <% last_pos = phone.last_position %>
     <% if last_pos %>
       <div class="date"><%= last_pos.created.strftime '%b. %d, ‘%y' rescue nil %></div>
-      <div class="time"><%= last_pos.created.strftime '%R' rescue nil%></div>
+      <div class="time"><%= last_pos.created.strftime '%I:%M %p' rescue nil%></div>
       <div class="addr"><%= last_pos.location.address rescue nil %></div>
     <% else %>
       <div class="addr">None</div>
