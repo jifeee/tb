@@ -87,8 +87,14 @@ namespace :trips do
 			phones_log = PhonesLog.find(grouped_event.phones_log_id)
 			phone = phones_log.phone
 
-			raise 'Fatal error. Phone is not defined' if (phone.nil? || phones_log.nil?)
-			raise 'Fatal error. textbuster device is not defined' if device.nil?
+			if (phone.nil? || phones_log.nil?)
+				puts "WARNING!!! Phone is not defined #{phones_log.imei}"
+				next
+			end
+			if device.nil?
+				puts "WARNING!!! Textbuster device is not defined #{phones_log.imei}"
+				next
+			end
 
  			trips,trip = [],{}
  			query = Event.query_for_trips_calculation(grouped_event.textbuster_mac,grouped_event.phones_log_id)
