@@ -88,11 +88,11 @@ namespace :trips do
 			phone = phones_log.phone
 
 			if (phone.nil? || phones_log.nil?)
-				puts "WARNING!!! Phone is not defined #{phones_log.imei}"
+				puts "WARNING!!! Phone is not defined, imei:#{phones_log.imei}, mac:#{grouped_event.textbuster_mac}"
 				next
 			end
 			if device.nil?
-				puts "WARNING!!! Textbuster device is not defined #{phones_log.imei}"
+				puts "WARNING!!! Textbuster device is not defined, imei:#{phones_log.imei}, mac:#{grouped_event.textbuster_mac}"
 				next
 			end
 
