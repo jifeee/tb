@@ -13,11 +13,6 @@
     <%= f.fields_for :members do |m| %>
      <%= render :partial => 'edit_line', :locals => {:form => m} %>
     <% end %>
-    <% if can? :create, User %>
-      <tr>
-        <td colspan="5" style="text-align:right;"><%= link_to "Add Account Manager", "#", :id => Role.by_name('Parent').first.id, :class => :add %></td>
-      </tr>     
-    <% end %>
   </tbody>
 </table>
 
