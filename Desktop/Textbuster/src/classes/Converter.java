@@ -48,50 +48,7 @@ public class Converter {
 
 	}
 
-	public String normalizeDateString(String dateString) {
-		String nDateString=dateString;
-		
-		if (dateString.length()==28) {
-			nDateString=removeCharAt(nDateString, 19);
-			nDateString=removeCharAt(nDateString, 19);
-			nDateString=removeCharAt(nDateString, 19);
-		}
-		
-		if (dateString.length()==29) {
-			nDateString=removeCharAt(nDateString, 19);
-			nDateString=removeCharAt(nDateString, 19);
-			nDateString=removeCharAt(nDateString, 19);
-			nDateString=removeCharAt(nDateString, 19);
-		}
-		
-		if (dateString.length()==27) {
-			nDateString=removeCharAt(nDateString, 19);
-			nDateString=removeCharAt(nDateString, 19);
 
-		}
-		
-		return nDateString;
-	}
-
-	
-	
-	
-	
-	// geht nicht!
-	public int checkLatLon (int value) {
-		
-		String v = String.valueOf(value);
-		String x = "0";
-		Log.i(TAG, "CONVERTER: " + v);
-		if (String.valueOf(v.charAt(1)).equals(".")) {
-			
-			x=x.concat(v);
-			x=removeCharAt(x, x.length()-1);
-			value = Integer.parseInt(x);
-			Log.i(TAG, String.valueOf(x));
-		}
-		return value; 
-	}
 	
 	public String imei (String imei) {
 		String fimei = imei;
