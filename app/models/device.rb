@@ -9,6 +9,7 @@ class Device < ActiveRecord::Base
   
   alias_attribute :mac, :imei
 
+  validates :imei, :format => { :with => /^.{2}:.{2}:.{2}:.{2}:.{2}:.{2}$/, :message => "Incorrect MAC address" }
   validates :imei, :presence => true, :uniqueness => true, :length => {:maximum => 50}
   validates :name, :presence => true, :length => {:maximum => 255}, :uniqueness => {:case_sensitive => true}
   
@@ -23,4 +24,13 @@ class Device < ActiveRecord::Base
   def display_name
     name || imei rescue ''
   end
+
+  def imei
+    self['imei'].to_mac
+  end
+
+  def imei= value
+    self['imei'] = value.to_mac
+  end
+
 end

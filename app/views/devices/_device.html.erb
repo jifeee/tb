@@ -3,6 +3,7 @@
   <td><img src="images/icons/alert.png" width="19" height="19" alt="alert" /></td>
   <td>
     <div class="ttl"><%= link_to_if can?(:update, device), device.name, edit_textbuster_path(device) %></div>
+    MAC: <%= device.imei %>
   </td>
   <td>
     <% @family.phones.each do |phone| %>

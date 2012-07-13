@@ -12,7 +12,7 @@
     </tr>
     <tr>
       <th>MAC</th>
-      <td><%= f.text_field :imei %></td>
+      <td><%= f.text_field :imei, :alt => 'msk' %></td>
     </tr>
     <tr>
       <th>Phones list</th>
@@ -32,14 +32,12 @@
 </div>
 <% end %>
 
-
-
-
-
-
-
-
-
+<%= javascript_include_tag 'field_mask' %>
+<script type="text/javascript">
+  $(document).ready(function() { 
+    $('#device_imei').setMask({mask: '**:**:**:**:**:**'})
+  });
+</script>
 
 <div class="panel">
   <div class="panel_contents">

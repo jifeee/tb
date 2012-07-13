@@ -67,7 +67,7 @@ class Event < ActiveRecord::Base
         having 
          MINUTE(TIMEDIFF((select time from events where id=min(q.id) limit 1),(select time from events where id=q.next_id limit 1))) >= 10
         ) qr0 on qr2.next_id=qr0.id      
-      ".gsub(/%%textbuster_mac%%/,textbuster_mac.to_s).gsub(/%%phones_log_id%%/,phones_log_id.to_s)
+      ".gsub(/%%textbuster_mac%%/,textbuster_mac.to_s.to_mac).gsub(/%%phones_log_id%%/,phones_log_id.to_s)
     end
   end
 

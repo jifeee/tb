@@ -68,6 +68,14 @@ class Location < ActiveRecord::Base
     Time.at(self['time']) if self['created_at'].blank?
   end
 
+  def time
+    Time.at(self['time'].to_i/1000) rescue nil
+  end
+
+  def time_with_timezone
+    time.in_time_zone(trip.timezone) rescue time
+  end
+
 protected
 
   def get_attr_geo(attr)

@@ -14,11 +14,11 @@
         </tr>
         <tr>
           <th>Start date</th>
-          <td><%= Time.at(@trip.start_point.time.to_i/1000).strftime("%d %b %Y") %></td>
+          <td><%= @trip.start_point.time_with_timezone.strftime("%d %b %Y") %></td>
         </tr>
         <tr>
           <th>Start time</th>
-          <td><%= Time.at(@trip.start_point.time.to_i/1000).strftime("%X") %></td>
+          <td><%= @trip.start_point.time_with_timezone.strftime("%X") %></td>
         </tr>
         <tr>
           <th>End Point</th>
@@ -26,7 +26,7 @@
         </tr>
         <tr>
           <th>Duration</th>
-          <td><%= distance_of_time_in_words(Time.at(@trip.start_point.time.to_i/1000), Time.at(@trip.end_point.time.to_i/1000)) %></td>
+          <td><%= distance_of_time_in_words(@trip.start_point.time_with_timezone, @trip.end_point.time_with_timezone)) %></td>
         </tr>
         <tr>
           <th>Alert violations</th>

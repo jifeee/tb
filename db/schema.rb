@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120712130422) do
+ActiveRecord::Schema.define(:version => 20120713131944) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -35,6 +35,10 @@ ActiveRecord::Schema.define(:version => 20120712130422) do
     t.datetime "updated_at"
   end
 
+  add_index "alert_histories", ["alert_id"], :name => "index_alert_histories_on_alert_id"
+  add_index "alert_histories", ["trip_id", "alert_id"], :name => "index_alert_histories_on_trip_id_and_alert_id"
+  add_index "alert_histories", ["trip_id"], :name => "index_alert_histories_on_trip_id"
+
   create_table "alert_trip_notifications", :force => true do |t|
     t.integer  "alert_id"
     t.integer  "trip_id"
@@ -42,6 +46,10 @@ ActiveRecord::Schema.define(:version => 20120712130422) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "alert_trip_notifications", ["alert_id"], :name => "index_alert_trip_notifications_on_alert_id"
+  add_index "alert_trip_notifications", ["trip_id", "alert_id"], :name => "index_alert_trip_notifications_on_trip_id_and_alert_id"
+  add_index "alert_trip_notifications", ["trip_id"], :name => "index_alert_trip_notifications_on_trip_id"
 
   create_table "alerts", :force => true do |t|
     t.string   "name"
@@ -57,6 +65,10 @@ ActiveRecord::Schema.define(:version => 20120712130422) do
     t.integer  "repeat_count",          :default => 3
     t.integer  "speed"
   end
+
+  add_index "alerts", ["author_id"], :name => "index_alerts_on_author_id"
+  add_index "alerts", ["enabled"], :name => "index_alerts_on_enabled"
+  add_index "alerts", ["event_type"], :name => "index_alerts_on_event_type"
 
   create_table "alerts_phones", :id => false, :force => true do |t|
     t.integer "alert_id"
@@ -127,7 +139,13 @@ ActiveRecord::Schema.define(:version => 20120712130422) do
   end
 
   add_index "events", ["locations_id"], :name => "index_events_on_locations_id"
+  add_index "events", ["locked"], :name => "index5"
+  add_index "events", ["locked"], :name => "index_events_on_locked"
   add_index "events", ["phones_log_id"], :name => "index_events_on_phones_log_id"
+  add_index "events", ["textbuster_mac", "phones_log_id"], :name => "index6"
+  add_index "events", ["textbuster_mac", "phones_log_id"], :name => "index_events_on_textbuster_mac_and_phones_log_id"
+  add_index "events", ["textbuster_mac"], :name => "index4"
+  add_index "events", ["textbuster_mac"], :name => "index_events_on_textbuster_mac"
 
   create_table "families", :force => true do |t|
   end
@@ -149,6 +167,7 @@ ActiveRecord::Schema.define(:version => 20120712130422) do
   end
 
   add_index "locations", ["created_at"], :name => "index_locations_on_created_at"
+  add_index "locations", ["trip_id"], :name => "index_locations_on_trip_id"
 
   create_table "menu_items", :force => true do |t|
     t.string   "resource"

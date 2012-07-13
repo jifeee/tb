@@ -2,7 +2,7 @@
   <td width="15">
     <%= image_tag "icons/#{trip.status}.png", :width => 15, :height => 16, :alt => "on" %>
   </td>
-  <td><%= Time.at(trip.start_point.time.to_i/1000).strftime '%b. %d, ‘%y'%></td>
+  <td><%= trip.start_point.time_with_timezone.strftime '%b. %d, ‘%y'%></td>
   <td>
     <div class="status">
       <div class="whos"><%= link_to_if can?(:update, trip.device), trip.device.try(:display_name), edit_textbuster_path(trip.device) %></div>
@@ -13,7 +13,7 @@
     <div class="device"><%= trip.phone.name rescue nil %></div>
   </td>
   <td>
-    <%= Time.at(trip.start_point.time.to_i/1000).strftime '%R' %> - <%= Time.at(trip.end_point.time.to_i/1000).strftime '%R' %>
+    <%= trip.start_point.time_with_timezone.strftime '%R' %> - <%= trip.end_point.time_with_timezone.strftime '%R' %>
   </td>
   <td>
     <div class="st-on"><%= trip.distance %> / <%= trip.average_speed %></div>
