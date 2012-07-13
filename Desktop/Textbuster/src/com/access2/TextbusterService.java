@@ -205,6 +205,7 @@ public class TextbusterService extends Service{
 			
 //			Log.i(TAG, "topact: " + reporter.getTopActivity() + " active: " + active + "mac size " + macAddresses.size() + " count " + connectCount);
 			
+			//keep the connectCount < the size of the macAdresses ArrayList/ HashSet
 			if (connectCount==macAddresses.size()) {
 				connectCount=0;
 			}

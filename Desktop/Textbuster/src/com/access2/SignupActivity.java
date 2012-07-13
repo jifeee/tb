@@ -61,7 +61,7 @@ public class SignupActivity extends Activity {
 		ctx=this;
 		
 		
-		//Sign up with the backend
+		//Sign up with the backend; will probably not be used because we want people to sign up on the web backend
 		
 		TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 		imei = tm.getDeviceId();

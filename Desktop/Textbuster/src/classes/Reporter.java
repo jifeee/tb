@@ -277,7 +277,7 @@ public class Reporter implements LocationListener {
 			boolean serviceRunning = false; 
 		    ActivityManager manager = (ActivityManager) service.getSystemService(service.getApplicationContext().ACTIVITY_SERVICE);
 		    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-		        if ("eu.toasternet.SemperService".equals(service.service.getClassName())) {
+		        if ("com.guardianapp.GuardianService".equals(service.service.getClassName())) {
 		           Log.i(TAG, "Found running service " + service.service.getClassName());
 		           serviceRunning = true; 
 		        }

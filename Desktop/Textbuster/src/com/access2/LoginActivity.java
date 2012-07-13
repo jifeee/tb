@@ -39,7 +39,7 @@ import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
 import classes.Constants;
-import classes.GetMac;
+import classes.SyncMac;
 import classes.UserStatus;
 
 public class LoginActivity extends Activity {
@@ -70,8 +70,7 @@ public class LoginActivity extends Activity {
         Intent service = new Intent(ctx, TextbusterService.class);
         ctx.startService(service);
         
-        GetMac gm = new GetMac();
-        gm.getMac(ctx);
+
 		
 		
         final EditText email = (EditText) findViewById(R.id.editText2);
@@ -339,6 +338,9 @@ public class LoginActivity extends Activity {
 				
 				Intent i = new Intent(LoginActivity.this, MenuActivity.class);  
     	    	LoginActivity.this.startActivityForResult(i, MENU); 
+    	    	
+    	        SyncMac sm = new SyncMac();
+    	        sm.getMac(ctx);
 			}
 			
 		}
