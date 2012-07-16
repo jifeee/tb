@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120713131944) do
+ActiveRecord::Schema.define(:version => 20120716143432) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -86,6 +86,7 @@ ActiveRecord::Schema.define(:version => 20120713131944) do
     t.integer  "phones_log_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "last_time"
   end
 
   create_table "click", :force => true do |t|
@@ -139,12 +140,9 @@ ActiveRecord::Schema.define(:version => 20120713131944) do
   end
 
   add_index "events", ["locations_id"], :name => "index_events_on_locations_id"
-  add_index "events", ["locked"], :name => "index5"
   add_index "events", ["locked"], :name => "index_events_on_locked"
   add_index "events", ["phones_log_id"], :name => "index_events_on_phones_log_id"
-  add_index "events", ["textbuster_mac", "phones_log_id"], :name => "index6"
   add_index "events", ["textbuster_mac", "phones_log_id"], :name => "index_events_on_textbuster_mac_and_phones_log_id"
-  add_index "events", ["textbuster_mac"], :name => "index4"
   add_index "events", ["textbuster_mac"], :name => "index_events_on_textbuster_mac"
 
   create_table "families", :force => true do |t|

@@ -21,8 +21,8 @@ namespace :trips do
 			end
   	end
 
-		def update_last_event(last_event_id,device,phones_log,trip)
-			event = Event.find(last_event_id)
+		def update_last_event(last_time,device,phones_log,trip)
+			event = Event.find_by_time(last_time)
 			
 			#  Check time restrictions
 			trip_alert = trip.phone.alerts.time_resrtriction.where(['? not between restricted_time_start and restricted_time_end',event.time.strftime('%H:%M')])
@@ -55,7 +55,7 @@ namespace :trips do
 			end
 
 			last_event = CalculatedEvent.find_or_create_by_textbuster_mac_and_phones_log_id(device.imei,phones_log.id)
-			last_event.update_attributes :last_event_id => last_event_id
+			last_event.update_attributes :last_time => last_time
 		end
 
 		def calculate_distance(locations)
@@ -97,68 +97,47 @@ namespace :trips do
 			end
 
  			trips,trip = [],{}
- 			query = Event.query_for_trips_calculation(grouped_event.textbuster_mac,grouped_event.phones_log_id)
-
-    	events = ActiveRecord::Base.connection.select_all(query)
-
-			#  Separating trips
-	    t = nil
-	    current_trip = nil
-	    events.map do |e|
-	    	if e['qr2_next_id'].nil? && current_trip.nil?
-	    		current_trip = e['qr2_id'].to_i 
-	    		next
-	    	end
-		    t = e['qr2_id'].to_i if e['qr0_id'].nil? && t.nil?
-		    if e['qr0_id'] && t
-		    	trips << {:start_id => t , :end_id => e['qr2_next_id']}
-		    	t = nil
-		    end
-	    end
+ 			events = Event.events_for_calculation_trip(grouped_event.textbuster_mac,grouped_event.phones_log_id)
 
 	    #  Create a completed trips
-	    trips.map do |t|
-		  	locations = Location.joins(:events).where(:events => {:id => t[:start_id].to_i..t[:end_id].to_i})
+	    events.map do |t|
+
+				start_time = DateTime.parse(t['start_time'])
+				end_time = DateTime.parse(t['end_time'])
+
+		  	locations = Location.joins(:events).where(:events => {:time => start_time..end_time})
 		  	locations = locations.where(:events => {:textbuster_mac => device.imei, :phones_log_id => phones_log.id})
 
-		  	#  Average speed
-			 	average_speed = locations.average('spd')
-				distance = calculate_distance(locations)
-
-				trip = Trip.new :distance => distance, :average_speed => average_speed,
-					:user => phone.user,
-					:device => device,
-					:start_point => locations.first,
-					:end_point => locations.last,
-					:phone => phone
-				if trip.save
-					locations.update_all :trip_id => trip.id
-					update_last_event t[:end_id], device, phones_log, trip
-					puts "  ... created new trip, user: #{phone.user.email} trip_id: #{trip.id}"
-				end
-	    end
-
-	    #  Create or update current trip
-	    if current_trip
-	    	last_event_id = CalculatedEvent.find_by_textbuster_mac_and_phones_log_id(device.imei,phones_log.id).last_event_id
-				 			 
-	    	locations = Location.joins(:events).where(['events.id >= ?', current_trip])
-	    	locations = locations.where(:events => {:textbuster_mac => device.imei, :phones_log_id => phones_log.id})
-				locations = locations.where(['events.id > ?',last_event_id]) unless last_event_id.nil? && last_event_id < current_trip
-
-				if locations.count > 0
+		  	if locations.count > 0
 			  	#  Average speed
 				 	average_speed = locations.average('spd')
 					distance = calculate_distance(locations)
 
-					trip = Trip.find_or_create_by_user_id_and_device_id_and_phone_id_and_start_point_id( phone.user.id, device.id, phone.id, locations.first.id)
-					if trip.update_attributes(:end_point => locations.last, :distance => distance, :average_speed => average_speed)
-						locations.update_all :trip_id => trip.id
-						update_last_event locations.select('events.id').last.id, device, phones_log, trip
+					trip = Trip.find_or_initialize_by_user_id_and_device_id_and_start_point_id_and_phone_id(phone.user.id,
+						device.id,
+						locations.first.id,
+						phone.id
+					)
+					
+					if trip.new_record?
+						puts "  ... created new trip, user: #{phone.user.email} trip_id: #{trip.id}"
+					else
 						puts "  ... updated trip, user: #{phone.user.email} trip_id: #{trip.id}"
 					end
-				end
+
+					trip.update_attributes(:end_point_id => locations.last.id,
+						:distance => distance, 
+						:average_speed => average_speed
+					)
+
+
+					if trip.save
+						locations.update_all :trip_id => trip.id
+						update_last_event end_time, device, phones_log, trip
+					end
+				end # if locations.count > 0
 	    end
+
 	  end
 	  puts "#{Time.now} Finish"
   end

@@ -30,44 +30,56 @@ class Event < ActiveRecord::Base
   end
 
   class << self
-    def query_for_trips_calculation(textbuster_mac,phones_log_id)
+    def events_for_calculation_trip(textbuster_mac,phones_log_id)
       q = "
-        select 
-            qr2.id as 'qr2_id', qr2.next_id as 'qr2_next_id', 
-            qr0.id as 'qr0_id', qr0.next_id as 'qr0_next_id'
-        from
-        (
-        select 
-         min(q.id) 'id',
-         q.next_id
-        from (select e.id, (select id from events where id>e.id and locked=0 
-          and (textbuster_mac = '%%textbuster_mac%%' and phones_log_id = %%phones_log_id%%) 
-        limit 1) as 'next_id'
-        from events e where e.locked=2
-        and (e.textbuster_mac = '%%textbuster_mac%%' and e.phones_log_id = %%phones_log_id%%)
-        and 
-        (
-         (select last_event_id from calculated_events where textbuster_mac='%%textbuster_mac%%' and phones_log_id=%%phones_log_id%%) is null
-         or e.id > (select last_event_id from calculated_events where textbuster_mac='%%textbuster_mac%%' and phones_log_id=%%phones_log_id%%)
+      select min(q3.start_time) start_time, max(q3.end_time) end_time
+      from
+      (
+      select q2.*,
+      if (q2.duration >= 10*60 and q2.locked=0, @v2:=@v2+1,0) c2,
+      if (TIME_TO_SEC(TIMEDIFF(q2.start_time,@old_time)) >= 10*60 and q2.locked=2, @v2:=@v2+1, 0) c3,
+      @old_time:=q2.end_time,
+      @v2 as v2
+      from
+      (
+      select 
+      q.v,
+      q.locked,
+      TIME_TO_SEC(TIMEDIFF(max(q.time),min(q.time))) duration,
+      min(q.time) start_time,
+      max(q.time) end_time
+      from
+      (
+      select
+      e.*,
+      IF (e.locked = @old_locked, 0, @v:=@v+1) if1,
+      IF (e.locked = @old_locked, 0, @old_locked:=e.locked) if2,
+      @v as v
+      from 
+      events e
+      where 
+      textbuster_mac = '%%textbuster_mac%%' and phones_log_id = %%phones_log_id%%
+      and ((@last_time is null) or (e.time > @last_time))
+      ) q
+      group by q.v, q.locked
+      ) q2
+      ) q3
+      where c2=0 
+      group by q3.v2".gsub(/%%textbuster_mac%%/,textbuster_mac.to_s.to_mac).gsub(/%%phones_log_id%%/,phones_log_id.to_s)
+
+      events = ActiveRecord::Base.transaction do
+        ActiveRecord::Base.connection.execute("select @last_time:=last_time from calculated_events 
+          where 
+            textbuster_mac = '%%textbuster_mac%%' and phones_log_id = %%phones_log_id%%
+          ".gsub(/%%textbuster_mac%%/,textbuster_mac.to_s.to_mac).gsub(/%%phones_log_id%%/,phones_log_id.to_s)
         )
-        ) q
-        group by q.next_id
-        ) qr2
-        left join 
-        (
-        select 
-         min(q.id) 'id',
-         q.next_id
-        from (select e.id, (select id from events where id>e.id and locked=2 and (textbuster_mac = '%%textbuster_mac%%' and phones_log_id = %%phones_log_id%%) limit 1) as 'next_id'
-        from events e where e.locked=0
-        and (e.textbuster_mac = '%%textbuster_mac%%' and e.phones_log_id = %%phones_log_id%%)
-        ) q
-        where next_id is not null
-        group by q.next_id
-        having 
-         MINUTE(TIMEDIFF((select time from events where id=min(q.id) limit 1),(select time from events where id=q.next_id limit 1))) >= 10
-        ) qr0 on qr2.next_id=qr0.id      
-      ".gsub(/%%textbuster_mac%%/,textbuster_mac.to_s.to_mac).gsub(/%%phones_log_id%%/,phones_log_id.to_s)
+        %w(v2 old_time old_locked v).map do |var|
+          ActiveRecord::Base.connection.execute("SET @#{var} = 0;")
+        end
+        ActiveRecord::Base.connection.select_all(q)
+      end
+
+      return events
     end
   end
 
