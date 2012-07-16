@@ -14,7 +14,7 @@ task :tst do
   # set :rails_env, "test"
   set :rails_env, "production"
   set :scm, "git"
-  set :repository, "https://juliavetl:VbifRheu10@github.com/mobilezapp/Access2.git"
+  set :repository, "https://juliavetl:VbifRheu12@github.com/mobilezapp/Access2.git"
   set :branch, "master"
   set :deploy_via, :checkout
   set :git_shallow_clone, 1

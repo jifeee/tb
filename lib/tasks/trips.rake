@@ -110,7 +110,7 @@ namespace :trips do
 
 		  	if locations.count > 0
 			  	#  Average speed
-				 	average_speed = locations.average('spd')
+				 	average_speed = locations.where('spd > 0').average('spd') rescue 0
 					distance = calculate_distance(locations)
 
 					trip = Trip.find_or_initialize_by_user_id_and_device_id_and_start_point_id_and_phone_id(phone.user.id,
