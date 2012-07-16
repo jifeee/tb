@@ -13,7 +13,7 @@
     <div class="device"><%= trip.phone.name rescue nil %></div>
   </td>
   <td>
-    <%= trip.start_point.time_with_timezone.strftime '%I:%M %p' rescue 'None' %> - <%= trip.end_point.time_with_timezone.strftime '%I:%M %p' rescue 'None' %>
+    <%= trip.start_point.time_with_timezone.strftime '%I:%M' rescue 'None' %> - <%= trip.end_point.time_with_timezone.strftime '%I:%M' rescue 'None' %>
   </td>
   <td>
     <div class="st-on"><%= trip.distance %> / <%= trip.average_speed %></div>
