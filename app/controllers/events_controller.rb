@@ -20,3 +20,13 @@ class EventsController < ApplicationController
     @events = @events.order('time DESC').page(params[:page]).per(20)
   end
 end
+
+
+=begin
+
+select * from events
+where textbuster_mac='00:12:A1:D5:00:06' and phones_log_id=1265
+and time > '2012-07-16 00:41:32'
+and id between 163590 and 163975
+
+=end

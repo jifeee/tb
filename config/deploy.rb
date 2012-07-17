@@ -2,7 +2,7 @@
 # c9J0mcCQ1
 
 task :tst2 do
-  set :application, "textbuster.mobilezapp.de"
+  set :application, "textbuster"
   set :domain, "176.9.79.105"
   server domain, :app, :web, :db, :primary => true
 
@@ -84,7 +84,7 @@ task :tst2 do
 
   desc "Config symlinks"
   task :symlink_config_files do
-    run "ln -nfs #{deploy_to}/#{shared_dir}/config/database.yml #{current_path}/config/database.yml"
+    run "ln -nfs #{deploy_to}/config/database.yml #{current_path}/config/database.yml"
   end
 
   desc "Fix dirs permission"
