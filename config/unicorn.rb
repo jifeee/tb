@@ -1,4 +1,4 @@
-rails_root  = "/www/textbuster.mobilezapp.de"
+rails_root  = "/mnt/www/textbuster.mobilezapp.com"
 pid_file    = "#{rails_root}/tmp/pids/unicorn.pid"
 socket_file = "#{rails_root}/tmp/unicorn.sock"
 log_file    = "#{rails_root}/log/unicorn.log"
