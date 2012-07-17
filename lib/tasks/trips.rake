@@ -113,28 +113,36 @@ namespace :trips do
 				 	average_speed = locations.where('spd > 0').average('spd') rescue 0
 					distance = calculate_distance(locations)
 
-					trip = Trip.find_or_initialize_by_user_id_and_device_id_and_start_point_id_and_phone_id(phone.user.id,
-						device.id,
-						locations.first.id,
-						phone.id
-					)
+					trip = Trip.where(:device_id => device.id, :phone_id => phone.id, :last_time_event => (end_time.ago(10.minutes)..end_time)).limit(1).first
+
+					unless trip 
+						trip = Trip.new :user_id => phone.user.id,
+							:device_id => device.id,
+							:phone_id => phone.id,
+							:start_point_id => locations.first.id,
+							:end_point_id => locations.last.id,
+							:distance => distance, 
+					 		:average_speed => average_speed,
+					 		:last_time_event => end_time
+					else
+						trip.update_attributes(:end_point_id => locations.last.id,
+							:distance => distance, 
+							:average_speed => average_speed,
+							:last_time_event => end_time
+						)						
+					end
 					
 					if trip.new_record?
-						puts "  ... created new trip, user: #{phone.user.email} trip_id: #{trip.id}"
+						puts "  ... created new trip, user: #{phone.user.email}"
 					else
 						puts "  ... updated trip, user: #{phone.user.email} trip_id: #{trip.id}"
 					end
-
-					trip.update_attributes(:end_point_id => locations.last.id,
-						:distance => distance, 
-						:average_speed => average_speed
-					)
-
 
 					if trip.save
 						locations.update_all :trip_id => trip.id
 						update_last_event end_time, device, phones_log, trip
 					end
+
 				end # if locations.count > 0
 	    end
 

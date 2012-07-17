@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120716143432) do
+ActiveRecord::Schema.define(:version => 20120717121257) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -144,6 +144,7 @@ ActiveRecord::Schema.define(:version => 20120716143432) do
   add_index "events", ["phones_log_id"], :name => "index_events_on_phones_log_id"
   add_index "events", ["textbuster_mac", "phones_log_id"], :name => "index_events_on_textbuster_mac_and_phones_log_id"
   add_index "events", ["textbuster_mac"], :name => "index_events_on_textbuster_mac"
+  add_index "events", ["time"], :name => "new_index"
 
   create_table "families", :force => true do |t|
   end
@@ -252,16 +253,17 @@ ActiveRecord::Schema.define(:version => 20120716143432) do
   end
 
   create_table "trips", :force => true do |t|
-    t.decimal  "distance",       :precision => 8, :scale => 2
-    t.decimal  "average_speed",  :precision => 5, :scale => 2
+    t.decimal  "distance",        :precision => 8, :scale => 2
+    t.decimal  "average_speed",   :precision => 5, :scale => 2
     t.integer  "user_id"
     t.integer  "device_id"
-    t.decimal  "timezone",       :precision => 2, :scale => 1
+    t.decimal  "timezone",        :precision => 2, :scale => 1
     t.integer  "start_point_id"
     t.integer  "end_point_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "phone_id"
+    t.datetime "last_time_event"
   end
 
   create_table "users", :force => true do |t|

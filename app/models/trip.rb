@@ -19,6 +19,7 @@ class Trip < ActiveRecord::Base
 
   # show the most recent point if trip not finished
   alias :finish :end_point
+  
   def end_point
     finish || locations.last
   end
@@ -46,7 +47,7 @@ class Trip < ActiveRecord::Base
   
   # check if all the trip points meet restrictions
   def allowed?
-    locations.map(&:allowed?).reduce(:|)
+    !self.alert_histories.any?
   end
   
   def status
