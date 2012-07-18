@@ -72,7 +72,7 @@ protected
 
   def user_sign_in user, imei
     sign_in(:user, user)
-    Phone.find_or_create_by_imei(imei) if imei
+    Phone.find_or_create_by_imei_and_user_id(imei,user.id) if imei
   end
 
   def logger

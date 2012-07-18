@@ -15,7 +15,7 @@ task :tst2 do
   set :rails_env, "production"
   set :scm, "git"
   set :repository, "https://juliavetl:VbifRheu12@github.com/mobilezapp/Access2.git"
-  set :branch, "master"
+  set :branch, "webapp_master"
   set :deploy_via, :checkout
   set :git_shallow_clone, 1
   default_run_options[:pty] = true
@@ -128,7 +128,7 @@ task :tst do
   set :rails_env, "production"
   set :scm, "git"
   set :repository, "https://juliavetl:VbifRheu12@github.com/mobilezapp/Access2.git"
-  set :branch, "master"
+  set :branch, "webapp_master"
   set :deploy_via, :checkout
   set :git_shallow_clone, 1
   default_run_options[:pty] = true
