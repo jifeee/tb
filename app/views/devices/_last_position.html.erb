@@ -1,0 +1,3 @@
+<div class="date"><%= last_position.created.strftime('%b. %d, ‘%y') rescue '' %></div>
+<div class="time"><%= last_position.created.strftime('%R') rescue '' %></div>
+<div class="addr"><%= last_position.address rescue '' %></div>

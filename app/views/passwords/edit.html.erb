@@ -1,0 +1,37 @@
+<div class="middle">
+  <div class="entry-login container">
+
+    <div class="row">
+      <div class="span6 t-centered">
+        <%= image_tag "app.png", :alt => "", :width => 273, :height => 537 %>
+      </div>
+    
+      <div class="span4">
+        <h1>Change my password</h1>
+        <%= form_for(@user, :as => 'user', :url => password_path(@user), :html => { :method => :put, :id => 'edit_pwd'}, :class => "form-vertical") do |f| %>
+          <%= f.hidden_field :reset_password_token %>
+          <%#= devise_error_messages! %>
+
+          <div class="control-group">
+            <%= f.label :password, 'New password', :class => "control-label" %>
+            <div class="controls"><%= f.password_field :password, :class => "span4" %></div>
+          </div>
+
+          <div class="control-group">
+            <%= f.label :password_confirmation, 'Confirm new password', :class => "control-label" %>
+            <div class="controls"><%= f.password_field :password_confirmation, :class => "span4" %></div>
+          </div>
+  
+          <div class="form-actions">
+            <div class="row">
+              <div class="span2">
+                <button type="submit" class="btn btn-primary btn-xlarge btn-submit"><span>Reset</span></button>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+        
+  </div><!-- /container -->
+</div><!-- /middle -->
