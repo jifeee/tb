@@ -54,6 +54,8 @@ class Event < ActiveRecord::Base
       e.*,
       IF (e.locked = @old_locked, 0, @v:=@v+1) if1,
       IF (e.locked = @old_locked, 0, @old_locked:=e.locked) if2,
+      IF (TIME_TO_SEC(TIMEDIFF(e.time,@old_time1)) >= 10*60, @v:=@v+1,0) if3,
+      @old_time1:=e.time,
       @v as v
       from 
       events e

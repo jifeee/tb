@@ -1,9 +1,14 @@
 <%= render :partial => 'events/filters' %>
-<%= render :partial => 'events/submenu' %>
+<%#= render :partial => 'events/submenu' %>
 
 <table class="dashboard-table table table-bordered tablesorter">
   <thead>
     <tr>
+      <th class="mark">
+        <% if current_user.is_main? %>
+          <input type="checkbox" id="all" />
+        <% end %>
+      </th>
       <th class="mark2"></th>
       <th>Date</th>
       <th>Textbuster</th>
@@ -18,10 +23,27 @@
   </tbody>
 </table>
 <div class="dashboard-actions">
-  <div class="pull-left"><a href="#" class="lnk">Show More Results</a></div>
+  <div class="pull-left">
+    <% if current_user.is_main?  %>
+      <%= link_to "Remove Trips", trip_path(0), :class => "btn", :id => 'delete_trips', :method => :delete %>
+    <% end %>
+  </div>
   <div class="pull-right"><%= paginate @trips if @trips %></div>
   <br clear="all" />
 </div>
+
+<% content_for :javascripts do %>
+  <script>    
+    $("a#delete_trips").click(function() {
+      var ids = $.map($("input.all:checked"), function(val) { return val.id; })
+      if (ids.length == 0) {
+        alert("No Alerts checked");
+        return false;
+      }
+      $(this).attr("href", $(this).attr("href") + "?ids=" + ids);
+    });
+  </script>
+<% end %>
 
 <% content_for :javascripts do %>
     <%= javascript_include_tag "jquery.tablesorter.min" %>

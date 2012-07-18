@@ -2,6 +2,17 @@ require 'geo_helper'
 
 namespace :trips do
 
+	desc 'Delete all old trips'
+	task :compact, :days, :needs => :environment do |t, args|
+		puts "#{Time.now} Start. Compacting trips...."
+		time_ago = (args[:days] || 14).to_i
+		trips = Trip.where(['updated_at <= ?',Time.now.ago(time_ago.day)])
+		count = trips.count		
+		trips.destroy_all
+		puts "... deleted #{count} trips"
+		puts "#{Time.now} Finish"
+	end
+
   desc "Calculation trips by events"
   task :calculate => :environment do
 
@@ -56,6 +67,7 @@ namespace :trips do
 
 			last_event = CalculatedEvent.find_or_create_by_textbuster_mac_and_phones_log_id(device.imei,phones_log.id)
 			last_event.update_attributes :last_time => last_time
+			Event.where(:textbuster_mac => device.imei, :phones_log_id => phones_log.id).where(['time <= ?',last_time]).delete_all
 		end
 
 		def calculate_distance(locations)

@@ -1,8 +1,8 @@
 # Trips controller. Showing the kids trips details to parents
 class TripsController < ApplicationController
-  load_and_authorize_resource
+  load_resource :except => [:destroy]
   layout "parents"
-  authorize_resource
+  authorize_resource :except => [:destroy]
   
   # list of trips
   def index
@@ -21,4 +21,12 @@ class TripsController < ApplicationController
   def show
     @trip = Trip.find_by_id params[:id]
   end
+
+  def destroy
+    trips = @family.trips.where(:phone_id => current_user.family.phones, :device_id => current_user.family.devices)
+    trips = trips.where(:id => params[:ids].split(','))
+    trips.destroy_all
+    redirect_to trips_path    
+  end
+
 end

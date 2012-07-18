@@ -6,7 +6,7 @@ class Location < ActiveRecord::Base
 
   belongs_to :trip
 
-  has_many :events, :foreign_key => 'locations_id'
+  has_many :events, :foreign_key => 'locations_id', :dependent => :destroy
 
   delegate :user, :to => :trip, :allow_nil => true
   alias_attribute :to_s, :address

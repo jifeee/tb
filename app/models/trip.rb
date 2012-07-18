@@ -4,9 +4,9 @@ class Trip < ActiveRecord::Base
   belongs_to :device
   belongs_to :phone
   
-  has_many :locations, :order => :time
-  has_many :alert_trip_notifications
-  has_many :alert_histories
+  has_many :locations, :order => :time, :dependent => :destroy
+  has_many :alert_trip_notifications, :dependent => :destroy
+  has_many :alert_histories, :dependent => :destroy
   belongs_to :start_point, :class_name => 'Location', :foreign_key => :start_point_id
   belongs_to :end_point, :class_name => 'Location', :foreign_key => :end_point_id
   

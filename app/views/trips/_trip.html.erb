@@ -1,4 +1,9 @@
 <tr>
+  <td>
+    <% if current_user.is_main? %>
+      <input type="checkbox" id="<%= trip.id %>", class="all", title="Check to remove"/>
+    <% end %>
+  </td>
   <td width="15">
     <%= image_tag "icons/#{trip.status}.png", :width => 15, :height => 16, :alt => "on" %>
   </td>

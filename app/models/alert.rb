@@ -54,6 +54,6 @@ private
   end
 
   def valid_speed
-    errors.add(:speed, "must be greater than #{Alert.min_speed}") if speed < Alert.min_speed.to_i
+    errors.add(:speed, "must be greater than #{Alert.min_speed}") if speed && speed < Alert.min_speed.to_i
   end
 end
