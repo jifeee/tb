@@ -3,4 +3,3 @@ tmp/
 log/
 db/dump.sql
 routes
-public/videos/

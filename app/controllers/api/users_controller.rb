@@ -61,7 +61,11 @@ class Api::UsersController < ApplicationController
     render_with_log :json => {:status => 403, :message => e.message}
   end
 
-  
+  def system_notification
+    # params[:token]
+    # params[:imei]
+    # params[:mac]    
+  end
 
 protected
 

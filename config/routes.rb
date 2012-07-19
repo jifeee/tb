@@ -36,6 +36,8 @@ Textbuster::Application.routes.draw do
     post 'change_password' => 'users#change_password' #post
     post 'get_textbusters/:imei' => 'users#get_textbusters'    
     post 'textbusters/create/:imei/:mac/:token' => 'textbusters#create'   
+
+    post 'system_notification/:id' => 'users#system_notification'
     
     resources :trips
   end
