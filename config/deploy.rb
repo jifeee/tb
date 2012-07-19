@@ -6,9 +6,9 @@ task :tst2 do
   set :domain, "176.9.79.105"
   server domain, :app, :web, :db, :primary => true
 
-  set :deploy_to, "/www/#{application}"
+  set :deploy_to, "/var/www/#{application}"
   set :user, "root"
-  set :password, "julia653"
+  set :password, "manan653"
   set :keep_releases, 2
 
   # set :rails_env, "test"
@@ -63,10 +63,7 @@ task :tst2 do
     end
   end
 
-  after "deploy:update_code", :symlink_config_files,
-                              'bundler:bundle_install',
-                              :fix_public_dir_permission,
-                              :fix_tmp_dir_permission,
+  after "deploy:update_code", 'bundler:bundle_install',
                               "deploy:migrate",
                               :cleanup
 
@@ -84,7 +81,7 @@ task :tst2 do
 
   desc "Config symlinks"
   task :symlink_config_files do
-    run "ln -nfs #{deploy_to}/config/database.yml #{current_path}/config/database.yml"
+    run "ln -nfs #{deploy_to}/#{shared_dir}/config/database.yml #{current_path}/config/database.yml"
   end
 
   desc "Fix dirs permission"

@@ -1,4 +1,4 @@
-rails_root  = "/mnt/www/textbuster.mobilezapp.com"
+rails_root  = "/var/www/textbuster"
 pid_file    = "#{rails_root}/tmp/pids/unicorn.pid"
 socket_file = "#{rails_root}/tmp/unicorn.sock"
 log_file    = "#{rails_root}/log/unicorn.log"
@@ -7,7 +7,6 @@ rails_env   = 'development'
 username    = 'textbuster'
 group	    = 'textbuster'
 old_pid     = pid_file + '.oldbin'
- 
  
 timeout 30
  
