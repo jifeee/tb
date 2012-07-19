@@ -1,4 +1,6 @@
 Textbuster::Application.routes.draw do
+  match "pages/media/:type/:file_name" => "media#show"
+
   ActiveAdmin.routes(self)
 
   # devise_for :users, :only => [:registrations, :passwords]
