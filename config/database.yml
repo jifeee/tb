@@ -19,7 +19,7 @@ production:
   adapter: mysql
   database: textbuster
   username: textbuster
-  password: asv1T8s8t
+  password: mz-db-123
   pool: 5
   timeout: 5000
   host: 127.0.0.1
