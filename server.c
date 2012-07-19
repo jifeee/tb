@@ -102,7 +102,7 @@ MYSQL_ROW mysql_row;
 
 char *mysql_server = "localhost";
 char *mysql_user = "textbuster";
-char *mysql_password = "asv1T8s8t"; /* set me first */
+char *mysql_password = "mz-db-123"; /* set me first */
 char *mysql_database = "textbuster";
 
 void error(const char *msg)
