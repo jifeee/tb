@@ -62,9 +62,28 @@ class Api::UsersController < ApplicationController
   end
 
   def system_notification
-    # params[:token]
-    # params[:imei]
-    # params[:mac]    
+    # 
+    family_id = nil
+    if imei = params[:imei]
+      phone = Phone.find_by_imei(imei)
+      family_id = phone.user.family_id
+    elsif mac = params[:mac]
+      device = Device.find_by_imei(mac)
+      family_id = device.family_id
+    elsif token = params[:token]
+      user = User.find_by_authentication_token(token)
+      family_id = user.family_id      
+    end
+
+    render :json => {:status => 401, :message => 'Family was not found'} and return unless family_id
+
+    if Mailer.system_guard_uninstall(family_id,device,phone).deliver
+      render :json => {:status => 200}
+    else
+      render :json => {:status => 401}
+    end
+  rescue => e
+      render :json => {:status => 401, :message => e.message}    
   end
 
 protected

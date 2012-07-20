@@ -8,6 +8,10 @@ class Family < ActiveRecord::Base
   has_many :authored_alerts, :through => :members
   accepts_nested_attributes_for :members, :allow_destroy => true, :reject_if => :all_blank
   
+  def hard_trips
+    self.trips.where(:phone_id => self.phones, :device_id => self.devices)
+  end
+
   # retrives the users in the family with 'Parent' role
   def parents
     members.by_role 'Parent'

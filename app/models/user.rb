@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   delegate :permissions, :to => :role
   
   scope :by_role, lambda{|role_name| where(:role_id => Role.find_by_name(role_name))}
+  scope :main, where(:is_main => true)
 
   before_create do |record| # fill the defaults if not set
     record.name ||= record.login
