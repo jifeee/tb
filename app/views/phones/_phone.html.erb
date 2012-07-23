@@ -1,5 +1,5 @@
 <tr>
-  <td><% if can? :destroy, phone %><input type="checkbox" id="<%= phone.id %>", class="all", title="Check to remove"/><% end %></td>
+  <td><% if can? :destroy, phone %><input type="checkbox" class="isd" id="<%= phone.id %>", class="all" /><% end %></td>
   <td><img src="images/icons/alert.png" width="19" height="19" alt="alert" /></td>
   <td>
     <div class="ttl"><%= phone.user.name %></div>

@@ -6,13 +6,13 @@
     <tr>
       <th class="mark">
         <% if current_user.is_main? %>
-          <input type="checkbox" id="all" />
+          <input type="checkbox" id="all" title="Remove all trips" />
         <% end %>
       </th>
       <th class="mark2"></th>
-      <th>Date</th>
-      <th>Textbuster</th>
-      <th>Phone</th>
+      <th>Date of Trip</th>
+      <th>TextBuster Vehicle</th>
+      <th>TextBuster Phone</th>
       <th>Trip Time</th>
       <th>Total miles/ Ave.Speed</th>
       <th>Trip Details</th>
@@ -31,6 +31,14 @@
   <div class="pull-right"><%= paginate @trips if @trips %></div>
   <br clear="all" />
 </div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.dashboard-table tbody input').each(function(e){
+      $(this).attr('title','Check to remove trip then click Remove Trip button at the bottom of the page');
+    })
+  })
+</script>
 
 <% content_for :javascripts do %>
   <script>    

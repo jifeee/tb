@@ -2,6 +2,15 @@ require 'geo_helper'
 
 namespace :trips do
 
+	desc 'Update all trips'
+	task :speed => :environment do |t, args|
+		trip = Trip.find_by_id(196)
+		trip.locations.order('locations.time').map do |t|
+			lt = t.time if lt.nil?
+			p lt
+		end
+	end
+
 	desc 'Delete all old trips'
 	task :compact, :days, :needs => :environment do |t, args|
 		puts "#{Time.now} Start. Compacting trips...."

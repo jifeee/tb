@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs">
   <% if can? :read, Event %>
-    <li class="<%= menu_item_class('trips/events') %>"><%= link_to menu_item_label(:trips, "Event"), trips_path %></li>
+    <li class="<%= menu_item_class('trips/events') %>"><%= link_to menu_item_label(:trips, "Trip"), trips_path %></li>
   <% end %>
   <% if can? :read, Phone %>
     <li class="<%= menu_item_class('phones') %>"><%= link_to menu_item_label(:phones, "Phone"), phones_path %></li>

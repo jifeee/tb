@@ -25,12 +25,12 @@ class Mailer < ActionMailer::Base
     alert.alert_histories << alert_history    
   end
 
-  def system_guard_uninstall(family_id,device,phone)
+  def system_notification(id,family_id,device,phone)
     user = User.where(:family_id => family_id).main.first
     if user 
       email = user.email
-      subject = 'system_guard_uninstall'
-      mail :to => email, :subject => subject, :body => "system_guard_uninstall device: #{device.id}, phone: #{phone.id}"
+      subject = id.humanize.capitalize
+      mail :to => email, :subject => subject, :body => "#{subject}, device: #{device.id rescue 'undefined'}, phone: #{phone.id rescue 'undefined'}"
     else
       return false
     end

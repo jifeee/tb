@@ -53,5 +53,9 @@ class Trip < ActiveRecord::Base
   def status
     allowed? ? "on" : "alert" rescue 'on'
   end 
+
+  def average_speed
+    self['average_speed'].to_f
+  end
   
 end

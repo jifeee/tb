@@ -62,7 +62,12 @@ class Api::UsersController < ApplicationController
   end
 
   def system_notification
-    # 
+    id = params[:id]
+
+    unless %w(textbuster_uninstall guard_uninstall).include?(id)
+      render :json => {:status => 401, :message => 'Undefined system notification type'} and return
+    end
+
     family_id = nil
     if imei = params[:imei]
       phone = Phone.find_by_imei(imei)
@@ -75,9 +80,11 @@ class Api::UsersController < ApplicationController
       family_id = user.family_id      
     end
 
-    render :json => {:status => 401, :message => 'Family was not found'} and return unless family_id
+    unless family_id
+      render :json => {:status => 401, :message => 'Family was not found'} and return 
+    end
 
-    if Mailer.system_guard_uninstall(family_id,device,phone).deliver
+    if Mailer.system_notification(id,family_id,device,phone).deliver
       render :json => {:status => 200}
     else
       render :json => {:status => 401}

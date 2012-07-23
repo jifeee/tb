@@ -11,7 +11,7 @@ module ApplicationHelper
   def menu_item_label meth, model
     meth = :hard_trips if meth == :trips
     count = @family.send(meth).count
-    "<span class='label label-important'>#{count}</span> #{MenuItem.find_by_resource(model).menu_item.capitalize}".html_safe
+    "<span class='label label-important'>#{count}</span> #{MenuItem.find_by_resource(model).menu_item}".html_safe
   end
   
   def menu_item_class ctr

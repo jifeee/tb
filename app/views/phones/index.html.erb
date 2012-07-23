@@ -1,7 +1,7 @@
 <table class="dashboard-table table table-bordered">
   <thead>
     <tr>
-      <th class="mark"><% if can? :destroy, Phone %><input type="checkbox" id="all" /><% end %></th>
+      <th class="mark"><% if can? :destroy, Phone %><input type="checkbox" id="all", title="Check to remove all phones then click Remove phone button at the bottom" /><% end %></th>
       <th class="mark2"></th>
       <th>Phone/Abilities</th>
       <th>Textbusters/status</th>
@@ -22,6 +22,15 @@
     <%= link_to "Remove phone", delete_phones_path, :class => "btn", :id => 'delete_phone' %>
   <% end %>
 </div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.dashboard-table tbody isd.input').each(function(e){
+      $(this).attr('title','Check to remove phone then click Remove Phone button at the bottom');
+    })
+  })
+
+</script>
 
 <% content_for :javascripts do %>
   <script>
