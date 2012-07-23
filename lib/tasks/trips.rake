@@ -2,13 +2,39 @@ require 'geo_helper'
 
 namespace :trips do
 
-	desc 'Update all trips'
-	task :speed => :environment do |t, args|
-		trip = Trip.find_by_id(196)
-		trip.locations.order('locations.time').map do |t|
-			lt = t.time if lt.nil?
-			p lt
+	MAILING_FREQ = 15 # in minutes
+	KM_PER_MILE = 1.609344
+	MILE_PER_KM = 0.621371192
+
+	def calculate_distance_and_speed(locations)
+		res = {:distance => 0, :speed => []}
+		locations.each_cons(2) do |a,b| 
+			distance = a.distance_to(b) * MILE_PER_KM
+			speed = (distance / (b.time - a.time))*3600
+			res[:distance] += distance
+			res[:speed] << speed
 		end
+		res[:speed] = res[:speed].reduce(:+)/res[:speed].size.to_f rescue 0
+		res[:speed] = 0 unless res[:speed].to_f.infinite?.nil?
+		res[:speed] = 0 if res[:speed].to_f.nan?
+		return res
+	rescue => e
+		raise "Error on calculate_distance_and_speed, #{e.message}"
+	end
+
+	def update_distance_and_speed(trip_id)
+		trip = Trip.find_by_id(trip_id)
+		locations = trip.locations.order('locations.time')
+		z = calculate_distance_and_speed(locations)
+		trip.update_attributes :distance => z[:distance].to_f, :average_speed => z[:speed]
+	end
+
+	desc 'Update speed and distances for all trips'
+	task :speed => :environment do |t, args|
+		puts "#{Time.now} Start. Updating trips...."
+		trips = Trip.select(:id).uniq
+		trips.each {|t|  update_distance_and_speed(t.id)}
+		puts "#{Time.now} Finish"
 	end
 
 	desc 'Delete all old trips'
@@ -24,10 +50,6 @@ namespace :trips do
 
   desc "Calculation trips by events"
   task :calculate => :environment do
-
-  	MAILING_FREQ = 15 # in minutes
-  	KM_PER_MILE = 1.609344
-  	MILE_PER_KM = 0.621371192
 
   	def send_alert(trip, alert)
 			alert_trip_notifications = AlertTripNotification.find_or_initialize_by_trip_id_and_alert_id(trip.id, alert.id)
@@ -79,24 +101,6 @@ namespace :trips do
 			Event.where(:textbuster_mac => device.imei, :phones_log_id => phones_log.id).where(['time <= ?',last_time]).delete_all
 		end
 
-		def calculate_distance(locations)
-			z = []
-			# distance = locations.count > 1 ? locations.inject(0) {|s,l| z.last.nil? ? (0 && z.push(l)) : l.distance_to(z.last)} : 0
-			distance = 0 
-			if locations.count > 1 
-				locations.map do |l|
-					if z.last.nil?
-						z.push(l)
-						next 
-					end
-					distance += l.distance_to(z.last)
-# puts "from(#{z.last.lat}, #{z.last.lng}) to(#{l.lat}, #{l.lng}) =  #{l.distance_to(z.last)*MILE_PER_KM}" 
-					z.push(l)		
-				end
-			end
-			distance *= MILE_PER_KM
-		end
-
   	puts "#{Time.now} Start. Prepare calculation trips...."
 
   	grouped_events = Event.select('phones_log_id, textbuster_mac').joins(:phones_log,:device).group('phones_log_id, textbuster_mac')
@@ -131,8 +135,7 @@ namespace :trips do
 
 		  	if locations.count > 0
 			  	#  Average speed
-				 	average_speed = locations.where('spd > 0').average('spd') rescue 0
-					distance = calculate_distance(locations)
+			  	distspeed = calculate_distance_and_speed(locations)
 
 					trip = Trip.where(:device_id => device.id, :phone_id => phone.id, :last_time_event => (end_time.ago(10.minutes)..end_time)).limit(1).first
 
@@ -142,13 +145,13 @@ namespace :trips do
 							:phone_id => phone.id,
 							:start_point_id => locations.first.id,
 							:end_point_id => locations.last.id,
-							:distance => distance, 
-					 		:average_speed => average_speed,
+							:distance => distspeed[:distance], 
+					 		:average_speed => distspeed[:speed],
 					 		:last_time_event => end_time
 					else
 						trip.update_attributes(:end_point_id => locations.last.id,
-							:distance => distance, 
-							:average_speed => average_speed,
+							:distance => distspeed[:distance],
+							:average_speed => distspeed[:speed],
 							:last_time_event => end_time
 						)						
 					end
