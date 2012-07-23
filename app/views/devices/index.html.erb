@@ -1,7 +1,7 @@
 <table class="dashboard-table table table-bordered">
   <thead>
     <tr>
-      <th class="mark"><% if can? :destroy, Device %><input type="checkbox" id="all" /><% end %></th>
+      <th class="mark"><% if can? :destroy, Device %><input type="checkbox" id="all" title="Check to delete all TextBuster devices then click the Remove TextBuster button at the bottom" /><% end %></th>
       <th class="mark2"></th>
       <th>Name</th>
       <th>Phones</th>
@@ -19,6 +19,16 @@
     <%= link_to "Remove Textbuster", delete_textbusters_path, :class => "btn", :id => 'delete_device' %>
   <% end %>
 </div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.dashboard-table tbody input').each(function(e){
+      $(this).attr('title','Check to remove TextBuster device then click the Remove TextBuster button at the bottom');
+    })
+  })
+
+</script>
+
 
 <% content_for :javascripts do %>
   <script>

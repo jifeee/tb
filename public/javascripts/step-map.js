@@ -324,7 +324,8 @@ function addNewButton() {
     button.setAttribute('style','margin-right:10px;');
     button.innerHTML = 'Add new point';
     button.onclick = function() { createNewPoint(); return false; }
-    document.getElementById('map-input').appendChild(button);
+    // document.getElementById('map-input').appendChild(button);    
+    document.getElementById('map-actions').appendChild(button);    
     
     function createNewPoint() {
       var div = document.getElementById('controls_').cloneNode(true);

@@ -1,24 +1,31 @@
 <%= form_for @alert do |f| %>
   <table class="dashboard-table table table-bordered">
     <tr>
-      <th class="span2">Name</th>
+      <th class="span2">Put a name to the Aler</th>
       <td><%= f.text_field :name %></td>
     </tr>
     <tr>
-      <th>Type</th>
+      <th>Type of Alert</th>
       <td><%= f.enum_select :event_type %></td>
     </tr>
     <tr class="alert_conditions">
-      <th>Conditions</th>
+      <th>Set condition parameters</th>
       <td>
         <%= content_tag :div, f.object.errors[:restrictions], :class => 'alert alert-error' if f.object.errors[:restrictions].present? %>
         <div class="time">
-          <span>From</span> <%= f.text_field :restricted_time_start, :placeholder => 'Restricted time start', :alt => 'time' %>
-          <span>till</span> <%= f.text_field :restricted_time_end, :placeholder => 'Restricted time end', :alt => 'time' %>
+          <span>From</span> <%= f.text_field :restricted_time_start, :placeholder => 'Restricted time start', :class => 'timepicker' %>
+          <span>till</span> <%= f.text_field :restricted_time_end, :placeholder => 'Restricted time end', :class => 'timepicker' %>
           <span class="error"><br><%= "Time format is invalid" if f.object.time_errors.present? %></span>
         </div>
         <div class="map">
           <%= render :partial => 'restrictions/map', :locals => {:f => f} %>
+          <div class="row-fluid">
+            <div class="span2" id="map-actions">
+            </div>
+            <div class="span8">
+              Zoom in on Google location with mousse roller. Place pinpoint on desired area. Hold mousse and pull circle radius to adjust parameters. Click Create Alert at bottom when done.
+            </div>
+          </div>
         </div>
         <div class="speed">
           <%= f.text_field :speed, :placeholder => "Speed restriction > #{Alert.min_speed}" %>
@@ -26,23 +33,22 @@
       </td>
     </tr>
     <tr>
-      <th>Phone list</th>
+      <th>Check the box of the phone(s)to receive SMS alert messages on cell phone</th>
       <td>
         <% @family.phones.each do |phone| %>
           <div>
-            <%= check_box_tag "alert[phone_ids][]", phone.id, f.object.phones.map {|p| p.id}.include?(phone.id) %>
+            <%= check_box_tag "alert[phone_ids][]", phone.id, f.object.phones.map {|p| p.id}.include?(phone.id), :title => 'Check to receive sms alert on this phone. Be sure to click Create Alert at the bottom when finished' %>
             <%= phone.name || phone.user.name %>
           </div>
         <% end %>
       </td>
     </tr>
     <tr>
-      <th>Contacts
-      </th>
+      <th>Check the box to receive email(s) alert messages</th>
       <td>
         <% @family.parents.each do |parent| %>
           <div>
-            <%= check_box_tag "alert[user_ids][]", parent.id, f.object.users.map {|p| p.id}.include?(parent.id) %>
+            <%= check_box_tag "alert[user_ids][]", parent.id, f.object.users.map {|p| p.id}.include?(parent.id), :title => 'Check to receive email alert message. Be sure to click Create Alert at the bottom when finished' %>
             <%= parent.name || parent.email %>
           </div>
         <% end %>
@@ -52,6 +58,10 @@
 </table>
 
 <div class="modal-footer">
+  <div class="center">
+    Lists of people to be notified of alerts by sms or email must first be created in the Account Manager Tab
+  </div>
+  <br />
   <%= f.submit :class => "btn" %>
 </div>
 <% end %>
@@ -59,6 +69,8 @@
 <% content_for :javascripts do %>
   <%= javascript_include_tag 'field_mask' %>
   <script>
+
+  $('.timepicker').timepicker({template : 'modal',showInputs: false});
 
     function updateAlert() {
       $("div.time, div.speed, div.map").each(function(){$(this).addClass('invisible')});

@@ -8,15 +8,17 @@ namespace :trips do
 
 	def calculate_distance_and_speed(locations)
 		res = {:distance => 0, :speed => []}
+		locations = locations.select('distinct lat,lng,time')
 		locations.each_cons(2) do |a,b| 
 			distance = a.distance_to(b) * MILE_PER_KM
+			# p "#{b.time} - #{a.time}"
 			speed = (distance / (b.time - a.time))*3600
 			res[:distance] += distance
 			res[:speed] << speed
 		end
 		res[:speed] = res[:speed].reduce(:+)/res[:speed].size.to_f rescue 0
-		res[:speed] = 0 unless res[:speed].to_f.infinite?.nil?
-		res[:speed] = 0 if res[:speed].to_f.nan?
+		# res[:speed] = 0 unless res[:speed].to_f.infinite?.nil?
+		# res[:speed] = 0 if res[:speed].to_f.nan?
 		return res
 	rescue => e
 		raise "Error on calculate_distance_and_speed, #{e.message}"
@@ -30,9 +32,11 @@ namespace :trips do
 	end
 
 	desc 'Update speed and distances for all trips'
-	task :speed => :environment do |t, args|
-		puts "#{Time.now} Start. Updating trips...."
-		trips = Trip.select(:id).uniq
+	task :speed, :trip_id, :needs => :environment do |t, args|
+		puts "#{Time.now} Start. Updating trips.... #{args[:trip_id]}"
+		trips = Trip.select(:id)
+		trips = trips.where(:id => args[:trip_id]) if args[:trip_id]
+		trips = trips.uniq
 		trips.each {|t|  update_distance_and_speed(t.id)}
 		puts "#{Time.now} Finish"
 	end

@@ -14,10 +14,8 @@
 </table>
 
 <div class="dashboard-actions">
-  <% if can? :create, Device %>
-    <%= link_to 'Add new Textbuster', new_textbuster_path, :class => 'btn', :remote => true %>
-  <% end %><% if can? :read, Event %>
-  <%= link_to "Show Events", events_path, :class => "btn" %>
+  <% if can? :read, Event %>
+    <%= link_to "Show Events", events_path, :class => "btn" %>
   <% end %><% if can? :destroy, Phone %>
     <%= link_to "Remove phone", delete_phones_path, :class => "btn", :id => 'delete_phone' %>
   <% end %>
@@ -25,11 +23,14 @@
 
 <script type="text/javascript">
   $(document).ready(function(){
-    $('.dashboard-table tbody isd.input').each(function(e){
+    $('.dashboard-table tbody input.isd').each(function(e){
       $(this).attr('title','Check to remove phone then click Remove Phone button at the bottom');
     })
-  })
 
+    $('.dashboard-table tbody input[name="phone[device_ids][]"]').each(function(e){
+      $(this).attr('title','Please check TextBuster device to assign to TextBuster phone');
+    });
+  })
 </script>
 
 <% content_for :javascripts do %>

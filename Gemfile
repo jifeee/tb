@@ -31,6 +31,8 @@ gem 'capistrano', :group => :development, :require => false
 #  Use pagination
 # gem "will_paginate", "~> 3.0.3"
 gem 'kaminari'
+gem "bootstrap-timepicker-rails", "~> 0.1.2"
+
 
 
 # Deploy with Capistrano
