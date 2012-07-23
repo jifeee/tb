@@ -8,7 +8,7 @@ namespace :trips do
 
 	def calculate_distance_and_speed(locations)
 		res = {:distance => 0, :speed => []}
-		locations = locations.select('distinct lat,lng,time')
+		locations = locations.select('distinct locations.lat,locations.lng,locations.time')
 		locations.each_cons(2) do |a,b| 
 			distance = a.distance_to(b) * MILE_PER_KM
 			next if (b.time-a.time) == 0
