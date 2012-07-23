@@ -11,11 +11,13 @@ namespace :trips do
 		locations = locations.select('distinct lat,lng,time')
 		locations.each_cons(2) do |a,b| 
 			distance = a.distance_to(b) * MILE_PER_KM
-			# p "#{b.time} - #{a.time}"
-			speed = (distance / (b.time - a.time))*3600
+			next if (b.time-a.time) == 0
+			# p "#{b.time} - #{a.time}, #{b.time-a.time}"
+			speed = (distance / (b.time - a.time))*3600 
 			res[:distance] += distance
 			res[:speed] << speed
 		end
+		# p res[:speed]		
 		res[:speed] = res[:speed].reduce(:+)/res[:speed].size.to_f rescue 0
 		# res[:speed] = 0 unless res[:speed].to_f.infinite?.nil?
 		# res[:speed] = 0 if res[:speed].to_f.nan?
