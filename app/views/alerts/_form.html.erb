@@ -19,13 +19,6 @@
         </div>
         <div class="map">
           <%= render :partial => 'restrictions/map', :locals => {:f => f} %>
-          <div class="row-fluid">
-            <div class="span2" id="map-actions">
-            </div>
-            <div class="span8">
-              Zoom in on Google location with mousse roller. Place pinpoint on desired area. Hold mousse and pull circle radius to adjust parameters. Click Create Alert at bottom when done.
-            </div>
-          </div>
         </div>
         <div class="speed">
           <%= f.text_field :speed, :placeholder => "Speed restriction > #{Alert.min_speed}" %>
@@ -33,7 +26,7 @@
       </td>
     </tr>
     <tr>
-      <th>Check the box of the phone(s)to receive SMS alert messages on cell phone</th>
+      <th>List of phones which will be listening by system for this alert</th>
       <td>
         <% @family.phones.each do |phone| %>
           <div>
@@ -44,7 +37,7 @@
       </td>
     </tr>
     <tr>
-      <th>Check the box to receive email(s) alert messages</th>
+      <th>Check the box to receive email(s) alert messages or / and SMS alert messages on cell phone</th>
       <td>
         <% @family.parents.each do |parent| %>
           <div>
