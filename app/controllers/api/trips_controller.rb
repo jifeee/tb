@@ -11,6 +11,7 @@ class Api::TripsController < ApplicationController
   def index
     user = User.find_by_authentication_token(params[:token])
     trip = user.trips_without_order.scoped
+    trip = trip.where(:phone_id => user.family.phones, :device_id => user.family.devices)
     trip = trip.where(:created_at => (params[:date_start].to_date)..(params[:date_end].to_date)) unless params[:date_start].nil? && params[:date_end].nil? rescue trip
     trip = trip.order(params[:order] == 'miles' ? 'distance ASC' : 'created_at ASC')
     render_with_log :json => trip.map(&:to_hash)
