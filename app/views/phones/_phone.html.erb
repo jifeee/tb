@@ -3,7 +3,7 @@
   <td><img src="images/icons/alert.png" width="19" height="19" alt="alert" /></td>
   <td>
     <div class="ttl"><%= phone.user.name %></div>
-    <div class="device"><%= link_to_if can?(:update, phone), phone.name, edit_phone_path(phone) %></div>
+    <div class="device"><%= link_to_if can?(:update, phone), phone.name_with_imei, edit_phone_path(phone) %></div>
     <div class="tech"><%= phone.abilities.join ', ' %></div>
   </td>
   <td>

@@ -1,6 +1,6 @@
 <tr>
   <td><%= image_tag "icons/on.png", :width => 15, :height => 16, :alt => "on" %></td>
-  <td><%= event.time.strftime '%b. %d, ‘%y'%></td>
+  <td><%= event.time.strftime '%r'%></td>
   <td>
     <div class="status">
       <div class="whos">
@@ -11,7 +11,7 @@
   <td>
     <div class="ttl"><%= event.phone.user.name %></div>
     <div class="device">
-      <%= link_to(event.phone.name, edit_phone_path(event.phone)) if event.phone && can?(:update, event.phone) %>
+      <%= link_to(event.phone.name_with_imei, edit_phone_path(event.phone)) if event.phone && can?(:update, event.phone) %>
     </div>
   </td>
   <td>

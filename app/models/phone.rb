@@ -24,7 +24,11 @@ class Phone < ActiveRecord::Base
   end
 
   def name
-    self['name'] || ('imei ' << self['imei'][0,4] << 'xxxxxxxx' << self['imei'][-4,4])
+    self['name'] || 'noname'
+  end
+
+  def name_with_imei
+    "#{self.name} (#{self['imei'][0,4]}xxxxxxxx#{self['imei'][-4,4]})"
   end
 
 end

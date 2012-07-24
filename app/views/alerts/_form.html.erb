@@ -38,7 +38,7 @@
         <% @family.phones.each do |phone| %>
           <div>
             <%= check_box_tag "alert[phone_ids][]", phone.id, f.object.phones.map {|p| p.id}.include?(phone.id), :title => 'Check to receive sms alert on this phone. Be sure to click Create Alert at the bottom when finished' %>
-            <%= phone.name || phone.user.name %>
+            <%= phone.name_with_imei || phone.user.name %>
           </div>
         <% end %>
       </td>
