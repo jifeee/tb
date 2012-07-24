@@ -42,8 +42,6 @@ GEM
     bindata (1.4.3)
     bitmask_attributes (0.3.0)
       activerecord (~> 3.0)
-    bootstrap-timepicker-rails (0.1.2)
-      railties (>= 3.0)
     builder (2.1.2)
     cancan (1.6.7)
     capistrano (2.12.0)
@@ -154,7 +152,6 @@ DEPENDENCIES
   activeadmin
   bindata
   bitmask_attributes
-  bootstrap-timepicker-rails (~> 0.1.2)
   cancan
   capistrano
   delayed_job_active_record

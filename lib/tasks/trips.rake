@@ -140,9 +140,6 @@ namespace :trips do
 		  	locations = locations.where(:events => {:textbuster_mac => device.imei, :phones_log_id => phones_log.id})
 
 		  	if locations.count > 0
-			  	#  Average speed
-			  	distspeed = calculate_distance_and_speed(locations)
-
 					trip = Trip.where(:device_id => device.id, :phone_id => phone.id, :last_time_event => (end_time.ago(10.minutes)..end_time)).limit(1).first
 
 					unless trip 
@@ -151,15 +148,11 @@ namespace :trips do
 							:phone_id => phone.id,
 							:start_point_id => locations.first.id,
 							:end_point_id => locations.last.id,
-							:distance => distspeed[:distance], 
-					 		:average_speed => distspeed[:speed],
 					 		:last_time_event => end_time
 					else
 						trip.update_attributes(:end_point_id => locations.last.id,
-							:distance => distspeed[:distance],
-							:average_speed => distspeed[:speed],
 							:last_time_event => end_time
-						)						
+						)
 					end
 					
 					if trip.new_record?
@@ -170,6 +163,7 @@ namespace :trips do
 
 					if trip.save
 						locations.update_all :trip_id => trip.id
+						update_distance_and_speed(trip.id)
 						update_last_event end_time, device, phones_log, trip
 					end
 

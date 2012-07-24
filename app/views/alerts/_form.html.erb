@@ -70,7 +70,7 @@
   <%= javascript_include_tag 'field_mask' %>
   <script>
 
-  $('.timepicker').timepicker({template : 'modal',showInputs: false});
+  $('.timepicker').ptTimeSelect();
 
     function updateAlert() {
       $("div.time, div.speed, div.map").each(function(){$(this).addClass('invisible')});

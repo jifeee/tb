@@ -14,10 +14,14 @@
     <%= javascript_include_tag 'jquery.qtip.js', 
       'jquery-1.7.1.min', 
       'jquery_ujs', 
-      'bootstrap.min', 
+      'bootstrap.min',
+      'jquery.ptTimeSelect',
       'application' 
     %>  
-    <%= stylesheet_link_tag "bootstrap", "style" %>
+    <%= stylesheet_link_tag "bootstrap", 'jquery.ptTimeSelect',
+    'ui.core',
+    'ui.theme',
+     "style" %>
 
     <!-- fav and touch icons -->
     <!-- 
