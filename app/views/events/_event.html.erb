@@ -15,6 +15,7 @@
     </div>
   </td>
   <td>
+    <%= "#{event.gps_state.to_s.humanize}, #{event.bt_state.to_s.humanize}, locked:#{event.locked.to_s.humanize}" %>
     <%= event.alert_histories.first.alert.conditions if event.alert_histories.any? %>
   </td>
 </tr>
