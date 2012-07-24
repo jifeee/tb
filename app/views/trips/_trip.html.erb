@@ -15,7 +15,7 @@
   </td>
   <td>
     <div class="ttl"><%= trip.phone.user.name rescue nil %></div>
-    <div class="device"><%= trip.phone.name rescue nil %></div>
+    <div class="device"><%= trip.phone.name_with_imei rescue nil %></div>
   </td>
   <td>
     <%= trip.start_point.time_with_timezone(trip.timezone).strftime '%I:%M %p' rescue 'None' %> - <%= trip.end_point.time_with_timezone(trip.timezone).strftime '%I:%M %p' rescue 'None' %>
