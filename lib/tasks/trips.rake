@@ -113,8 +113,6 @@ namespace :trips do
 
  		grouped_events.each_with_index do |grouped_event,idx|
 
-next if grouped_event.textbuster_mac != '4C:54:99:EF:F3:0F'
-
 			device = Device.find_by_imei(grouped_event.textbuster_mac)
 			phones_log = PhonesLog.find(grouped_event.phones_log_id)
 			phone = phones_log.phone
