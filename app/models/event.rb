@@ -75,7 +75,7 @@ class Event < ActiveRecord::Base
             textbuster_mac = '%%textbuster_mac%%' and phones_log_id = %%phones_log_id%%
           ".gsub(/%%textbuster_mac%%/,textbuster_mac.to_s.to_mac).gsub(/%%phones_log_id%%/,phones_log_id.to_s)
         )
-        %w(v2 old_time old_locked v).map do |var|
+        %w(v2 old_time old_time1 old_locked v).map do |var|
           ActiveRecord::Base.connection.execute("SET @#{var} = 0;")
         end
         ActiveRecord::Base.connection.select_all(q)
