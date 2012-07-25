@@ -60,6 +60,7 @@ class Event < ActiveRecord::Base
       from 
       events e
       where 
+      1=1 or
       textbuster_mac = '%%textbuster_mac%%' and phones_log_id = %%phones_log_id%%
       and ((@last_time is null) or (e.time > @last_time))
       ) q
