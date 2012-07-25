@@ -71,6 +71,9 @@ class Event < ActiveRecord::Base
       group by q3.v2".gsub(/%%textbuster_mac%%/,textbuster_mac.to_s.to_mac).gsub(/%%phones_log_id%%/,phones_log_id.to_s)
 
       events = ActiveRecord::Base.transaction do
+        %w(last_time).map do |var|
+          ActiveRecord::Base.connection.execute("SET @#{var} = NULL;")
+        end
         ActiveRecord::Base.connection.execute("select @last_time:=last_time from calculated_events 
           where 
             textbuster_mac = '%%textbuster_mac%%' and phones_log_id = %%phones_log_id%%
