@@ -4,13 +4,13 @@ development:
   pool: 5
   timeout: 5000
   host: 127.0.0.1
-  password: ruby
+  password: 
 
 test:
   adapter: mysql
-  database: test
-  username: textbuster
-  password: asv1T8s8t
+  database: textbuster-test
+  username: root
+  password: 
   pool: 5
   timeout: 5000
   host: 127.0.0.1
@@ -22,5 +22,5 @@ production:
   password: mz-db-123
   pool: 5
   timeout: 5000
-  host: 127.0.0.1
+  host: localhost
 

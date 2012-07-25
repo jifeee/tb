@@ -29,8 +29,13 @@ gem 'unicorn'
 gem 'capistrano', :group => :development, :require => false
 
 #  Use pagination
-# gem "will_paginate", "~> 3.0.3"
 gem 'kaminari'
+
+group :test, :development do
+  gem "rspec-rails", "~> 2.6"
+  gem 'shoulda'
+  gem "factory_girl_rails", "~> 1.2"
+end
 
 # Deploy with Capistrano
 # gem 'capistrano'
