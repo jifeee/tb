@@ -112,11 +112,12 @@ namespace :trips do
   	grouped_events = Event.select('phones_log_id, textbuster_mac').joins(:phones_log,:device).group('phones_log_id, textbuster_mac')
 
  		grouped_events.each_with_index do |grouped_event,idx|
- 			puts "Calculating #{idx+1} of #{grouped_events.size}"
 
 			device = Device.find_by_imei(grouped_event.textbuster_mac)
 			phones_log = PhonesLog.find(grouped_event.phones_log_id)
 			phone = phones_log.phone
+
+ 			puts "Calculating #{idx+1} of #{grouped_events.size} [#{grouped_event.textbuster_mac} #{phones_log.imei}]"
 
 			if (phone.nil? || phones_log.nil?)
 				puts "WARNING!!! Phone is not defined, imei:#{phones_log.imei}, mac:#{grouped_event.textbuster_mac}"
