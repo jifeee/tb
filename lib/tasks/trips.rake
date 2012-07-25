@@ -133,6 +133,7 @@ namespace :trips do
 
 	    #  Create a completed trips
 	    events.map do |t|
+puts ">>>>>>>>>>> #{t}"
 
 				start_time = DateTime.parse(t['start_time'])
 				end_time = DateTime.parse(t['end_time'])
