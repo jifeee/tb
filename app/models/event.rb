@@ -69,6 +69,8 @@ class Event < ActiveRecord::Base
       where c2=0 
       group by q3.v2".gsub(/%%textbuster_mac%%/,textbuster_mac.to_s.to_mac).gsub(/%%phones_log_id%%/,phones_log_id.to_s)
 
+puts q
+
       events = ActiveRecord::Base.transaction do
         ActiveRecord::Base.connection.execute("select @last_time:=last_time from calculated_events 
           where 
