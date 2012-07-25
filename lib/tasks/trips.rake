@@ -131,6 +131,8 @@ namespace :trips do
  			trips,trip = [],{}
  			events = Event.events_for_calculation_trip(grouped_event.textbuster_mac,grouped_event.phones_log_id)
 
+puts events.to_sql
+
 	    #  Create a completed trips
 	    events.map do |t|
 
@@ -139,8 +141,6 @@ namespace :trips do
 
 		  	locations = Location.joins(:events).where(:events => {:time => start_time..end_time})
 		  	locations = locations.where(:events => {:textbuster_mac => device.imei, :phones_log_id => phones_log.id})
-
-puts locations.to_sql
 
 		  	if locations.count > 0
 					trip = Trip.where(:device_id => device.id, :phone_id => phone.id, :last_time_event => (end_time.ago(10.minutes)..end_time)).limit(1).first
