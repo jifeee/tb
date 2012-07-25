@@ -32,7 +32,7 @@ class Event < ActiveRecord::Base
   class << self
     def events_for_calculation_trip(textbuster_mac,phones_log_id)
       q = "
-      select min(q3.start_time) start_time, max(q3.end_time) end_time
+      select @last_time start_time, max(q3.end_time) end_time
       from
       (
       select q2.*,
