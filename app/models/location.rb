@@ -25,7 +25,7 @@ class Location < ActiveRecord::Base
   end
 
   def update_address
-    record.delay.set_address! if record.lat_changed? or record.lng_changed?    
+    self.delay.set_address! if self.lat_changed? or self.lng_changed?    
   end
 
   # checks if the location object inside of the allowed area
