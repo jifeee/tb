@@ -7,6 +7,7 @@ namespace :trips do
 	MILE_PER_KM = 0.621371192
 
 	def calculate_distance_and_speed(locations)
+		cc = 10
 		res = {:distance => 0, :speed => []}
 		locations = locations.select('distinct locations.lat,locations.lng,locations.time')
 		locations.each_cons(2) do |a,b| 

@@ -15,15 +15,17 @@ class Location < ActiveRecord::Base
   alias_attribute :latitude, :lat
 
   # try to geolocate the point
-  after_save do |record|
-    record.delay.set_address! if record.lat_changed? or record.lng_changed?
-  end
+  after_save :update_address
 
   #  Redefine attributes read
   %w(country city zip address).map do |attr|
     define_method("#{attr}") do
       get_attr_geo(attr.to_sym)    
     end
+  end
+
+  def update_address
+    record.delay.set_address! if record.lat_changed? or record.lng_changed?    
   end
 
   # checks if the location object inside of the allowed area
