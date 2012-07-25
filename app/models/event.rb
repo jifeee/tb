@@ -70,11 +70,12 @@ class Event < ActiveRecord::Base
       group by q3.v2".gsub(/%%textbuster_mac%%/,textbuster_mac.to_s.to_mac).gsub(/%%phones_log_id%%/,phones_log_id.to_s)
 
       events = ActiveRecord::Base.transaction do
-        p ActiveRecord::Base.connection.execute("select @last_time:=last_time from calculated_events 
+        a = ActiveRecord::Base.connection.execute("select @last_time:=last_time from calculated_events 
           where 
             textbuster_mac = '%%textbuster_mac%%' and phones_log_id = %%phones_log_id%%
           ".gsub(/%%textbuster_mac%%/,textbuster_mac.to_s.to_mac).gsub(/%%phones_log_id%%/,phones_log_id.to_s)
         )
+puts ">>>> #{a.inspect}"        
         %w(v2 old_time old_time1 old_locked v).map do |var|
           ActiveRecord::Base.connection.execute("SET @#{var} = 0;")
         end
