@@ -131,6 +131,10 @@ namespace :trips do
  			trips,trip = [],{}
  			events = Event.events_for_calculation_trip(grouped_event.textbuster_mac,grouped_event.phones_log_id)
 
+puts "************************ #{events.size}"
+p events
+
+
 	    #  Create a completed trips
 	    events.map do |t|
 
