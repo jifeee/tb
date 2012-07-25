@@ -13,7 +13,7 @@ class Alert < ActiveRecord::Base
   validates :restricted_time_start, :restricted_time_end, :format => /^(([0-9])|([0-1][0-9])|([2][0-3])):(([0-9])|([0-5][0-9])) (AM|PM)$/, :if => :time_type?
   validate :restrictions_present, :unless => :time_type?
 
-  validates :speed, :numericality => true #{:greater_than => 5}
+  validates :speed, :numericality => true, :if => :speed_type?
   validate :valid_speed, :if => :speed_type?
 
   scope :time_resrtriction, where(:event_type => 'Driving at a specific time')
