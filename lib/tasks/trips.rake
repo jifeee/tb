@@ -72,8 +72,6 @@ namespace :trips do
 
 		def update_last_event(last_time,device,phones_log,trip)
 			event = Event.find_by_time(last_time)
-
-raise 'aaaa'			
 			#  Check time restrictions
 			trip_alert = trip.phone.alerts.time_resrtriction.where(['? not between restricted_time_start and restricted_time_end',event.time.strftime('%H:%M')])
 			trip_alert.map do |e|
