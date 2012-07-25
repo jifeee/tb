@@ -117,7 +117,7 @@ namespace :trips do
 			phones_log = PhonesLog.find(grouped_event.phones_log_id)
 			phone = phones_log.phone
 
- 			puts "Calculating #{idx+1} of #{grouped_events.size} [#{grouped_event.textbuster_mac} #{phones_log.imei}]"
+ 			puts "Calculating #{idx+1} of #{grouped_events.size} [#{device.imei} #{phones_log.imei}]"
 
 			if (phone.nil? || phones_log.nil?)
 				puts "WARNING!!! Phone is not defined, imei:#{phones_log.imei}, mac:#{grouped_event.textbuster_mac}"
@@ -139,6 +139,8 @@ namespace :trips do
 
 		  	locations = Location.joins(:events).where(:events => {:time => start_time..end_time})
 		  	locations = locations.where(:events => {:textbuster_mac => device.imei, :phones_log_id => phones_log.id})
+
+puts locations.to_sql
 
 		  	if locations.count > 0
 					trip = Trip.where(:device_id => device.id, :phone_id => phone.id, :last_time_event => (end_time.ago(10.minutes)..end_time)).limit(1).first
