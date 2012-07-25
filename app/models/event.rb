@@ -80,6 +80,7 @@ class Event < ActiveRecord::Base
         end
         ActiveRecord::Base.connection.select_all(q)
       end
+  puts "************** #{events}"
 
       return events
     end
