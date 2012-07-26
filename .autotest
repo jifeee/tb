@@ -1,0 +1,7 @@
+# encoding: utf-8
+require 'test_notifier/runner/autotest'
+Autotest.add_hook :initialize do |a|
+	%w{.git vendor tmp log doc}.each do |exception|
+		a.add_exception(exception)
+	end
+end

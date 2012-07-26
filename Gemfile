@@ -35,6 +35,9 @@ group :test, :development do
   gem "rspec-rails", "~> 2.6"
   gem 'shoulda'
   gem "factory_girl_rails", "~> 1.2"
+  gem 'autotest'
+  gem 'spork'
+  gem 'test_notifier'
 end
 
 # Deploy with Capistrano

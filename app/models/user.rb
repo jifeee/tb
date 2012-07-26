@@ -21,12 +21,8 @@ class User < ActiveRecord::Base
   scope :by_role, lambda{|role_name| where(:role_id => Role.find_by_name(role_name))}
   scope :main, where(:is_main => true)
 
-  before_create do |record| # fill the defaults if not set
-    record.name ||= record.login
-    record.role_id ||= Role.find_by_name('Parent').id
-    record.is_main = true unless record.family_id
-    record.build_family unless record.admin? || record.family_id
-  end
+  before_create :fill_defaults
+
   after_create :send_welcome_email
   # before_validation :generate_pwd, :on => :create, :if => "password.blank? && password_confirmation.blank?"
 
@@ -43,6 +39,13 @@ class User < ActiveRecord::Base
     define_method "#{r.downcase}?" do
       r.eql? role.try(:name)
     end
+  end
+
+  def fill_defaults
+    self.name ||= self.login
+    self.role_id ||= Role.find_by_name('Parent').id
+    self.is_main = true unless self.family_id
+    # self.build_family unless self.admin? || self.family_id    
   end
 
   # get devices through the phones association
@@ -70,7 +73,7 @@ class User < ActiveRecord::Base
   protected
   # send an email on registration
   def send_welcome_email
-    #Mailer.registered(self).deliver
+    Mailer.registered(self).deliver
   end
 
   # generate temporary passwords if user was registered by the other user

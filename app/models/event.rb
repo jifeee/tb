@@ -22,7 +22,8 @@ class Event < ActiveRecord::Base
   end
 
   def time= val
-    created_at = Time.at(val)
+    self[:time] = val
+    self[:created_at] = Time.at(val)
   end
 
   def event_type= val
