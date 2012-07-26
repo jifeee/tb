@@ -45,7 +45,7 @@ class User < ActiveRecord::Base
     self.name ||= self.login
     self.role_id ||= Role.find_by_name('Parent').id
     self.is_main = true unless self.family_id
-    # self.build_family unless self.admin? || self.family_id    
+    self.build_family unless self.admin? || self.family_id    
   end
 
   # get devices through the phones association
