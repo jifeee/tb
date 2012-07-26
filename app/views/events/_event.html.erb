@@ -1,6 +1,6 @@
 <tr>
   <td><%= image_tag "icons/on.png", :width => 15, :height => 16, :alt => "on" %></td>
-  <td><%= event.time.strftime '%c'%></td>
+  <td><%= event.time.strftime('%b. %d, ‘%y, %I:%M:%S %p') %></td>
   <td>
     <div class="status">
       <div class="whos">
