@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120726101402) do
+ActiveRecord::Schema.define(:version => 20120726130959) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(:version => 20120726101402) do
     t.integer  "repeat_freq",           :default => 15
     t.integer  "repeat_count",          :default => 3
     t.integer  "speed"
+    t.integer  "speed_over"
   end
 
   add_index "alerts", ["author_id"], :name => "index_alerts_on_author_id"

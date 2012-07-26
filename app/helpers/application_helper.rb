@@ -36,4 +36,10 @@ module ApplicationHelper
     end
     html.html_safe
   end
+
+  def speed_over_for_select
+    speed_over = Setting.where(:name => 'speed_over').first.value.split(',') # rescue [15,20]
+    speed_over.map {|s| [s,s]}    
+  end
+
 end

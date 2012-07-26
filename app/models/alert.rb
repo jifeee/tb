@@ -13,6 +13,8 @@ class Alert < ActiveRecord::Base
   validates :restricted_time_start, :restricted_time_end, :format => /^(([0-9])|([0-1][0-9])|([2][0-3])):(([0-9])|([0-5][0-9])) (AM|PM)$/, :if => :time_type?
   validate :restrictions_present, :unless => :time_type?
 
+  validate :validate_restricted_time, :restricted_time_end
+
   validates :speed, :numericality => true, :if => :speed_type?
   validate :valid_speed, :if => :speed_type?
 
@@ -31,7 +33,7 @@ class Alert < ActiveRecord::Base
     elsif event_type.eql? :"Driving at a specific time"
        "driving from " << restricted_time_start << " till " << restricted_time_end
     elsif event_type.eql? :"Speed restriction"
-      "speed exceeds #{speed} miles per hour"
+      "speed exceeds #{speed} miles per hour, notify me when speed over #{speed_over}"
     end
   end
   
@@ -55,5 +57,11 @@ private
 
   def valid_speed
     errors.add(:speed, "must be greater than #{Alert.min_speed}") if speed && speed < Alert.min_speed.to_i
+  end
+
+  def validate_restricted_time
+    time_start = Time.parse(restricted_time_start)
+    time_end = Time.parse(restricted_time_end)
+    errors.add(:restricted_time_end, "must be greater than #{restricted_time_start}") if time_start && time_end && (time_start > time_end)
   end
 end

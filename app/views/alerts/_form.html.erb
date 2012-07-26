@@ -23,6 +23,8 @@
         </div>
         <div class="speed">
           <%= f.text_field :speed, :placeholder => "Speed restriction > #{Alert.min_speed}" %>
+          <span>notify me when speed over</span>
+          <%= f.select :speed_over, speed_over_for_select, {:include_blank => false}, {:class => 'input-mini'} %>
         </div>
       </td>
     </tr>

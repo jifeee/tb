@@ -6,22 +6,19 @@ namespace :trips do
 	KM_PER_MILE = 1.609344
 	MILE_PER_KM = 0.621371192
 
-	def calculate_distance_and_speed(locations)
-		cc = 10
+	def calculate_distance_and_speed(locations, last_point = false)
 		res = {:distance => 0, :speed => []}
 		locations = locations.select('distinct locations.lat,locations.lng,locations.time')
+		points = locations.each_cons(2)
+		points = points.to_a.last(1) if last_point 
 		locations.each_cons(2) do |a,b| 
 			distance = a.distance_to(b) * MILE_PER_KM
 			next if (b.time-a.time) == 0
-			# p "#{b.time} - #{a.time}, #{b.time-a.time}"
 			speed = (distance / (b.time - a.time))*3600 
 			res[:distance] += distance
 			res[:speed] << speed
 		end
-		# p res[:speed]		
 		res[:speed] = res[:speed].reduce(:+)/res[:speed].size.to_f rescue 0
-		# res[:speed] = 0 unless res[:speed].to_f.infinite?.nil?
-		# res[:speed] = 0 if res[:speed].to_f.nan?
 		return res
 	rescue => e
 		raise "Error on calculate_distance_and_speed, #{e.message}"
@@ -72,6 +69,7 @@ namespace :trips do
 
 		def update_last_event(last_time,device,phones_log,trip)
 			event = Event.find_by_time(last_time)
+			
 			#  Check time restrictions
 			trip_alert = trip.phone.alerts.time_resrtriction.where(['? not between restricted_time_start and restricted_time_end',event.time.strftime('%H:%M')])
 			trip_alert.map do |e|
@@ -87,13 +85,14 @@ namespace :trips do
 				send_alert(trip, alert) do
 					puts '.... mailing alert zone'
 					Mailer.delay.alert_notification(event.time,alert,phones_log,event,trip)
-					# Mailer.alert_notification(event.time,alert,phones_log).deliver
 				end
 			end
 
 			#  Check speed restriction
 			if event.location
-				trip_alert = trip.phone.alerts.speed_resrtriction.where(['? > speed', event.location.spd.to_i])
+				locations = trip.locations.order('locations.time')
+				speed = calculate_distance_and_speed(locations,true)
+				trip_alert = trip.phone.alerts.speed_resrtriction.where(['? > speed + speed_over', speed[:speed]])
 				trip_alert.map do |e|
 					send_alert(trip, e) do
 						puts '.... mailing speed time'
