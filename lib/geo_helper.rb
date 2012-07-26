@@ -20,7 +20,8 @@ module GeoHelper
   # returns a decimal num, representing an hours shift corresponding utc
   def timeshift
     zone = RestClient.get "http://api.geonames.org/timezone?lat=#{latitude}&lng=#{longitude}&username=textbuster"
-    Hash.from_xml(zone)["geonames"]["timezone"]["gmtOffset"].to_f rescue nil
+    # Hash.from_xml(zone)["geonames"]["timezone"]["gmtOffset"].to_f rescue nil
+    Hash.from_xml(zone)["geonames"]["timezone"]["dstOffset"].to_f rescue nil
   end
   
   # get distance in km between two points

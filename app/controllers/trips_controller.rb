@@ -6,6 +6,14 @@ class TripsController < ApplicationController
   
   # list of trips
   def index
+
+trips = Trip.all
+trips.map do |trip|
+  ttt = trip.start_point.timeshift
+  puts  "====================== #{ttt}"
+  trip.update_attribute :timezone, ttt
+end
+
     # @trips = @family.trips.where(:phone_id => current_user.family.phones, :device_id => current_user.family.devices)
     @trips = @family.trips.includes([:start_point, :end_point, :phone, :alert_histories, :device])
     @trips = @trips.where(:phone_id => current_user.family.phones, :device_id => current_user.family.devices)
