@@ -24,7 +24,7 @@ class Alert < ActiveRecord::Base
   
 
   def self.min_speed
-    Setting.find_by_name('alert_min_speed').value || 5
+    Setting.find_by_name('alert_min_speed').value.to_i || 5
   end
 
   def conditions
@@ -56,7 +56,7 @@ private
   end
 
   def valid_speed
-    errors.add(:speed, "must be greater than #{Alert.min_speed}") if speed && speed < Alert.min_speed.to_i
+    errors.add(:speed, "must be greater than #{Alert.min_speed} and less than 200") if speed && !(Alert.min_speed..200).to_a.include?(speed.to_i)
   end
 
   def validate_restricted_time
