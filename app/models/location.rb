@@ -76,7 +76,8 @@ class Location < ActiveRecord::Base
 
   def time_with_timezone(timezone = nil)
     timezone = trip.timezone unless timezone
-    time.in_time_zone(timezone) rescue time
+    # time.in_time_zone(timezone) rescue time
+    time + timezone.to_i.hours rescue time
   end
 
 protected
