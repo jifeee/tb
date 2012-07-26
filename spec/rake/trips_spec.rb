@@ -32,7 +32,7 @@ describe "Test rake trips tasks" do
 			trip = Factory.create :trip
 			locations = Factory.create :location, {:trip_id => trip.id, :lat => 49.628162, :lng => 49.628162, :time => 1343220263}
 			locations = Factory.create :location, {:trip_id => trip.id, :lat => 49.626357, :lng => 49.626357, :time => 1343223863}
-			@rake[@task_name].execute
+			@rake['trips:speed'].execute
 			trip.reload.distance.to_f.should == 0.15
 			trip.reload.average_speed.to_f.should == 178.95
   	end
@@ -40,41 +40,71 @@ describe "Test rake trips tasks" do
 
   describe 'rake trips:calculate' do
     before do
-      
+      @user = Factory.create :user
+      @device = Factory.create :device
+      @phone = Factory.create :phone, {:user_id => @user.id}
+      @phones_log = Factory.create :phones_log, {:imei => @phone.imei}
     end
 
     it "should have 'environment' as a prereq" do
       @rake['trips:speed'].prerequisites.should include("environment")
     end
 
-  	it 'trip should be created' do
-  		user = Factory.create :user
-  		device = Factory.create :device
-  		phone = Factory.create :phone, {:user_id => user.id}
-  		phones_log = Factory.create :phones_log, {:imei => phone.imei}
+  	it 'trip should be created' do  		  		
   		location = Factory.create :location
-  		time = Time.now
-  		event = Factory.create :event, {:phones_log_id => phones_log.id, 
-  			:time => time,
+  		event = Factory.create :event, {:phones_log_id => @phones_log.id, 
+  			:time => Time.now,
   			:alert => 3,
   			:gps => 3,
   			:locked => 2,
-  			:textbuster_mac => device.imei,
+  			:textbuster_mac => @device.imei,
   			:locations_id => location.id
   		}
 
   		@rake['trips:calculate'].execute
 			Trip.count.should == 1
-      trip = Trip.find_by_device_id_and_phone_id device.id, phone.id
+      trip = Trip.find_by_device_id_and_phone_id(@device.id, @phone.id)
       trip.nil?.should be_false
   	end
 
     it 'should be send mail with alert' do
-      Event
+      alert = Factory.create :alert
+      @phone.alerts << alert
+      location = Factory.create :location
+      event = Factory.create :event, {:phones_log_id => @phones_log.id, 
+        :time => Time.parse('05:00 AM'),
+        :alert => 3,
+        :gps => 3,
+        :locked => 2,
+        :textbuster_mac => @device.imei,
+        :locations_id => location.id
+      }
 
+      @rake['trips:calculate'].execute
+      Trip.count.should == 1
+      trip = Trip.find_by_device_id_and_phone_id(@device.id, @phone.id)
+      trip.nil?.should be_false
       ActionMailer::Base.deliveries.empty?.should be_false      
-      # email.to.should include user.email
-      email.subject.should match("You are being sent an alert message")
+    end
+
+    it 'should not be send mail with alert' do
+      alert = Factory.create :alert
+      @phone.alerts << alert
+      location = Factory.create :location
+      event = Factory.create :event, {:phones_log_id => @phones_log.id, 
+        :time => Time.parse('02:00 AM'),
+        :alert => 3,
+        :gps => 3,
+        :locked => 2,
+        :textbuster_mac => @device.imei,
+        :locations_id => location.id
+      }
+
+      @rake['trips:calculate'].execute
+      Trip.count.should == 1
+      trip = Trip.find_by_device_id_and_phone_id(@device.id, @phone.id)
+      trip.nil?.should be_false
+      ActionMailer::Base.deliveries.empty?.should be_true
     end
   
   end

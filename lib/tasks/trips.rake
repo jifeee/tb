@@ -17,8 +17,18 @@ namespace :trips do
 			speed = (distance / (b.time - a.time))*3600 
 			res[:distance] += distance
 			res[:speed] << speed
+
+if ENV['DEBUG']=='yes'
+	puts "#{a.lat},#{a.lng} - #{b.lat},#{b.lng}, #{b.time-a.time}, #{distance}, #{speed}" 
+end
 		end
 		res[:speed] = res[:speed].reduce(:+)/res[:speed].size.to_f rescue 0
+
+
+if ENV['DEBUG']=='yes'
+	puts "#{res[:distance]}, #{res[:speed]}"
+end
+
 		return res
 	rescue => e
 		raise "Error on calculate_distance_and_speed, #{e.message}"
