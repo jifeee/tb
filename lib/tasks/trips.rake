@@ -9,6 +9,7 @@ namespace :trips do
 	def calculate_distance_and_speed(locations, last_point = false)
 		res = {:distance => 0, :speed => []}
 		locations = locations.select('distinct locations.lat,locations.lng,locations.time')
+		locations = locations.where('locations.spd > 0')
 		points = locations.each_cons(2)
 		points = points.to_a.last(1) if last_point 
 		locations.each_cons(2) do |a,b| 
@@ -18,16 +19,18 @@ namespace :trips do
 			res[:distance] += distance
 			res[:speed] << speed
 
-if ENV['DEBUG']=='yes'
-	puts "#{a.lat},#{a.lng} - #{b.lat},#{b.lng}, #{b.time-a.time}, #{distance}, #{speed}" 
-end
+			#  For debug
+			if ENV['DEBUG']=='yes'
+				puts "#{a.lat},#{a.lng} - #{b.lat},#{b.lng}, #{b.time-a.time}, #{distance}, #{speed}" 
+			end
+
 		end
 		res[:speed] = res[:speed].reduce(:+)/res[:speed].size.to_f rescue 0
 
-
-if ENV['DEBUG']=='yes'
-	puts "#{res[:distance]}, #{res[:speed]}"
-end
+		#  For debug
+		if ENV['DEBUG']=='yes'
+			puts "#{res[:distance]}, #{res[:speed]}"
+		end
 
 		return res
 	rescue => e
