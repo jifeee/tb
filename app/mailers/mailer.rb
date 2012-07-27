@@ -2,6 +2,8 @@ class Mailer < ActionMailer::Base
   include Devise::Mailers::Helpers
 
   default :from => "info@textbuster.com"
+
+  SMSLOGGER = Logger.new(File.join(Rails.root, "log", "sms.log"), 'daily')
   
   def registered(user)
     @user = user
@@ -60,8 +62,8 @@ class Mailer < ActionMailer::Base
         :user => sms_username,
         :pass => sms_password,
         :message => message
-      }     
-    $smsloger.info "[#{Time.now.strftime('%d-%m-%Y %H:%M:%S')}] UserID: #{user.id} : #{user.email} : #{number} : #{response}"
+      }
+    SMSLOGGER.info "[#{Time.now.strftime('%d-%m-%Y %H:%M:%S')}] UserID: #{user.id} : #{user.email} : #{number} : #{response}"
   end
 
 end
