@@ -44,6 +44,19 @@ namespace :trips do
 		trip.update_attributes :distance => z[:distance].to_f, :average_speed => z[:speed]
 	end
 
+	desc 'Update start and end points for tll trips'
+	task :location, :trip_id, :needs => :environment do |t, args|
+		puts "#{Time.now} Start. Updating trips.... #{args[:trip_id]}"
+		trips = Trip.select(:id)
+		trips = trips.where(:id => args[:trip_id]) if args[:trip_id]
+		trips = trips.uniq
+		trips.each do |t|
+			locations = Location.where(:trip_id => t.id).order('time')
+			t.update_attributes :start_point_id => locations.first.id , :end_point_id => locations.last.id
+		end
+		puts "#{Time.now} Finish"
+	end
+
 	desc 'Update speed and distances for all trips'
 	task :speed, :trip_id, :needs => :environment do |t, args|
 		puts "#{Time.now} Start. Updating trips.... #{args[:trip_id]}"
@@ -153,6 +166,7 @@ namespace :trips do
 
 		  	locations = Location.joins(:events).where(:events => {:time => start_time..end_time})
 		  	locations = locations.where(:events => {:textbuster_mac => device.imei, :phones_log_id => phones_log.id})
+		  	locations = locations.order('locations.time')
 
 		  	if locations.count > 0
 					trip = Trip.where(:device_id => device.id, :phone_id => phone.id, :last_time_event => (end_time.ago(10.minutes)..end_time)).limit(1).first

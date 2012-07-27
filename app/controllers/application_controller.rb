@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :restore_page_param, :retrieve_family
   before_filter :api_logger
+
   
   # redirection for user attempting to get restricted resources
   rescue_from CanCan::AccessDenied do |exception|
