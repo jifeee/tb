@@ -45,11 +45,12 @@ class Mailer < ActionMailer::Base
   end
 
   def send_sms(user,message)
-    puts "... sending sms to #{number}"    
 
     #  Using only numbers for phone
     number = user.phone.scan(/\d+/).to_s if user.phone
 
+    puts "... sending sms to #{number}"    
+    
     sms_route_url = 'http://smsc5.routotelecom.com/SMSsend'
     sms_username = Setting.find_by_name('sms_username').value
     sms_password = Setting.find_by_name('sms_password').value
