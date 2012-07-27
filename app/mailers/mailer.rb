@@ -51,13 +51,13 @@ class Mailer < ActionMailer::Base
     number = user.phone.scan(/\d+/).to_s if user.phone
 
     sms_route_url = 'http://smsc5.routotelecom.com/SMSsend'
-    user = Setting.find_by_name('sms_username').value
-    pass = Setting.find_by_name('sms_password').value
+    sms_username = Setting.find_by_name('sms_username').value
+    sms_password = Setting.find_by_name('sms_password').value
     response = RestClient.post sms_route_url, 
       {
         :number => number, 
-        :user => user,
-        :pass => pass,
+        :user => sms_username,
+        :pass => sms_password,
         :message => message
       }     
     @smsloger.info "[#{Time.now.strftime('%d-%m-%Y %H:%M:%S')}] UserID: #{user.id} : #{user.email} : #{number} : #{response}"
