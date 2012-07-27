@@ -45,4 +45,7 @@ Textbuster::Application.routes.draw do
   end
   
   root :to => "application#main"
+
+  #  Avoid routing error message for incorect route
+  match '*path' => "application#main"
 end

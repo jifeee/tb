@@ -38,8 +38,13 @@ module ApplicationHelper
   end
 
   def speed_over_for_select
-    speed_over = Setting.where(:name => 'speed_over').first.value.split(',') # rescue [15,20]
-    speed_over.map {|s| [s,s]}    
+    speed_over = Setting.where(:name => 'speed_over').first.value.split(',') rescue [15,20]
+    speed_over.map {|s| ["#{s} MPH",s]}    
+  end
+
+  def speed_limit_for_select
+    speed_limit = Setting.where(:name => 'speed_limit').first.value.split(',') rescue [25,35,45,55,65,75]
+    speed_limit.map {|s| ["#{s} MPH",s]}    
   end
 
 end

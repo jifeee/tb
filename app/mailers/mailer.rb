@@ -16,13 +16,21 @@ class Mailer < ActionMailer::Base
     @contact = Setting.find_by_name('customerservice_email').value
     @time = time
     from = Setting.find_by_name('alert_notification_email_from').value
-    emails = alert.users.map {|user| user.email}
+    parents = alert.users
+    emails = parents.map {|user| user.email}
+    puts "send alerts for #{emails.join(',')}"
     subject = "You are being sent an alert message from TextBuster ® for the phone user #{phones_log.phone.name}"
     mail(:to => emails, :from => from, :subject => subject)
 
     #  Storing aler history
     alert_history = AlertHistory.create :trip_id => trip.id, :event_id => event.id
     alert.alert_histories << alert_history    
+
+    #  Sending SMS
+    parents.map do |parent|
+      puts "send sms to  #{parent.phone}" if parent.phone
+      send_sms(parent.phone, subject) if parent.phone
+    end
   end
 
   def system_notification(id,family_id,device,phone)
@@ -34,6 +42,21 @@ class Mailer < ActionMailer::Base
     else
       return false
     end
+  end
+
+  def send_sms(number,message)
+    puts "... sending sms to #{number}"
+    sms_route_url = 'http://smsc5.routotelecom.com/SMSsend'
+    user = Setting.find_by_name('sms_username').value
+    pass = Setting.find_by_name('sms_password').value
+    response = RestClient.post sms_route_url, 
+      {
+        :number => number, 
+        :user => user,
+        :pass => pass,
+        :message => message
+      }     
+    puts "#{user},#{pass}, response: #{response.body}"
   end
 
 end

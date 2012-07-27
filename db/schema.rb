@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120726130959) do
+ActiveRecord::Schema.define(:version => 20120727084354) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -145,6 +145,7 @@ ActiveRecord::Schema.define(:version => 20120726130959) do
   add_index "events", ["phones_log_id"], :name => "index_events_on_phones_log_id"
   add_index "events", ["textbuster_mac", "phones_log_id"], :name => "index_events_on_textbuster_mac_and_phones_log_id"
   add_index "events", ["textbuster_mac"], :name => "index_events_on_textbuster_mac"
+  add_index "events", ["time"], :name => "new_index"
 
   create_table "families", :force => true do |t|
   end
@@ -179,6 +180,7 @@ ActiveRecord::Schema.define(:version => 20120726130959) do
     t.string  "title"
     t.string  "anchor"
     t.text    "data"
+    t.boolean "menu_logged_upt"
     t.boolean "menu_logged_in"
     t.boolean "menu_logged_out"
     t.boolean "menu_footer"
@@ -205,11 +207,12 @@ ActiveRecord::Schema.define(:version => 20120726130959) do
   end
 
   create_table "phones_log", :force => true do |t|
-    t.integer  "imei",    :null => false
-    t.datetime "created", :null => false
-    t.datetime "seen",    :null => false
+    t.string   "imei",    :limit => 65, :null => false
+    t.datetime "created",               :null => false
+    t.datetime "seen",                  :null => false
   end
 
+  add_index "phones_log", ["imei"], :name => "imei_UNIQUE", :unique => true
   add_index "phones_log", ["imei"], :name => "index_phones_log_on_imei", :unique => true
 
   create_table "reports", :force => true do |t|
@@ -218,16 +221,17 @@ ActiveRecord::Schema.define(:version => 20120726130959) do
     t.integer  "conditions"
     t.text     "data"
     t.datetime "created_at"
+    t.integer  "device_id"
   end
 
   create_table "restrictions", :force => true do |t|
-    t.decimal  "latitude",   :precision => 10, :scale => 6
-    t.decimal  "longitude",  :precision => 10, :scale => 6
-    t.decimal  "radius",     :precision => 5,  :scale => 1
+    t.decimal  "latitude",                  :precision => 10, :scale => 6
+    t.decimal  "longitude",                 :precision => 10, :scale => 6
+    t.decimal  "radius",                    :precision => 5,  :scale => 1
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "alert_id"
-    t.string   "address"
+    t.string   "address",    :limit => 256
   end
 
   create_table "roles", :force => true do |t|
@@ -252,9 +256,9 @@ ActiveRecord::Schema.define(:version => 20120726130959) do
   create_table "trips", :force => true do |t|
     t.decimal  "distance",        :precision => 8, :scale => 2
     t.decimal  "average_speed",   :precision => 5, :scale => 2
-    t.decimal  "timezone",        :precision => 3, :scale => 1
     t.integer  "user_id"
     t.integer  "device_id"
+    t.decimal  "timezone",        :precision => 2, :scale => 1
     t.integer  "start_point_id"
     t.integer  "end_point_id"
     t.datetime "created_at"

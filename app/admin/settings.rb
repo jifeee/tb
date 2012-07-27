@@ -1,13 +1,13 @@
 # Admin pages for global application settings
 ActiveAdmin.register Setting do
-  actions :index, :show, :edit
+  actions :index, :edit, :update
   # table view for index action
   index do
     column :name
     column :value
     
     column "Actions" do |set|
-      link_to("View", admin_setting_path(set)) << ' ' << link_to("Edit", edit_admin_setting_path(set))
+      link_to("Edit", edit_admin_setting_path(set))
     end
   end
   
@@ -29,4 +29,5 @@ ActiveAdmin.register Setting do
     
     active_admin_comments
   end
+
 end

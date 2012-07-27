@@ -88,7 +88,8 @@ namespace :trips do
 			trip_alert.map do |e|
 				send_alert(trip, e) do
 					puts '.... mailing alert time'
-					Mailer.delay.alert_notification(event.time,e,phones_log,event,trip)
+					# Mailer.delay.alert_notification(event.time,e,phones_log,event,trip)
+					Mailer.alert_notification(event.time,e,phones_log,event,trip).deliver
 				end
 			end
 
@@ -97,7 +98,8 @@ namespace :trips do
 				alert = rz.first.alert
 				send_alert(trip, alert) do
 					puts '.... mailing alert zone'
-					Mailer.delay.alert_notification(event.time,alert,phones_log,event,trip)
+					# Mailer.delay.alert_notification(event.time,alert,phones_log,event,trip)
+					Mailer.alert_notification(event.time,alert,phones_log,event,trip).deliver
 				end
 			end
 
@@ -108,8 +110,9 @@ namespace :trips do
 				trip_alert = trip.phone.alerts.speed_resrtriction.where(['? > speed + speed_over', speed[:speed]])
 				trip_alert.map do |e|
 					send_alert(trip, e) do
-						puts '.... mailing speed time'
-						Mailer.delay.alert_notification(event.time,e,phones_log,event,trip)
+						puts '.... mailing alert speed'
+						# Mailer.delay.alert_notification(event.time,e,phones_log,event,trip)
+						Mailer.alert_notification(event.time,e,phones_log,event,trip).deliver
 					end
 				end
 			end
