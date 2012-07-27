@@ -22,14 +22,14 @@ class Mailer < ActionMailer::Base
     subject = "You are being sent an alert message from TextBuster ® for the phone user #{phones_log.phone.name}"
     mail(:to => emails, :from => from, :subject => subject)
 
-    #  Storing aler history
+    #  Storing alert history
     alert_history = AlertHistory.create :trip_id => trip.id, :event_id => event.id
     alert.alert_histories << alert_history    
 
     #  Sending SMS
     parents.map do |parent|
       puts "send sms to  #{parent.phone}" if parent.phone
-      send_sms(parent.phone, subject) if parent.phone
+      send_sms(parent, subject) if parent.phone
     end
   end
 
@@ -44,11 +44,11 @@ class Mailer < ActionMailer::Base
     end
   end
 
-  def send_sms(number,message)
-    puts "... sending sms to #{number}"
-    
+  def send_sms(user,message)
+    puts "... sending sms to #{number}"    
+
     #  Using only numbers for phone
-    number = number.scan(/\d+/).to_s
+    number = user.phone.scan(/\d+/).to_s if user.phone
 
     sms_route_url = 'http://smsc5.routotelecom.com/SMSsend'
     user = Setting.find_by_name('sms_username').value
@@ -60,7 +60,7 @@ class Mailer < ActionMailer::Base
         :pass => pass,
         :message => message
       }     
-    puts "#{user},#{pass}, response: #{response.body}"
+    @smsloger.info "[#{Time.now.strftime('%d-%m-%Y %H:%M:%S')}] UserID: #{user.id} : #{user.email} : #{number} : #{response}"
   end
 
 end
