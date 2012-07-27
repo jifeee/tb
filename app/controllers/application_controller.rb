@@ -76,6 +76,6 @@ class ApplicationController < ActionController::Base
 
   def api_logger
     @logger = Logger.new(File.join(Rails.root, "log", "api_#{Rails.env}.log"), 'daily')
-    @smsloger = Logger.new(File.join(Rails.root, "log", "sms_#{Rails.env}.log"), 'daily')
+    $smsloger = Logger.new(File.join(Rails.root, "log", "sms_#{Rails.env}.log"), 'daily')
   end
 end
