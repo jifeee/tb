@@ -1,4 +1,6 @@
 class Device < ActiveRecord::Base
+  default_scope where(:is_deleted => false)
+
   belongs_to :family
   has_and_belongs_to_many :phones
   has_many :reports, :order => 'created_at desc'
@@ -12,6 +14,10 @@ class Device < ActiveRecord::Base
   validates :imei, :format => { :with => /^.{2}:.{2}:.{2}:.{2}:.{2}:.{2}$/, :message => "Incorrect MAC address" }
   validates :imei, :presence => true, :uniqueness => true, :length => {:maximum => 50}
   validates :name, :presence => true, :length => {:maximum => 255}, :uniqueness => {:case_sensitive => true}
+
+
+  scope :actived, where(:is_deleted => false)
+  scope :to_remove, where(:is_deleted => true)
   
   def name
     self['name'] || self['imei']    

@@ -37,5 +37,10 @@ ActiveAdmin.register Device, :as => "Textbuster" do
 
   # available filters
   filter :name
+
+  scope :all do |devices| devices.unscoped end
+  # scope :actived, :default => true do |devices| devices.where(:is_deleted => false) end
+  scope :to_remove do |devices| devices.unscoped.where(:is_deleted => true) end
+
 end
 

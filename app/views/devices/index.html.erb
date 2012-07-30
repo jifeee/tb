@@ -15,8 +15,8 @@
   <% if can? :create, Device %>
     <%= link_to 'Add new Textbuster', new_textbuster_path, :class => 'btn', :remote => true %>
   <% end %>
-  <% if can? :destroy, @devices %>
-    <%= link_to "Remove Textbuster", delete_textbusters_path, :class => "btn", :id => 'delete_device' %>
+  <% if current_user.is_main? %>
+    <%= link_to "Remove Textbuster", delete_textbusters_path, :class => "btn", :id => 'delete_device', :confirm => 'Are you sure?' %>
   <% end %>
 </div>
 

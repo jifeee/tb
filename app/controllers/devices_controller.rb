@@ -1,5 +1,6 @@
 # Devices (textbusters) controller
 class DevicesController < ApplicationController
+
   layout "parents"
   load_and_authorize_resource
 
@@ -45,7 +46,8 @@ class DevicesController < ApplicationController
   end
   
   def batch_delete
-    Device.destroy_all(:id => params[:ids].split(','))
+    # Device.destroy_all(:id => params[:ids].split(','))
+    @family.devices.update_all(:is_deleted => true)
     redirect_to textbusters_path
   end
 end
