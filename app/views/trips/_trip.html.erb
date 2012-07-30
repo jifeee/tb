@@ -1,7 +1,7 @@
 <tr>
   <td>
     <% if current_user.is_main? %>
-      <input type="checkbox" id="<%= trip.id %>", class="all"/>
+      <input type="checkbox" id="<%= trip.id %>", class="all", title="There is an alert set for this user. You can manage alert setting under Set Alerts"/>
     <% end %>
   </td>
   <td width="15">
