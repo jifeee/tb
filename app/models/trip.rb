@@ -21,7 +21,7 @@ class Trip < ActiveRecord::Base
   alias :finish :end_point
   
   def end_point
-    finish || locations.order('time DESC').last
+    finish || locations.order('time').last
   end
   
   # location points excluding start and end
