@@ -29,11 +29,12 @@ class Mailer < ActionMailer::Base
     alert.alert_histories << alert_history    
 
     #  Sending SMS
-    main_chuvak = parents.main.first
-    parents.map do |parent|
-      puts "send sms to  #{parent.phone}" if parent.phone
-      send_sms(parent, subject) if parent.phone
-    end if main_chuvak.is_sms? && main_chuvak.is_allowed_sms?
+    #  Customer peredumal
+    # main_chuvak = parents.main.first
+    # parents.map do |parent|
+    #   puts "send sms to  #{parent.phone}" if parent.phone
+    #   send_sms(parent, subject) if parent.phone
+    # end if main_chuvak.is_sms? && main_chuvak.is_allowed_sms?
   end
 
   def system_notification(id,family_id,device,phone)

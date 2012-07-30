@@ -3,13 +3,5 @@
   <td><div class="num"><%= member.email %></div></td>
   <td><div class="num"><%= member.aux_emails %></div></td>
   <td><div class="num"><%= member.phone %></div></td>
-  <td>
-  	<% if member.is_main? %>
-  		<div class="num">
-  			<%= check_box_tag 'is_sms', member.id, member.is_sms, :disabled => !current_user.is_main? %>
-  			<%= member.is_allowed_sms? ? "(sms is allowed)" : "(sms is not allowed)"  %>
-  		</div>
-  	<% end %>
-  </td>
 </tr>
 

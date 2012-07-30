@@ -1,6 +1,18 @@
 # Admin pages for textbusters
-ActiveAdmin.register Device, :as => "Textbuster" do
+ActiveAdmin.register Device.unscoped, :as => 'Textbuster' do
   actions :index, :show, :edit, :update, :destroy
+
+  collection_action :active_admin_collection do
+    Device.unscoped{super}
+  end
+
+  # scoped tabs
+  scope :all, :dafailt => true do |devices| devices.unscoped end
+  scope 'Active' do |devices| devices.where(:is_deleted => false) end
+  scope 'Marked as delete', :with_deleted
+
+  # available filters
+  filter :name
   
   # table for index action
   index do
@@ -28,19 +40,10 @@ ActiveAdmin.register Device, :as => "Textbuster" do
     f.inputs "Textbuster Details" do
       f.input :name
       f.input :imei
-      f.input :phones, :as => :check_boxes, :collection => f.object.family.try(:phones)
     end
     f.buttons do
       f.submit "Update Textbuster"
     end
   end
-
-  # available filters
-  filter :name
-
-  scope :all do |devices| devices.unscoped end
-  # scope :actived, :default => true do |devices| devices.where(:is_deleted => false) end
-  scope :to_remove do |devices| devices.unscoped.where(:is_deleted => true) end
-
 end
 

@@ -33,7 +33,7 @@ class Alert < ActiveRecord::Base
     elsif event_type.eql? :"Driving at a specific time"
        "driving from " << restricted_time_start << " till " << restricted_time_end
     elsif event_type.eql? :"Speed restriction"
-      "speed exceeds #{speed} MPH, notify me when speed over #{speed_over} MPH"
+      "if speed exceeds #{speed_over}MPH over the set #{speed}MPH speed limit"
     end
   end
   
