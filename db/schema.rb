@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120730093544) do
+ActiveRecord::Schema.define(:version => 20120730120504) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -112,11 +112,12 @@ ActiveRecord::Schema.define(:version => 20120730093544) do
   add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
   create_table "devices", :force => true do |t|
-    t.string   "imei",      :limit => 17
+    t.string   "imei",       :limit => 17
     t.string   "name"
     t.integer  "family_id"
     t.datetime "created"
     t.datetime "seen"
+    t.boolean  "is_deleted",               :default => false, :null => false
   end
 
   add_index "devices", ["imei"], :name => "index_devices_on_imei", :unique => true

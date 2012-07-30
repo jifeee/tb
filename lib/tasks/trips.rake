@@ -97,12 +97,15 @@ namespace :trips do
 			event = Event.find_by_time(last_time)
 			
 			#  Check time restrictions
-			trip_alert = trip.phone.alerts.time_resrtriction.where(['? not between restricted_time_start and restricted_time_end',event.time.strftime('%H:%M')])
-			trip_alert.map do |e|
-				send_alert(trip, e) do
-					puts '.... mailing alert time'
-					# Mailer.delay.alert_notification(event.time,e,phones_log,event,trip)
-					Mailer.alert_notification(event.time,e,phones_log,event,trip).deliver
+			if event.location
+				location_time = event.location.time_with_timezone(trip.timezone)
+				trip_alert = trip.phone.alerts.time_resrtriction.where(['? not between restricted_time_start and restricted_time_end',location_time.strftime('%H:%M')])
+				trip_alert.map do |e|
+					send_alert(trip, e) do
+						puts '.... mailing alert time'
+						# Mailer.delay.alert_notification(event.time,e,phones_log,event,trip)
+						Mailer.alert_notification(event.time,e,phones_log,event,trip).deliver
+					end
 				end
 			end
 
