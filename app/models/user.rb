@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
   delegate :permissions, :to => :role
   
   scope :by_role, lambda{|role_name| where(:role_id => Role.find_by_name(role_name))}
-  scope :main, where(:is_main => true)
+  scope :main, where(:is_main => true).limit(1)
 
   before_create :fill_defaults
 
@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
   
   validates :email, :format =>  /^[a-z0-9,!#\$%&'\*\+\/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+\/=\?\^_`\{\|}~-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})$/
   validates :email, :name, :presence => true
+  validate :sms_is_main
   
   # methods determining if the user belongs to a particular role
   # example:
@@ -71,6 +72,11 @@ class User < ActiveRecord::Base
   end
 
   protected
+
+  def sms_is_main
+    errors.add(:is_sms, "only for main parent") if is_sms? && !is_main?
+  end
+
   # send an email on registration
   def send_welcome_email
     Mailer.registered(self).deliver

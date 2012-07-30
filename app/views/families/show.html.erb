@@ -5,6 +5,7 @@
       <th>Email</th>
       <th>Aux emails</th>
       <th>Phone</th>
+      <th>Sms</th>
     </tr>
   </thead>
   <tbody><%= render :partial => 'member', :collection => @family.parents %></tbody>
@@ -25,6 +26,19 @@
      $('#new_parent').removeClass('hide');
      $('#new_parent').modal('show');    
   }
+  $('input[name="is_sms"]').change(function(){
+    $.ajax({
+      type:'PUT',
+      url:"<%= parent_url %>",
+      data: {'parent_id':$(this).val(), 'parent':{'is_sms':$(this).is(':checked')}},
+      dataType: 'json',
+      success: function(data, textStatus, jqXHR) {
+        if ((data['user']['is_sms'] !== $(this).is(':checked'))) {
+          $(this).attr('checked',data['user']['is_sms']);
+        }
+      }
+    })
+  })
 </script>
 
 <%= javascript_tag '$(document).ready(function(){showNewParent();})' if flash[:action] == :new %>

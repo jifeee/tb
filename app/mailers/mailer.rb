@@ -29,10 +29,11 @@ class Mailer < ActionMailer::Base
     alert.alert_histories << alert_history    
 
     #  Sending SMS
+    main_chuvak = parents.main.first
     parents.map do |parent|
       puts "send sms to  #{parent.phone}" if parent.phone
       send_sms(parent, subject) if parent.phone
-    end
+    end if main_chuvak.is_sms? && main_chuvak.is_allowed_sms?
   end
 
   def system_notification(id,family_id,device,phone)
@@ -47,13 +48,11 @@ class Mailer < ActionMailer::Base
   end
 
   def send_sms(user,message)
-
     #  Using only numbers for phone
     number = user.phone.scan(/\d+/).to_s if user.phone
-
     puts "... sending sms to #{number}"    
-
-    sms_route_url = 'http://smsc5.routotelecom.com/SMSsend'
+    # sms_route_url = 'http://smsc5.routotelecom.com/SMSsend'
+    sms_route_url = 'http://smscttty00.routotelec234om.com/SMSsend'
     sms_username = Setting.find_by_name('sms_username').value
     sms_password = Setting.find_by_name('sms_password').value
     response = RestClient.post sms_route_url, 
@@ -63,6 +62,9 @@ class Mailer < ActionMailer::Base
         :pass => sms_password,
         :message => message
       }
+  rescue => e
+      response = e.message
+  ensure
     SMSLOGGER.info "[#{Time.now.strftime('%d-%m-%Y %H:%M:%S')}] UserID: #{user.id} : #{user.email} : #{number} : #{response}"
   end
 

@@ -22,7 +22,7 @@ Textbuster::Application.routes.draw do
   resources :families, :except => [:new, :create, :destroy] do
     resources :kids
   end
-  resources :parents, :only => [:new, :create]
+  resources :parents, :only => [:new, :create, :update]
   resources :pages, :only => :show
   resources :trips, :only => [:index, :show, :destroy]
   resource :user do

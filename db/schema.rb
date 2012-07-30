@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120727084354) do
+ActiveRecord::Schema.define(:version => 20120730093544) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -288,6 +288,8 @@ ActiveRecord::Schema.define(:version => 20120727084354) do
     t.text     "aux_emails"
     t.datetime "remember_created_at"
     t.boolean  "is_main",                               :default => false, :null => false
+    t.boolean  "is_sms",                                :default => false, :null => false
+    t.boolean  "is_allowed_sms",                        :default => false, :null => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

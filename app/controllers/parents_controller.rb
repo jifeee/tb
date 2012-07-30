@@ -20,11 +20,20 @@ class ParentsController < ApplicationController
             page << "window.location.href = '#{family_path(current_user.family_id || 1)}';"
           end
         else
-p @parent.errors.full_messages.join(',')
-
           render :new
         end
       end
     end
   end
+
+  def update
+    user = @family.parents.find_by_id(params[:parent_id])
+    respond_with(user) do |format|
+      format.json do
+        user.update_attributes params[:parent]
+        render :json => {:status => 200, :user => user}
+      end
+    end
+  end
+
 end

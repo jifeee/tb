@@ -1,6 +1,16 @@
 # Admin pages for users
 ActiveAdmin.register User do
 
+  controller do
+    def update
+      if params[:user][:password].blank?
+        params[:user].delete(:password)
+        params[:user].delete(:password_confirmation) 
+      end
+      super
+    end    
+  end
+
   # table for index action
   index do
     column 'Main' do |user|
@@ -14,6 +24,8 @@ ActiveAdmin.register User do
     column :current_sign_in_at
     column :last_sign_in_at
     column :sign_in_count
+    column 'SMS', :is_sms
+    column 'Allowed SMS', :is_allowed_sms
     default_actions
   end
 
@@ -24,6 +36,8 @@ ActiveAdmin.register User do
       row :login
       row :phone
       row :role
+      row :is_sms
+      row :is_allowed_sms
     end
     active_admin_comments
   end
@@ -37,6 +51,8 @@ ActiveAdmin.register User do
       f.input :password_confirmation
       f.input :login
       f.input :phone
+      f.input :is_sms
+      f.input :is_allowed_sms
     end
     f.buttons
   end
