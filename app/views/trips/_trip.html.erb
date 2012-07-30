@@ -1,11 +1,11 @@
 <tr>
   <td>
     <% if current_user.is_main? %>
-      <input type="checkbox" id="<%= trip.id %>", class="all", title="There is an alert set for this user. You can manage alert setting under Set Alerts"/>
+      <input type="checkbox" id="<%= trip.id %>", class="all"/>
     <% end %>
   </td>
   <td width="15">
-    <%= image_tag "icons/#{trip.status}.png", :width => 15, :height => 16, :alt => "on" %>
+    <%= image_tag "icons/#{trip.status}.png", :width => 15, :height => 16, :alt => "on", :title => 'There is an alert set for this user. You can manage alert setting under Set Alerts' %>
   </td>
   <td><%= trip.start_point.time_with_timezone(trip.timezone).strftime '%b. %d, ‘%y' rescue 'None' %></td>
   <td>
