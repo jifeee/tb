@@ -18,10 +18,15 @@ class Location < ActiveRecord::Base
   after_save :update_address
 
   #  Redefine attributes read
-  %w(country city zip address).map do |attr|
-    define_method("#{attr}") do
-      get_attr_geo(attr.to_sym)    
-    end
+  # %w(country city zip address).map do |attr|
+  #   define_method("#{attr}") do
+  #     get_attr_geo(attr.to_sym)    
+  #   end
+  # end
+
+  def address
+    self.set_address! if self['address'].nil?
+    self['address']
   end
 
   def update_address
