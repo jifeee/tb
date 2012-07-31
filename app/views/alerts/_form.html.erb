@@ -23,10 +23,7 @@
         </div>
         <div class="speed">
           Send an alert message when the driver exceeds <%= f.select :speed_over, speed_over_for_select, {:include_blank => false}, {:class => 'input-small'} %> over the 
-          <%= f.select :speed, speed_limit_for_select, {:include_blank => false}, {:class => 'input-small'} %> speed limit
-          
-
-          <%#= f.text_field :speed, :placeholder => "Speed restriction > #{Alert.min_speed}" %>          
+          <%= f.select :speed, speed_limit_for_select, {:include_blank => false}, {:class => 'input-small'} %> speed limit          
         </div>
       </td>
     </tr>
@@ -42,7 +39,7 @@
       </td>
     </tr>
     <tr>
-      <th>Check the box to receive email(s) alert messages or / and SMS alert messages on cell phone</th>
+      <th>Check the box to receive alert message by email</th>
       <td>
         <% @family.parents.each do |parent| %>
           <div>

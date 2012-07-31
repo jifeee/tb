@@ -9,9 +9,15 @@ class Api::UsersController < ApplicationController
   def login
     user = User.find_by_email(params[:email])
     if user && user.valid_password?(params[:password])
-      user.reset_authentication_token!
-      user_sign_in user, params[:imei]
-      
+      phone = Phone.find_or_create_by_imei_and_user_id(params[:imei],user.id)
+
+      #  Check if imei has already assigned to another family
+      if phone.new_record? && !user.family.phones.include?(phone)
+        render_with_log :json => {:status => 401, :message => 'The phone is assigned to another family, plese contact with admin'} and return
+      end
+
+      user.reset_authentication_token!      
+      sign_in(:user, user)
       render_with_log :json => {:token => user.authentication_token, :devices => user.devices.flatten.uniq.map(&:imei)}
     else
       render_with_log :json => {:status => 403, :message => 'email and/or password is incorrect'}
