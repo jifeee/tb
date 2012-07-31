@@ -86,7 +86,25 @@ protected
     self[attr]
   end
 
+
   def geo
+    # if @geo.nil? || @geo.blank?
+    puts 'Getting geo locations ....'
+    @geo = {}
+    params = {:lat => self.lat, :lng => self.lng, :username => 'textbuster'}
+    response = RestClient.get "http://api.geonames.org/findNearestAddressJSON", :params => params
+    neighbourhood = RestClient.get "http://api.geonames.org/neighbourhoodJSON", :params => params
+    a = JSON.parse(response)['address']
+    city = JSON.parse(neighbourhood)['neighbourhood']['city'] rescue nil
+    country = JSON.parse(neighbourhood)['neighbourhood']['countryName'] || a['countryCode'] rescue nil
+    @geo[:address] = [a['postalcode'],"#{a['streetNumber']} #{a['street']}",city,(country)].compact.reject {|s| s.empty?}.join(', ')
+    @geo[:country] = a['countryCode']
+    @geo[:city] = city
+    @geo[:zip] = a['postalcode']
+    return @geo
+  end
+
+  def geo_google
     # if @geo.nil? || @geo.blank?
     puts 'Getting geo locations ....'
     @geo = {}
