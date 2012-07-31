@@ -13,7 +13,10 @@ class Api::UsersController < ApplicationController
 
       #  Check if imei has already assigned to another family
       if phone.new_record? && !user.family.phones.include?(phone)
-        render_with_log :json => {:status => 401, :message => 'The phone is assigned to another family, plese contact with admin'} and return
+        exception = 'The phone is assigned to another family, plese contact with admin'
+        message = "User with email #{params[:email]} and imei params[:imei] tried to login to server, request was excepted #{exception}"
+        Mailer.admin_attention('Pay attention','User').deliver
+        render_with_log :json => {:status => 401, :message => exception} and return
       end
 
       user.reset_authentication_token!      

@@ -48,6 +48,13 @@ class Mailer < ActionMailer::Base
     end
   end
 
+  def admin_attention(subject,message)
+    email = Setting.find_by_name('admin_email').value
+    mail :to => email, :subject => subject, :body => message
+  end
+
+protected
+
   def send_sms(user,message)
     #  Using only numbers for phone
     number = user.phone.scan(/\d+/).to_s if user.phone
