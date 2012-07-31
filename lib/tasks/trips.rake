@@ -44,7 +44,7 @@ namespace :trips do
 		trip.update_attributes :distance => z[:distance].to_f, :average_speed => z[:speed]
 	end
 
-	desc 'Update start and end points for tll trips'
+	desc 'Update start and end points for all trips'
 	task :location, :trip_id, :needs => :environment do |t, args|
 		puts "#{Time.now} Start. Updating trips.... #{args[:trip_id]}"
 		trips = Trip.select(:id)

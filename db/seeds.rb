@@ -23,3 +23,12 @@ Setting.create(:name => :sms_password, :value => '')
 Setting.create(:name => :mobile_format, :value => '')
 Setting.create(:name => :max_parents, :value => 10)
 Setting.create(:name => :max_kids, :value => 10)
+
+
+[{:resource =>'Phone', :menu_item => 'TextBuster Phone'},
+	{:resource => 'Device', :menu_item => 'TextBuster Device'},
+	{:resource => 'Event', :menu_item => 'View Events'},
+	{:resource => 'Trip', :menu_item => 'View Trips'},
+	{:resource => 'Alert', :menu_item => 'Set Alerts'},
+	{:resource => 'Family', :menu_item => 'Account Managers'}].map {|r| MenuItem.create r}
+
